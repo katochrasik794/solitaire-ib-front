@@ -114,7 +114,7 @@ const CommissionStructures = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {group.structures.map((structure) => (
                     <tr key={structure.id}>
-                      <td className="px-4 py-3 text-sm font-medium text-purple-600">Level {structure.level_order || 1}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-brand-600">Level {structure.level_order || 1}</td>
                       <td className="px-4 py-3 text-sm font-medium text-gray-900">{structure.structure_name}</td>
                       <td className="px-4 py-3 text-sm text-gray-700">${structure.usd_per_lot}</td>
                       <td className="px-4 py-3 text-sm text-gray-700">{structure.spread_share_percentage}%</td>

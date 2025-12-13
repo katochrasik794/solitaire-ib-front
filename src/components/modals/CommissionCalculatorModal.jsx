@@ -47,8 +47,8 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
   const filteredInstruments = instruments.filter(inst => {
     if (!instrumentSearch) return true;
     const searchLower = instrumentSearch.toLowerCase();
-    return inst.name.toLowerCase().includes(searchLower) || 
-           (inst.category && inst.category.toLowerCase().includes(searchLower));
+    return inst.name.toLowerCase().includes(searchLower) ||
+      (inst.category && inst.category.toLowerCase().includes(searchLower));
   });
 
   const fetchCalculatorData = async () => {
@@ -59,27 +59,27 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
       const response = await fetch('/api/user/dashboard/calculator-data', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      
+
       console.log('[CALCULATOR] Response status:', response.status);
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error('[CALCULATOR] Error response:', response.status, errorText);
         throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
-      
+
       const data = await response.json();
       console.log('[CALCULATOR] Response data:', data);
       console.log('[CALCULATOR] Account Types count:', data.data?.accountTypes?.length || 0);
       console.log('[CALCULATOR] Account Types:', data.data?.accountTypes);
-      
+
       if (response.ok && data.success) {
         setAccountTypes(data.data.accountTypes || []);
         setInstruments(data.data.instruments || []);
         setCommissionLevels(data.data.commissionLevels || []);
-        
+
         console.log('[CALCULATOR] Set account types:', data.data.accountTypes?.length || 0);
-        
+
         // Set default values
         if (data.data.accountTypes && data.data.accountTypes.length > 0) {
           setAccountType(data.data.accountTypes[0].id);
@@ -112,7 +112,7 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
     // Calculate commission for each UNIFIED level
     // Commission levels are now uniform across all groups - based on IB Level only
     const calculatedResults = [];
-    
+
     // Group commission levels by level number (unified levels, not per group)
     const levelsMap = new Map();
     commissionLevels.forEach(level => {
@@ -185,8 +185,8 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
           {/* Header */}
           <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">Commission calculator</h3>
-            <button 
-              onClick={onClose} 
+            <button
+              onClick={onClose}
               className="text-gray-500 hover:text-gray-700 transition-colors"
               aria-label="Close"
             >
@@ -224,7 +224,7 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
                       <select
                         value={accountType}
                         onChange={(e) => setAccountType(e.target.value)}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 appearance-none pr-10"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none pr-10"
                         disabled={loading}
                       >
                         <option value="">Select account</option>
@@ -264,12 +264,12 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
                               setInstrumentDropdownOpen(true);
                             }}
                             placeholder="Select instrument"
-                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 pr-10"
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 pr-10"
                             disabled={loading}
                           />
                           <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
                         </div>
-                        
+
                         {/* Dropdown Menu - Opens Upwards */}
                         {instrumentDropdownOpen && (
                           <div className="absolute z-50 w-full bottom-full mb-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
@@ -282,9 +282,8 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
                                     setInstrumentSearch('');
                                     setInstrumentDropdownOpen(false);
                                   }}
-                                  className={`px-4 py-2 cursor-pointer hover:bg-purple-50 ${
-                                    instrument === inst.id ? 'bg-purple-100' : ''
-                                  }`}
+                                  className={`px-4 py-2 cursor-pointer hover:bg-brand-50 ${instrument === inst.id ? 'bg-brand-100' : ''
+                                    }`}
                                 >
                                   <div className="text-sm font-medium text-gray-900">{inst.name}</div>
                                   {inst.category && (
@@ -313,7 +312,7 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
                         step="0.01"
                         value={lots}
                         onChange={(e) => setLots(Number(e.target.value))}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
                         disabled={loading}
                       />
                     </div>
@@ -327,7 +326,7 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
                   <h4 className="text-lg font-semibold text-gray-900 mb-4">
                     Commission Calculation Results
                   </h4>
-                  
+
                   {/* Summary Info */}
                   <div className="bg-gray-50 rounded-lg p-4 mb-4">
                     <div className="grid grid-cols-2 gap-4 text-sm mb-2">
@@ -362,7 +361,7 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
                   {results.length > 0 ? (
                     <div className="space-y-3">
                       {results.map((result, idx) => (
-                        <div key={idx} className="border border-gray-200 rounded-lg p-4 hover:border-purple-300 transition-colors">
+                        <div key={idx} className="border border-gray-200 rounded-lg p-4 hover:border-brand-300 transition-colors">
                           <div className="flex items-center justify-between mb-3">
                             <div>
                               <h5 className="font-semibold text-gray-900">{result.levelName}</h5>
@@ -370,13 +369,13 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
                               <p className="text-xs text-gray-500 mt-1">Applies to all account types</p>
                             </div>
                             <div className="text-right">
-                              <div className="text-lg font-bold text-purple-600">
+                              <div className="text-lg font-bold text-brand-700">
                                 ${result.totalCommission.toFixed(2)}
                               </div>
                               <div className="text-xs text-gray-500">Total Commission</div>
                             </div>
                           </div>
-                          
+
                           <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100">
                             <div>
                               <div className="text-xs text-gray-600 mb-1">Fixed Commission</div>
@@ -422,7 +421,7 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
                 </button>
                 <button
                   onClick={handleCalculate}
-                  className="px-6 py-2.5 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors font-medium"
+                  className="px-6 py-2.5 rounded-lg bg-brand-500 text-dark-base hover:bg-brand-600 transition-colors font-medium border border-brand-500"
                 >
                   Recalculate
                 </button>
@@ -438,11 +437,10 @@ const CommissionCalculatorModal = ({ isOpen, onClose, presets = [] }) => {
                 <button
                   onClick={handleCalculate}
                   disabled={isCalculateDisabled}
-                  className={`px-6 py-2.5 rounded-lg font-medium transition-colors ${
-                    isCalculateDisabled
+                  className={`px-6 py-2.5 rounded-lg font-medium transition-colors ${isCalculateDisabled
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-purple-600 text-white hover:bg-purple-700'
-                  }`}
+                      : 'bg-brand-500 text-dark-base hover:bg-brand-600 border border-brand-500'
+                    }`}
                 >
                   Calculate
                 </button>

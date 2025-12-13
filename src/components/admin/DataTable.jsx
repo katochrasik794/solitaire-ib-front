@@ -86,7 +86,7 @@ const DataTable = ({
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
       </div>
     );
   }
@@ -105,7 +105,7 @@ const DataTable = ({
                   placeholder="Search..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-10 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                 />
               </div>
             )}
@@ -147,7 +147,7 @@ const DataTable = ({
                       type="checkbox"
                       checked={selectedRows.size === sortedData.length && sortedData.length > 0}
                       onChange={(e) => handleSelectAll(e.target.checked)}
-                      className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                      className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                     />
                   </th>
                 )}
@@ -155,9 +155,8 @@ const DataTable = ({
                 {columns.map((column) => (
                   <th
                     key={column.key}
-                    className={`px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${
-                      column.sortable !== false ? 'cursor-pointer hover:bg-gray-100' : ''
-                    }`}
+                    className={`px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${column.sortable !== false ? 'cursor-pointer hover:bg-gray-100' : ''
+                      }`}
                     onClick={() => column.sortable !== false && handleSort(column.key)}
                   >
                     <div className="flex items-center gap-1">
@@ -196,7 +195,7 @@ const DataTable = ({
                           type="checkbox"
                           checked={selectedRows.has(item.id)}
                           onChange={(e) => handleSelectRow(item.id, e.target.checked)}
-                          className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                          className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                         />
                       </td>
                     )}

@@ -7,11 +7,11 @@ const AdminLayout = ({ children }) => {
   const { sidebarOpen } = useAdmin();
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-neutral-50 font-sans">
       <AdminHeader />
       <div className="flex">
         {sidebarOpen && <AdminSidebar />}
-        <main className="flex-1 bg-gray-50 min-h-screen overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out">
+        <main className="flex-1 bg-neutral-50 min-h-screen overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out">
           <div className="px-3 sm:px-4 lg:px-6 xl:px-8 py-5 sm:py-6">{children}</div>
         </main>
       </div>

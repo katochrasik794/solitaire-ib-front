@@ -178,8 +178,13 @@ const Sidebar = () => {
     : { open: { width: '70vw', x: 0 }, closed: { width: 0, x: '-100%' } };
 
   const contentVariants = {
-    open: { opacity: 1 },
-    closed: { opacity: 0 }
+    open: { opacity: 1, width: 'auto', display: 'flex' },
+    closed: {
+      opacity: 0,
+      width: 0,
+      transition: { duration: 0.2 },
+      transitionEnd: { display: 'none' }
+    }
   };
 
   return (
@@ -213,18 +218,14 @@ const Sidebar = () => {
               animate={sidebarOpen ? 'open' : 'closed'}
               className="flex items-center"
             >
-              <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
+              <div className="h-12 flex items-center justify-center flex-shrink-0">
                 <img
                   src="/ib_images/logo.svg"
                   alt="Solitaire Partners"
-                  className="h-8 w-auto"
+                  className="h-12 w-auto"
                 />
               </div>
-              {sidebarOpen && (
-                <span className="ml-3 text-lg font-semibold text-gray-900">
-                  Solitaire Partners
-                </span>
-              )}
+
             </motion.div>
 
             <button
@@ -246,8 +247,8 @@ const Sidebar = () => {
                 key={item.id}
                 to={item.path}
                 className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${isActive(item.path)
-                  ? 'bg-purple-600 text-white shadow-lg'
-                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                  ? 'bg-brand text-dark-base shadow-sm'
+                  : 'text-dark-base/70 hover:bg-neutral-100 hover:text-dark-base'
                   }`}
                 onClick={() => {
                   // Close the sidebar on navigation for mobile screens

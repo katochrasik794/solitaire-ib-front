@@ -200,13 +200,13 @@ const IBReports = () => {
 
   const handleViewDetails = async (ibId) => {
     if (!ibId) return;
-    
+
     try {
       setLoadingDetails(true);
       setLoadingClients(true);
       setSelectedIB(ibId);
       const token = localStorage.getItem('adminToken');
-      
+
       // Fetch IB profile details and clients in parallel
       const [profileResponse, clientsResponse] = await Promise.all([
         fetch(`/api/admin/ib-requests/profiles/${ibId}`, {
@@ -284,7 +284,7 @@ const IBReports = () => {
     </AdminCard>,
     <AdminCard key="total-commission">
       <div className="text-center">
-        <p className="text-3xl font-bold text-purple-600">{formatCurrency(summary.commission?.total || 0)}</p>
+        <p className="text-3xl font-bold text-brand-600">{formatCurrency(summary.commission?.total || 0)}</p>
         <p className="text-sm text-gray-600 mt-1">Total Commission</p>
         <p className="text-xs text-gray-500 mt-1">
           Fixed: {formatCurrency(summary.commission?.fixed || 0)} | Spread: {formatCurrency(summary.commission?.spread || 0)}
@@ -324,7 +324,7 @@ const IBReports = () => {
   ] : [];
 
   // Chart colors
-  const COLORS = ['#8B5CF6', '#16A34A', '#F59E0B', '#EF4444', '#3B82F6', '#EC4899'];
+  const COLORS = ['#c8f300', '#16A34A', '#F59E0B', '#EF4444', '#3B82F6', '#EC4899'];
 
   // Status distribution data for pie chart
   const statusData = summary ? [
@@ -360,7 +360,7 @@ const IBReports = () => {
           </button>
           <button
             onClick={() => handleExport('summary')}
-            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-dark-base rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
           >
             <FiDownload className="h-4 w-4" />
             Export All
@@ -385,22 +385,20 @@ const IBReports = () => {
                   setFromDate('');
                   setToDate('');
                 }}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  period === p && !customDateRange
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${period === p && !customDateRange
+                  ? 'bg-brand-500 text-dark-base'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
               >
                 {p === 'today' ? 'Today' : p === '7d' ? 'Last 7 Days' : p === '30d' ? 'Last 30 Days' : p === '90d' ? 'Last 90 Days' : p === 'month' ? 'This Month' : 'This Year'}
               </button>
             ))}
             <button
               onClick={() => setCustomDateRange(!customDateRange)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                customDateRange
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${customDateRange
+                ? 'bg-brand-500 text-dark-base'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
             >
               Custom Range
             </button>
@@ -452,7 +450,7 @@ const IBReports = () => {
           <div className="flex justify-end mb-4">
             <button
               onClick={() => handleExport('top-performers')}
-              className="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+              className="px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-dark-base rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
             >
               <FiDownload className="h-4 w-4" />
               Export
@@ -460,76 +458,77 @@ const IBReports = () => {
           </div>
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
             </div>
           ) : topPerformers.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
               <p>No top performers data available for the selected period</p>
             </div>
           ) : (
-          <ProTable
-            rows={topPerformers.map(p => ({
-              ibId: p.ibId,
-              ibName: p.ibName,
-              ibEmail: p.ibEmail,
-              ibStatus: p.ibStatus,
-              totalCommission: p.totalCommission,
-              fixedCommission: p.fixedCommission,
-              spreadCommission: p.spreadCommission,
-              totalVolumeLots: p.totalVolumeLots,
-              totalVolumeUsd: p.totalVolumeUsd,
-              totalClients: p.totalClients,
-              totalTrades: p.totalTrades
-            }))}
-            columns={[
-              { key: 'ibName', label: 'IB Name', sortable: true },
-              { key: 'ibEmail', label: 'Email', sortable: true },
-              { key: 'ibStatus', label: 'Status', sortable: true, render: (v) => (
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  v === 'approved' ? 'bg-green-100 text-green-800' :
-                  v === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-gray-100 text-gray-800'
-                }`}>
-                  {v ? v.charAt(0).toUpperCase() + v.slice(1) : '-'}
-                </span>
-              )},
-              { key: 'totalCommission', label: 'Total Commission', sortable: true, render: (v) => formatCurrency(v) },
-              { key: 'totalVolumeUsd', label: 'Total Volume', sortable: true, render: (v) => formatCurrency(v) },
-              { key: 'totalClients', label: 'Clients', sortable: true },
-              { key: 'totalTrades', label: 'Trades', sortable: true },
-              { 
-                key: 'actions', 
-                label: 'Actions', 
-                sortable: false,
-                render: (v, row) => (
-                  <button
-                    onClick={() => handleViewDetails(row.ibId)}
-                    className="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-                  >
-                    <FiEye className="h-4 w-4" />
-                    View
-                  </button>
-                )
-              }
-            ]}
-            filters={{
-              searchKeys: ['ibName', 'ibEmail'],
-              selects: [
+            <ProTable
+              rows={topPerformers.map(p => ({
+                ibId: p.ibId,
+                ibName: p.ibName,
+                ibEmail: p.ibEmail,
+                ibStatus: p.ibStatus,
+                totalCommission: p.totalCommission,
+                fixedCommission: p.fixedCommission,
+                spreadCommission: p.spreadCommission,
+                totalVolumeLots: p.totalVolumeLots,
+                totalVolumeUsd: p.totalVolumeUsd,
+                totalClients: p.totalClients,
+                totalTrades: p.totalTrades
+              }))}
+              columns={[
+                { key: 'ibName', label: 'IB Name', sortable: true },
+                { key: 'ibEmail', label: 'Email', sortable: true },
                 {
-                  key: 'ibStatus',
-                  label: 'Status',
-                  options: [
-                    { value: 'approved', label: 'Approved' },
-                    { value: 'pending', label: 'Pending' },
-                    { value: 'rejected', label: 'Rejected' }
-                  ]
+                  key: 'ibStatus', label: 'Status', sortable: true, render: (v) => (
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${v === 'approved' ? 'bg-green-100 text-green-800' :
+                      v === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                      {v ? v.charAt(0).toUpperCase() + v.slice(1) : '-'}
+                    </span>
+                  )
+                },
+                { key: 'totalCommission', label: 'Total Commission', sortable: true, render: (v) => formatCurrency(v) },
+                { key: 'totalVolumeUsd', label: 'Total Volume', sortable: true, render: (v) => formatCurrency(v) },
+                { key: 'totalClients', label: 'Clients', sortable: true },
+                { key: 'totalTrades', label: 'Trades', sortable: true },
+                {
+                  key: 'actions',
+                  label: 'Actions',
+                  sortable: false,
+                  render: (v, row) => (
+                    <button
+                      onClick={() => handleViewDetails(row.ibId)}
+                      className="px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-dark-base rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                    >
+                      <FiEye className="h-4 w-4" />
+                      View
+                    </button>
+                  )
                 }
-              ]
-            }}
-            pageSize={10}
-            searchPlaceholder="Search by IB name or email..."
-            loading={false}
-          />
+              ]}
+              filters={{
+                searchKeys: ['ibName', 'ibEmail'],
+                selects: [
+                  {
+                    key: 'ibStatus',
+                    label: 'Status',
+                    options: [
+                      { value: 'approved', label: 'Approved' },
+                      { value: 'pending', label: 'Pending' },
+                      { value: 'rejected', label: 'Rejected' }
+                    ]
+                  }
+                ]
+              }}
+              pageSize={10}
+              searchPlaceholder="Search by IB name or email..."
+              loading={false}
+            />
           )}
         </AdminCard>
 
@@ -542,7 +541,7 @@ const IBReports = () => {
           <div className="flex justify-end mb-4">
             <button
               onClick={() => handleExport('commission')}
-              className="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+              className="px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-dark-base rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
             >
               <FiDownload className="h-4 w-4" />
               Export
@@ -550,50 +549,50 @@ const IBReports = () => {
           </div>
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
             </div>
           ) : topPerformers.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
               <p>No commission data available for the selected period</p>
             </div>
           ) : (
-          <ProTable
-            rows={topPerformers.map(p => ({
-              ibId: p.ibId,
-              ibName: p.ibName,
-              ibEmail: p.ibEmail,
-              totalCommission: p.totalCommission,
-              fixedCommission: p.fixedCommission,
-              spreadCommission: p.spreadCommission
-            }))}
-            columns={[
-              { key: 'ibName', label: 'IB Name', sortable: true },
-              { key: 'ibEmail', label: 'Email', sortable: true },
-              { key: 'totalCommission', label: 'Total Commission', sortable: true, render: (v) => formatCurrency(v) },
-              { key: 'fixedCommission', label: 'Fixed Commission', sortable: true, render: (v) => formatCurrency(v) },
-              { key: 'spreadCommission', label: 'Spread Commission', sortable: true, render: (v) => formatCurrency(v) },
-              { 
-                key: 'actions', 
-                label: 'Actions', 
-                sortable: false,
-                render: (v, row) => (
-                  <button
-                    onClick={() => handleViewDetails(row.ibId)}
-                    className="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-                  >
-                    <FiEye className="h-4 w-4" />
-                    View
-                  </button>
-                )
-              }
-            ]}
-            filters={{
-              searchKeys: ['ibName', 'ibEmail']
-            }}
-            pageSize={10}
-            searchPlaceholder="Search by IB name or email..."
-            loading={false}
-          />
+            <ProTable
+              rows={topPerformers.map(p => ({
+                ibId: p.ibId,
+                ibName: p.ibName,
+                ibEmail: p.ibEmail,
+                totalCommission: p.totalCommission,
+                fixedCommission: p.fixedCommission,
+                spreadCommission: p.spreadCommission
+              }))}
+              columns={[
+                { key: 'ibName', label: 'IB Name', sortable: true },
+                { key: 'ibEmail', label: 'Email', sortable: true },
+                { key: 'totalCommission', label: 'Total Commission', sortable: true, render: (v) => formatCurrency(v) },
+                { key: 'fixedCommission', label: 'Fixed Commission', sortable: true, render: (v) => formatCurrency(v) },
+                { key: 'spreadCommission', label: 'Spread Commission', sortable: true, render: (v) => formatCurrency(v) },
+                {
+                  key: 'actions',
+                  label: 'Actions',
+                  sortable: false,
+                  render: (v, row) => (
+                    <button
+                      onClick={() => handleViewDetails(row.ibId)}
+                      className="px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-dark-base rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                    >
+                      <FiEye className="h-4 w-4" />
+                      View
+                    </button>
+                  )
+                }
+              ]}
+              filters={{
+                searchKeys: ['ibName', 'ibEmail']
+              }}
+              pageSize={10}
+              searchPlaceholder="Search by IB name or email..."
+              loading={false}
+            />
           )}
         </AdminCard>
       </div>
@@ -604,7 +603,7 @@ const IBReports = () => {
         <AdminCard header="Commission Trends" icon={<FiBarChart className="h-5 w-5" />}>
           {loading ? (
             <div className="h-80 flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
             </div>
           ) : commissionTrends.length > 0 ? (
             <ResponsiveContainer width="100%" height={320}>
@@ -614,7 +613,7 @@ const IBReports = () => {
                 <YAxis tick={{ fontSize: 12 }} />
                 <Tooltip formatter={(value) => formatCurrency(value)} />
                 <Legend />
-                <Line type="monotone" dataKey="total" stroke="#8B5CF6" strokeWidth={2} name="Total Commission" />
+                <Line type="monotone" dataKey="total" stroke="#c8f300" strokeWidth={2} name="Total Commission" />
                 <Line type="monotone" dataKey="fixed" stroke="#16A34A" strokeWidth={2} name="Fixed Commission" />
                 <Line type="monotone" dataKey="spread" stroke="#F59E0B" strokeWidth={2} name="Spread Commission" />
               </LineChart>
@@ -630,7 +629,7 @@ const IBReports = () => {
         <AdminCard header="Trading Volume Trends" icon={<FiTrendingUp className="h-5 w-5" />}>
           {loading ? (
             <div className="h-80 flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
             </div>
           ) : volumeTrends.length > 0 ? (
             <ResponsiveContainer width="100%" height={320}>
@@ -657,7 +656,7 @@ const IBReports = () => {
         <AdminCard header="IB Status Distribution" icon={<FiPieChart className="h-5 w-5" />}>
           {loading ? (
             <div className="h-80 flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
             </div>
           ) : statusData.length > 0 ? (
             <ResponsiveContainer width="100%" height={320}>
@@ -691,7 +690,7 @@ const IBReports = () => {
         <AdminCard header="Client Growth" icon={<FiUsers className="h-5 w-5" />}>
           {loading ? (
             <div className="h-80 flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
             </div>
           ) : clientGrowth.length > 0 ? (
             <ResponsiveContainer width="100%" height={320}>
@@ -718,7 +717,7 @@ const IBReports = () => {
         <AdminCard header="Withdrawal Analysis" icon={<FiCreditCard className="h-5 w-5" />}>
           {loading ? (
             <div className="h-80 flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
             </div>
           ) : withdrawals.length > 0 ? (
             <ResponsiveContainer width="100%" height={320}>
@@ -744,7 +743,7 @@ const IBReports = () => {
         <AdminCard header="Reward Claims Status" icon={<FiGift className="h-5 w-5" />}>
           {loading ? (
             <div className="h-80 flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
             </div>
           ) : rewardClaimsData.length > 0 ? (
             <ResponsiveContainer width="100%" height={320}>
@@ -779,7 +778,7 @@ const IBReports = () => {
       <AdminCard header="Top Performers by Commission" icon={<FiTrendingUp className="h-5 w-5" />}>
         {loading ? (
           <div className="h-80 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
           </div>
         ) : topPerformers.length > 0 ? (
           <ResponsiveContainer width="100%" height={400}>
@@ -789,7 +788,7 @@ const IBReports = () => {
               <YAxis dataKey="ibName" type="category" width={150} tick={{ fontSize: 12 }} />
               <Tooltip formatter={(value) => formatCurrency(value)} />
               <Legend />
-              <Bar dataKey="totalCommission" fill="#8B5CF6" name="Total Commission" />
+              <Bar dataKey="totalCommission" fill="#c8f300" name="Total Commission" />
             </BarChart>
           </ResponsiveContainer>
         ) : (
@@ -812,11 +811,11 @@ const IBReports = () => {
                 <FiX className="h-6 w-6" />
               </button>
             </div>
-            
+
             <div className="p-6">
               {loadingDetails ? (
                 <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
                 </div>
               ) : ibDetails ? (
                 <div className="space-y-6">
@@ -851,11 +850,10 @@ const IBReports = () => {
                         <FiUserCheck className="h-5 w-5 text-gray-600" />
                         <div>
                           <p className="text-sm text-gray-600">Status</p>
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            ibDetails.status === 'approved' ? 'bg-green-100 text-green-800' :
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${ibDetails.status === 'approved' ? 'bg-green-100 text-green-800' :
                             ibDetails.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-gray-100 text-gray-800'
-                          }`}>
+                              'bg-gray-100 text-gray-800'
+                            }`}>
                             {ibDetails.status ? ibDetails.status.charAt(0).toUpperCase() + ibDetails.status.slice(1) : '-'}
                           </span>
                         </div>
@@ -886,7 +884,7 @@ const IBReports = () => {
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                           <p className="text-sm text-gray-600">Total Commission</p>
-                          <p className="text-2xl font-bold text-purple-600">{formatCurrency(ibDetails.commissionData.totalCommission || 0)}</p>
+                          <p className="text-2xl font-bold text-brand-600">{formatCurrency(ibDetails.commissionData.totalCommission || 0)}</p>
                         </div>
                         <div>
                           <p className="text-sm text-gray-600">Fixed Commission</p>
@@ -957,7 +955,7 @@ const IBReports = () => {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Client List ({ibClients.length})</h3>
                     {loadingClients ? (
                       <div className="flex items-center justify-center py-8">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-brand-600"></div>
                       </div>
                     ) : ibClients.length > 0 ? (
                       <div className="overflow-x-auto">
@@ -978,14 +976,13 @@ const IBReports = () => {
                                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{client.email || '-'}</td>
                                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{client.name || client.full_name || '-'}</td>
                                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
-                                  <span className={`px-2 py-1 text-xs rounded-full ${
-                                    client.source === 'ib_request' ? 'bg-blue-100 text-blue-800' :
+                                  <span className={`px-2 py-1 text-xs rounded-full ${client.source === 'ib_request' ? 'bg-blue-100 text-blue-800' :
                                     client.source === 'ib_referrals' ? 'bg-green-100 text-green-800' :
-                                    'bg-gray-100 text-gray-800'
-                                  }`}>
+                                      'bg-gray-100 text-gray-800'
+                                    }`}>
                                     {client.source === 'ib_request' ? 'IB Request' :
-                                     client.source === 'ib_referrals' ? 'Referral' :
-                                     client.source || 'Unknown'}
+                                      client.source === 'ib_referrals' ? 'Referral' :
+                                        client.source || 'Unknown'}
                                   </span>
                                 </td>
                                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">

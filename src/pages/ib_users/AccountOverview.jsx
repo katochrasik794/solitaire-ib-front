@@ -16,7 +16,7 @@ const getCachedData = (key) => {
   try {
     const cached = localStorage.getItem(key);
     const timestamp = localStorage.getItem(CACHE_KEYS.TIMESTAMP);
-    
+
     if (cached && timestamp) {
       const age = Date.now() - parseInt(timestamp);
       if (age < CACHE_DURATION) {
@@ -84,7 +84,7 @@ const AccountOverview = () => {
     try {
       const cachedAccountData = getCachedData(CACHE_KEYS.ACCOUNT_DATA);
       const cachedWithdrawalData = getCachedData(CACHE_KEYS.WITHDRAWAL_DATA);
-      
+
       if (cachedAccountData) {
         setStats(cachedAccountData.stats || { totalAccounts: 0, totalBalance: 0, totalEquity: 0, accountStatus: 'IB Approved' });
         setAccounts(cachedAccountData.accounts || []);
@@ -95,11 +95,11 @@ const AccountOverview = () => {
         setIbInfo(cachedAccountData.ibInfo || { fullName: '', email: '', phone: '', approvedDate: null, referralCode: '', commissionStructure: null });
         setReferralCodeInput(cachedAccountData.ibInfo?.referralCode || '');
       }
-      
+
       if (cachedWithdrawalData) {
         setWithdrawSummary(cachedWithdrawalData || { summary: { totalEarned: 0, totalPaid: 0, pending: 0, available: 0 } });
       }
-      
+
       if (cachedAccountData || cachedWithdrawalData) {
         setDataLoaded(true);
         setLoading(false);
@@ -118,7 +118,7 @@ const AccountOverview = () => {
       const json = await res.json();
       if (res.ok && json.success) {
         const d = json.data || {};
-        
+
         // Process and cache account data
         const detectType = (g) => {
           const s = (g || '').toString().toLowerCase();
@@ -126,16 +126,16 @@ const AccountOverview = () => {
         };
         const std = d.commissionByType?.Standard || null;
         const pro = d.commissionByType?.Pro || null;
-        
+
         const processedAccounts = (d.accounts || []).map(a => {
           const type = detectType(a.groupId || a.group);
           const rate = type === 'Pro' ? pro : std;
-          
+
           // Use actual commission values from backend if available
           const fixedCommission = Number(a.ibCommission || 0);
           const spreadCommission = Number(a.spreadCommissionAmount || 0);
           const totalCommission = Number(a.commissionTotal || a.ibCommissionTotal || (fixedCommission + spreadCommission));
-          
+
           return {
             id: a.accountId,
             balance: a.balance,
@@ -159,7 +159,7 @@ const AccountOverview = () => {
           const fixedComm = Number(g.totalCommission || 0);
           const spreadComm = Number(g.spreadCommission || 0) || (totalLots * (spreadPct / 100));
           const totalComm = Number(g.commissionTotal || 0) || (fixedComm + spreadComm);
-          
+
           return {
             id: idx + 1,
             accountId: g.groupName,
@@ -267,7 +267,7 @@ const AccountOverview = () => {
         <button
           onClick={refreshData}
           disabled={loading}
-          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="px-4 py-2 bg-brand-500 text-dark-base rounded-lg hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
           {loading ? (
             <>
@@ -292,11 +292,10 @@ const AccountOverview = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === tab.id
-                  ? 'border-[#6242a5] text-[#6242a5]'
+              className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.id
+                  ? 'border-brand-600 text-brand-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+                }`}
             >
               {tab.label}
             </button>
@@ -463,9 +462,9 @@ const AccountOverview = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Commission Structures</label>
                   {loading ? (
-                    <span className="inline-block h-5 w-24 bg-purple-100 rounded animate-pulse" />
+                    <span className="inline-block h-5 w-24 bg-brand-100 rounded animate-pulse" />
                   ) : (
-                    <div className="inline-flex items-center px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">
+                    <div className="inline-flex items-center px-2 py-0.5 rounded-full bg-brand-100 text-brand-900 border border-brand-200">
                       {ibInfo.commissionStructure || '—'}
                     </div>
                   )}
@@ -484,7 +483,7 @@ const AccountOverview = () => {
                         <button
                           type="button"
                           onClick={() => setEditingReferralCode(true)}
-                          className="text-xs text-purple-600 hover:text-purple-700 font-medium"
+                          className="text-xs text-brand-600 hover:text-brand-700 font-medium"
                         >
                           Edit
                         </button>
@@ -503,7 +502,7 @@ const AccountOverview = () => {
                               }
                             }}
                             maxLength={8}
-                            className="flex-1 text-gray-900 font-mono font-semibold text-lg bg-gray-50 px-3 py-1.5 rounded border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="flex-1 text-gray-900 font-mono font-semibold text-lg bg-gray-50 px-3 py-1.5 rounded border border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
                             placeholder="Enter referral code (max 8 chars)"
                             disabled={updatingReferralCode}
                           />
@@ -556,7 +555,7 @@ const AccountOverview = () => {
                               }
                             }}
                             disabled={updatingReferralCode}
-                            className="px-3 py-1.5 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-3 py-1.5 text-sm font-medium text-dark-base bg-brand-500 rounded-lg hover:bg-brand-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             {updatingReferralCode ? 'Updating...' : 'Save'}
                           </button>
@@ -588,13 +587,13 @@ const AccountOverview = () => {
                               const referralLink = `${window.location.origin}/login?referralCode=${ibInfo.referralCode}`;
                               navigator.clipboard.writeText(referralLink);
                             }}
-                            className="px-3 py-1.5 text-sm font-medium text-purple-600 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors"
+                            className="px-3 py-1.5 text-sm font-medium text-brand-700 bg-brand-50 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors"
                           >
                             Copy Link
                           </button>
                         </div>
                         <p className="text-xs text-gray-500 mt-2">
-                          Share this link to refer new partners: <span className="font-mono text-purple-600">{window.location.origin}/login?referralCode={ibInfo.referralCode}</span>
+                          Share this link to refer new partners: <span className="font-mono text-brand-600">{window.location.origin}/login?referralCode={ibInfo.referralCode}</span>
                         </p>
                       </>
                     )}
@@ -632,7 +631,7 @@ const AccountOverview = () => {
         <div className="space-y-6">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
             </div>
           ) : accounts.length === 0 ? (
             <AdminCard>

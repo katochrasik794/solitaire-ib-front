@@ -43,19 +43,19 @@ export const SymbolModal = ({ isOpen, onClose, symbol, categories, onSave }) => 
     const { name, value } = e.target;
     setFormData(prev => {
       const newData = { ...prev, [name]: value };
-      
+
       // Calculate pip_value when symbol_rate or pip_per_lot changes
       if (name === 'symbol_rate' || name === 'pip_per_lot') {
         const symbolRate = name === 'symbol_rate' ? parseFloat(value) || 0 : parseFloat(newData.symbol_rate) || 0;
         const pipPerLot = name === 'pip_per_lot' ? parseFloat(value) || 0 : parseFloat(newData.pip_per_lot) || 0;
         newData.pip_value = (symbolRate * pipPerLot).toFixed(2);
       }
-      
+
       // Update volume_lots when pip_per_lot changes
       if (name === 'pip_per_lot') {
         newData.volume_lots = value;
       }
-      
+
       // Calculate commission when volume, symbol_rate, or pip_per_lot changes
       // Formula: Commission = (Volume × Symbol Rate) × 1.00
       if (name === 'volume_lots' || name === 'symbol_rate' || name === 'pip_per_lot') {
@@ -70,14 +70,14 @@ export const SymbolModal = ({ isOpen, onClose, symbol, categories, onSave }) => 
           // When symbol_rate changes, use current volume_lots
           volume = parseFloat(newData.volume_lots) || 0;
         }
-        
+
         // Get the correct symbol_rate value
         const symbolRate = name === 'symbol_rate' ? parseFloat(value) || 0 : parseFloat(newData.symbol_rate) || 0;
-        
+
         // Commission = (volume × symbol_rate) × 1.00
         newData.commission = (volume * symbolRate * 1.00).toFixed(2);
       }
-      
+
       return newData;
     });
 
@@ -168,7 +168,7 @@ export const SymbolModal = ({ isOpen, onClose, symbol, categories, onSave }) => 
             {/* Info Message */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <p className="text-sm text-blue-800">
-               Edit the symbol details to update the commission. 
+                Edit the symbol details to update the commission.
               </p>
             </div>
 
@@ -204,16 +204,15 @@ export const SymbolModal = ({ isOpen, onClose, symbol, categories, onSave }) => 
                       onChange={handleChange}
                       step="0.01"
                       min="0"
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${
-                        errors.pip_per_lot ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 ${errors.pip_per_lot ? 'border-red-500' : 'border-gray-300'
+                        }`}
                     />
                     <span className="text-sm text-gray-600 whitespace-nowrap">pip</span>
                   </div>
                   {errors.pip_per_lot && (
                     <p className="mt-1 text-sm text-red-600">{errors.pip_per_lot}</p>
                   )}
-                  
+
                   {/* Pip Value Calculation */}
                   <div className="mt-2 text-sm text-gray-600">
                     Pip value = {formData.symbol_rate} × {formData.pip_per_lot} = <strong className="text-green-600">${pipValueDisplay.toFixed(2)}</strong> per pip (1 lot)
@@ -233,9 +232,8 @@ export const SymbolModal = ({ isOpen, onClose, symbol, categories, onSave }) => 
                       onChange={handleChange}
                       step="0.01"
                       min="0"
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${
-                        errors.symbol_rate ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 ${errors.symbol_rate ? 'border-red-500' : 'border-gray-300'
+                        }`}
                     />
                     <span className="text-sm text-gray-600 whitespace-nowrap">$/pip</span>
                   </div>
@@ -253,7 +251,7 @@ export const SymbolModal = ({ isOpen, onClose, symbol, categories, onSave }) => 
                     name="status"
                     value={formData.status}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
                   >
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -272,7 +270,7 @@ export const SymbolModal = ({ isOpen, onClose, symbol, categories, onSave }) => 
                     name="category"
                     value={formData.category}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
                   >
                     <option value="">Select Category</option>
                     {categories && categories.map((cat) => (
@@ -294,16 +292,15 @@ export const SymbolModal = ({ isOpen, onClose, symbol, categories, onSave }) => 
                       onChange={handleChange}
                       step="0.01"
                       min="0"
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${
-                        errors.volume_lots ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 ${errors.volume_lots ? 'border-red-500' : 'border-gray-300'
+                        }`}
                     />
                     <span className="text-sm text-gray-600 whitespace-nowrap">lots</span>
                   </div>
                   {errors.volume_lots && (
                     <p className="mt-1 text-sm text-red-600">{errors.volume_lots}</p>
                   )}
-                  
+
                   {/* Commission Calculation */}
                   <div className="mt-2 text-sm text-gray-600">
                     Commission = ({formData.volume_lots} × {formData.symbol_rate}) × 1.00 = <strong className="text-orange-600">${commissionDisplay.toFixed(2)}</strong>
@@ -319,7 +316,7 @@ export const SymbolModal = ({ isOpen, onClose, symbol, categories, onSave }) => 
                     name="currency"
                     value={formData.currency}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
                   >
                     <option value="USD">USD</option>
                     <option value="EUR">EUR</option>

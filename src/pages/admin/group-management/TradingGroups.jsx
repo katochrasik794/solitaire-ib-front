@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  FiUsers, 
+import {
+  FiUsers,
   FiSearch,
   FiRefreshCw,
   FiDownload,
@@ -42,14 +42,14 @@ const TradingGroups = () => {
     try {
       setLoading(true);
       // Try multiple token storage keys for compatibility
-      const token = localStorage.getItem('adminToken') || 
-                   localStorage.getItem('admin_token') || 
-                   null;
-      
+      const token = localStorage.getItem('adminToken') ||
+        localStorage.getItem('admin_token') ||
+        null;
+
       if (!token) {
         throw new Error('No authentication token found. Please login again.');
       }
-      
+
       const params = new URLSearchParams({
         page: pagination.page.toString(),
         limit: pagination.limit.toString(),
@@ -89,7 +89,7 @@ const TradingGroups = () => {
         title: 'Error!',
         text: 'Failed to fetch trading groups',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
     } finally {
       setLoading(false);
@@ -100,15 +100,15 @@ const TradingGroups = () => {
   const fetchStats = async () => {
     try {
       // Try multiple token storage keys for compatibility
-      const token = localStorage.getItem('adminToken') || 
-                   localStorage.getItem('admin_token') || 
-                   null;
-      
+      const token = localStorage.getItem('adminToken') ||
+        localStorage.getItem('admin_token') ||
+        null;
+
       if (!token) {
         console.warn('No token found for stats request');
         return;
       }
-      
+
       const response = await fetch('/api/admin/trading-groups/stats', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -151,16 +151,16 @@ const TradingGroups = () => {
     try {
       setSyncing(true);
       // Try multiple token storage keys for compatibility
-      const token = localStorage.getItem('adminToken') || 
-                   localStorage.getItem('admin_token') || 
-                   null;
-      
+      const token = localStorage.getItem('adminToken') ||
+        localStorage.getItem('admin_token') ||
+        null;
+
       if (!token) {
         await Swal.fire({
           title: 'Authentication Required',
           text: 'Please login again to continue',
           icon: 'warning',
-          confirmButtonColor: '#6242a5'
+          confirmButtonColor: '#c8f300'
         });
         // Redirect to login if on admin page
         if (window.location.pathname.startsWith('/admin')) {
@@ -168,7 +168,7 @@ const TradingGroups = () => {
         }
         return;
       }
-      
+
       const response = await fetch('/api/admin/trading-groups/sync', {
         method: 'POST',
         headers: {
@@ -186,26 +186,26 @@ const TradingGroups = () => {
             title: 'Session Expired',
             text: 'Please login again to continue',
             icon: 'warning',
-            confirmButtonColor: '#6242a5'
+            confirmButtonColor: '#c8f300'
           });
           localStorage.removeItem('adminToken');
           localStorage.removeItem('admin_token');
           window.location.href = '/admin/login';
           return;
         }
-        
+
         const errorData = await response.json().catch(() => ({ message: 'Failed to sync groups' }));
         throw new Error(errorData.message || 'Failed to sync groups');
       }
 
       const result = await response.json();
-      
+
       if (result.success) {
         await Swal.fire({
           title: 'Success!',
           text: result.message || 'Groups synced successfully',
           icon: 'success',
-          confirmButtonColor: '#6242a5',
+          confirmButtonColor: '#c8f300',
           timer: 2000
         });
 
@@ -221,7 +221,7 @@ const TradingGroups = () => {
         title: 'Error!',
         text: error.message || 'Failed to sync groups from API',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
     } finally {
       setSyncing(false);
@@ -232,20 +232,20 @@ const TradingGroups = () => {
   const handleViewDetails = async (id) => {
     try {
       // Try multiple token storage keys for compatibility
-      const token = localStorage.getItem('adminToken') || 
-                   localStorage.getItem('admin_token') || 
-                   null;
-      
+      const token = localStorage.getItem('adminToken') ||
+        localStorage.getItem('admin_token') ||
+        null;
+
       if (!token) {
         Swal.fire({
           title: 'Authentication Required',
           text: 'Please login again',
           icon: 'warning',
-          confirmButtonColor: '#6242a5'
+          confirmButtonColor: '#c8f300'
         });
         return;
       }
-      
+
       const response = await fetch(`/api/admin/trading-groups/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -268,7 +268,7 @@ const TradingGroups = () => {
         title: 'Error!',
         text: 'Failed to fetch group details',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
     }
   };
@@ -290,20 +290,20 @@ const TradingGroups = () => {
 
     try {
       // Try multiple token storage keys for compatibility
-      const token = localStorage.getItem('adminToken') || 
-                   localStorage.getItem('admin_token') || 
-                   null;
-      
+      const token = localStorage.getItem('adminToken') ||
+        localStorage.getItem('admin_token') ||
+        null;
+
       if (!token) {
         Swal.fire({
           title: 'Authentication Required',
           text: 'Please login again',
           icon: 'warning',
-          confirmButtonColor: '#6242a5'
+          confirmButtonColor: '#c8f300'
         });
         return;
       }
-      
+
       const response = await fetch(`/api/admin/trading-groups/${id}`, {
         method: 'DELETE',
         headers: {
@@ -322,7 +322,7 @@ const TradingGroups = () => {
           title: 'Deleted!',
           text: 'Trading group deleted successfully',
           icon: 'success',
-          confirmButtonColor: '#6242a5',
+          confirmButtonColor: '#c8f300',
           timer: 2000
         });
 
@@ -335,7 +335,7 @@ const TradingGroups = () => {
         title: 'Error!',
         text: 'Failed to delete trading group',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
     }
   };
@@ -542,8 +542,8 @@ const TradingGroups = () => {
               <p className="text-sm font-medium text-gray-600">OXO_B GROUPS</p>
               <p className="text-2xl font-bold text-gray-900">{stats.oxo_b_groups}</p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <FiServer className="h-6 w-6 text-purple-600" />
+            <div className="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center">
+              <FiServer className="h-6 w-6 text-brand-600" />
             </div>
           </div>
         </AdminCard>
@@ -571,7 +571,7 @@ const TradingGroups = () => {
               placeholder="Search groups by name, path, ID, or description..."
               value={filters.search}
               onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             />
           </div>
         </div>
@@ -618,7 +618,7 @@ const TradingGroups = () => {
                 <FiX className="h-5 w-5 text-gray-600" />
               </button>
             </div>
-            
+
             <div className="p-6 space-y-6">
               {/* Basic Information */}
               <div>

@@ -7,15 +7,15 @@ import Badge from '../../components/common/Badge.jsx';
 // Custom SVG Icons for Rewards
 const SportsCarIcon = ({ className }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
+    <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" />
   </svg>
 );
 
 const LuxuryWatchIcon = ({ className }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="12" r="9" strokeWidth={2}/>
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6l4 2"/>
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+    <circle cx="12" cy="12" r="9" strokeWidth={2} />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6l4 2" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
   </svg>
 );
 
@@ -24,9 +24,9 @@ const ClaimRewards = () => {
   const [totalVolumeMln, setTotalVolumeMln] = useState(0);
   const [selectedReward, setSelectedReward] = useState(null);
   const [showClaimForm, setShowClaimForm] = useState(false);
-  const [claimForm, setClaimForm] = useState({ 
-    name: '', 
-    phone: '', 
+  const [claimForm, setClaimForm] = useState({
+    name: '',
+    phone: '',
     email: '',
     address: {
       street: '',
@@ -136,7 +136,7 @@ const ClaimRewards = () => {
       const response = await fetch('/api/user/rewards/profile', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      
+
       if (!response.ok) {
         console.warn('[ClaimRewards] Profile endpoint returned error:', response.status);
         // Set empty profile on error so form can still be used
@@ -154,9 +154,9 @@ const ClaimRewards = () => {
         });
         return;
       }
-      
+
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         setUserProfile(data.data);
       } else {
@@ -196,13 +196,13 @@ const ClaimRewards = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token') || localStorage.getItem('userToken');
-      
+
       // Fetch milestones with status
       const response = await fetch('/api/user/rewards/milestones', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
-      
+
       if (response.ok && data.success) {
         const volume = Number(data.data?.totalVolumeMln || 0);
         const milestoneData = data.data?.milestones || [];
@@ -227,7 +227,7 @@ const ClaimRewards = () => {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
-      
+
       if (response.ok && data.success) {
         const claimedIds = data.data?.claims?.map(c => c.rewardId) || [];
         setClaimedRewards(claimedIds);
@@ -266,7 +266,7 @@ const ClaimRewards = () => {
 
     try {
       const token = localStorage.getItem('token') || localStorage.getItem('userToken');
-      
+
       // Submit claim request
       const response = await fetch('/api/user/rewards/claim', {
         method: 'POST',
@@ -290,9 +290,9 @@ const ClaimRewards = () => {
         await fetchClaimedRewards();
         await fetchVolumeAndMilestones();
         setShowClaimForm(false);
-        setClaimForm({ 
-          name: '', 
-          phone: '', 
+        setClaimForm({
+          name: '',
+          phone: '',
           email: '',
           address: {
             street: '',
@@ -317,11 +317,11 @@ const ClaimRewards = () => {
     // Check if claimed from milestones data or claimedRewards array
     const milestone = milestones.find(m => m.id === reward.id);
     const isClaimed = milestone?.claimed || claimedRewards.includes(reward.id);
-    
+
     if (isClaimed) {
       return { status: 'claimed', label: 'Claimed', icon: FiCheckCircle };
     }
-    
+
     // Use milestone status from API if available, otherwise calculate locally
     if (milestone) {
       if (milestone.status === 'unlocked') {
@@ -332,12 +332,12 @@ const ClaimRewards = () => {
         return { status: 'locked', label: 'Locked', remaining, icon: FiLock };
       }
     }
-    
+
     // Fallback: Check if unlocked based on volume
     if (totalVolumeMln >= reward.target) {
       return { status: 'unlocked', label: 'Claim Reward', icon: null };
     }
-    
+
     const remaining = reward.target - totalVolumeMln;
     return { status: 'locked', label: 'Locked', remaining, icon: FiLock };
   };
@@ -360,11 +360,11 @@ const ClaimRewards = () => {
   const tableData = rewards.map(reward => {
     const status = getRewardStatus(reward);
     const IconComponent = reward.icon;
-    
+
     // Calculate progress percentage
     const progress = totalVolumeMln > 0 ? Math.min((totalVolumeMln / reward.target) * 100, 100) : 0;
     const remaining = status.remaining !== undefined ? status.remaining : (reward.target - totalVolumeMln);
-    
+
     // Debug logging for first 3 rewards
     if (reward.id <= 3) {
       console.log(`[ClaimRewards] Reward ${reward.id} (${reward.value} MLN):`, {
@@ -375,10 +375,10 @@ const ClaimRewards = () => {
         progress: progress.toFixed(2) + '%'
       });
     }
-    
+
     return {
       id: reward.id,
-      icon: <IconComponent className="h-6 w-6 text-purple-600" />,
+      icon: <IconComponent className="h-6 w-6 text-brand-700" />,
       value: formatValue(reward.value),
       description: reward.description,
       status: status.status,
@@ -397,7 +397,7 @@ const ClaimRewards = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Claim Rewards</h1>
           <p className="text-gray-600 mt-1">
-            Your total trading volume: <span className="font-semibold text-purple-600">{totalVolumeMln.toFixed(2)} MLN USD</span>
+            Your total trading volume: <span className="font-semibold text-brand-700">{totalVolumeMln.toFixed(2)} MLN USD</span>
           </p>
           <p className="text-sm text-gray-500 mt-1">
             Rewards unlock based on your lifetime trading volume. Keep trading to unlock more rewards!
@@ -409,7 +409,7 @@ const ClaimRewards = () => {
             fetchClaimedRewards();
           }}
           disabled={loading}
-          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-dark-base border border-brand-500 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
           <FiRefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Refresh
@@ -427,7 +427,7 @@ const ClaimRewards = () => {
             sortable: false,
             render: (v) => (
               <div className="flex items-center justify-center">
-                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center">
                   {v}
                 </div>
               </div>
@@ -462,7 +462,7 @@ const ClaimRewards = () => {
                 return (
                   <button
                     onClick={() => handleClaimReward(row.reward)}
-                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
+                    className="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-dark-base border border-brand-500 rounded-lg text-sm font-medium transition-colors"
                   >
                     Claim Reward
                   </button>
@@ -483,8 +483,8 @@ const ClaimRewards = () => {
                     </div>
                     {row.progress !== undefined && row.progress < 100 && (
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-purple-600 h-2 rounded-full transition-all duration-300"
+                        <div
+                          className="bg-brand-500 h-2 rounded-full transition-all duration-300"
                           style={{ width: `${Math.max(0, Math.min(100, row.progress))}%` }}
                         />
                       </div>
@@ -514,9 +514,9 @@ const ClaimRewards = () => {
               <button
                 onClick={() => {
                   setShowClaimForm(false);
-                  setClaimForm({ 
-                    name: '', 
-                    phone: '', 
+                  setClaimForm({
+                    name: '',
+                    phone: '',
                     email: '',
                     address: {
                       street: '',
@@ -535,11 +535,11 @@ const ClaimRewards = () => {
                 </svg>
               </button>
             </div>
-            
-            <div className="mb-4 p-4 bg-purple-50 rounded-lg">
+
+            <div className="mb-4 p-4 bg-brand-50 rounded-lg">
               <p className="text-sm text-gray-600 mb-1">Reward:</p>
               <p className="text-lg font-semibold text-gray-900">{selectedReward.description}</p>
-              <p className="text-sm text-purple-600 mt-1">Value: {formatValue(selectedReward.value)}</p>
+              <p className="text-sm text-brand-700 mt-1">Value: {formatValue(selectedReward.value)}</p>
             </div>
 
             <form onSubmit={handleSubmitClaim} className="space-y-4">
@@ -553,7 +553,7 @@ const ClaimRewards = () => {
                   value={claimForm.name}
                   onChange={(e) => setClaimForm(prev => ({ ...prev, name: e.target.value }))}
                   readOnly={!!userProfile?.name}
-                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${userProfile?.name ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 ${userProfile?.name ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                   placeholder="Enter your full name"
                 />
               </div>
@@ -568,7 +568,7 @@ const ClaimRewards = () => {
                   value={claimForm.phone}
                   onChange={(e) => setClaimForm(prev => ({ ...prev, phone: e.target.value }))}
                   readOnly={!!userProfile?.phone}
-                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${userProfile?.phone ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 ${userProfile?.phone ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                   placeholder="Enter your phone number"
                 />
               </div>
@@ -583,7 +583,7 @@ const ClaimRewards = () => {
                   value={claimForm.email}
                   onChange={(e) => setClaimForm(prev => ({ ...prev, email: e.target.value }))}
                   readOnly={!!userProfile?.email}
-                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${userProfile?.email ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 ${userProfile?.email ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                   placeholder="Enter your email"
                 />
               </div>
@@ -594,12 +594,12 @@ const ClaimRewards = () => {
                 </label>
                 <textarea
                   value={claimForm.address.street}
-                  onChange={(e) => setClaimForm(prev => ({ 
-                    ...prev, 
+                  onChange={(e) => setClaimForm(prev => ({
+                    ...prev,
                     address: { ...prev.address, street: e.target.value }
                   }))}
                   readOnly={!!userProfile?.address?.street}
-                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${userProfile?.address?.street ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 ${userProfile?.address?.street ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                   placeholder="Enter street address"
                   rows="2"
                 />
@@ -613,12 +613,12 @@ const ClaimRewards = () => {
                   <input
                     type="text"
                     value={claimForm.address.city}
-                    onChange={(e) => setClaimForm(prev => ({ 
-                      ...prev, 
+                    onChange={(e) => setClaimForm(prev => ({
+                      ...prev,
                       address: { ...prev.address, city: e.target.value }
                     }))}
                     readOnly={!!userProfile?.address?.city}
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${userProfile?.address?.city ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 ${userProfile?.address?.city ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     placeholder="City"
                   />
                 </div>
@@ -629,12 +629,12 @@ const ClaimRewards = () => {
                   <input
                     type="text"
                     value={claimForm.address.state}
-                    onChange={(e) => setClaimForm(prev => ({ 
-                      ...prev, 
+                    onChange={(e) => setClaimForm(prev => ({
+                      ...prev,
                       address: { ...prev.address, state: e.target.value }
                     }))}
                     readOnly={!!userProfile?.address?.state}
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${userProfile?.address?.state ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 ${userProfile?.address?.state ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     placeholder="State/Province"
                   />
                 </div>
@@ -648,12 +648,12 @@ const ClaimRewards = () => {
                   <input
                     type="text"
                     value={claimForm.address.country}
-                    onChange={(e) => setClaimForm(prev => ({ 
-                      ...prev, 
+                    onChange={(e) => setClaimForm(prev => ({
+                      ...prev,
                       address: { ...prev.address, country: e.target.value }
                     }))}
                     readOnly={!!userProfile?.address?.country}
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${userProfile?.address?.country ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 ${userProfile?.address?.country ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     placeholder="Country"
                   />
                 </div>
@@ -664,12 +664,12 @@ const ClaimRewards = () => {
                   <input
                     type="text"
                     value={claimForm.address.postalCode}
-                    onChange={(e) => setClaimForm(prev => ({ 
-                      ...prev, 
+                    onChange={(e) => setClaimForm(prev => ({
+                      ...prev,
                       address: { ...prev.address, postalCode: e.target.value }
                     }))}
                     readOnly={!!userProfile?.address?.postalCode}
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${userProfile?.address?.postalCode ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 ${userProfile?.address?.postalCode ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     placeholder="Postal Code"
                   />
                 </div>
@@ -680,9 +680,9 @@ const ClaimRewards = () => {
                   type="button"
                   onClick={() => {
                     setShowClaimForm(false);
-                    setClaimForm({ 
-                      name: '', 
-                      phone: '', 
+                    setClaimForm({
+                      name: '',
+                      phone: '',
                       email: '',
                       address: {
                         street: '',
@@ -700,7 +700,7 @@ const ClaimRewards = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors"
+                  className="flex-1 px-4 py-2 bg-brand-500 hover:bg-brand-600 text-dark-base rounded-lg font-medium transition-colors"
                 >
                   Submit Claim
                 </button>
@@ -720,13 +720,12 @@ const ClaimRewards = () => {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="fixed bottom-6 right-6 z-50"
           >
-            <div className={`flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl min-w-[300px] backdrop-blur-sm ${
-              toastState.type === 'success' 
-                ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white' 
-                : toastState.type === 'error' 
-                ? 'bg-gradient-to-r from-red-500 to-red-600 text-white'
-                : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
-            }`}>
+            <div className={`flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl min-w-[300px] backdrop-blur-sm ${toastState.type === 'success'
+                ? 'bg-brand-500 text-dark-base'
+                : toastState.type === 'error'
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white'
+                  : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
+              }`}>
               <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm">
                 {toastState.type === 'success' && <FiCheck className="h-5 w-5" />}
                 {toastState.type === 'error' && <FiAlertCircle className="h-5 w-5" />}
@@ -737,7 +736,7 @@ const ClaimRewards = () => {
               </div>
               <button
                 onClick={() => setToastState(null)}
-                className="flex-shrink-0 text-white/80 hover:text-white transition-colors"
+                className="flex-shrink-0 text-dark-base/80 hover:text-dark-base transition-colors"
               >
                 <FiX className="h-4 w-4" />
               </button>

@@ -28,13 +28,13 @@ const IBTree = () => {
       if (response.ok && data.success) {
         const root = data.data?.root;
         const treeStats = data.data || {};
-        
+
         setStats({
           ownLots: treeStats.ownLots || 0,
           teamLots: treeStats.teamLots || 0,
           totalTrades: treeStats.totalTrades || 0
         });
-        
+
         if (root) {
           setTreeData(root);
           // Flatten tree for table view with all details
@@ -86,9 +86,9 @@ const IBTree = () => {
     if (!dateString) return 'N/A';
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'short', 
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
         day: 'numeric'
       });
     } catch {
@@ -103,16 +103,15 @@ const IBTree = () => {
   const renderTreeNode = (node, level = 0) => {
     const isIB = node.children && node.children.length > 0;
     const isRoot = level === 0;
-    
+
     return (
       <div key={node.id} className={`${level > 0 ? 'ml-8 mt-4' : 'mt-4'}`}>
-        <div className={`flex items-start p-4 rounded-lg border-2 ${
-          isRoot
-            ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white border-purple-500 shadow-lg' 
-            : isIB 
-            ? 'bg-blue-50 border-blue-300' 
-            : 'bg-gray-50 border-gray-200'
-        }`}>
+        <div className={`flex items-start p-4 rounded-lg border-2 ${isRoot
+            ? 'bg-brand-600 text-dark-base border-brand-500 shadow-lg'
+            : isIB
+              ? 'bg-neutral-50 border-neutral-300'
+              : 'bg-white border-neutral-200'
+          }`}>
           <div className="flex-shrink-0 mr-3">
             {isIB ? (
               <FiGitBranch className={`h-6 w-6 ${isRoot ? 'text-white' : 'text-blue-600'}`} />
@@ -132,13 +131,13 @@ const IBTree = () => {
                 <FiClock className={`h-4 w-4 ${isRoot ? 'text-yellow-200' : 'text-yellow-600'}`} />
               )}
             </div>
-            <div className={`text-sm mb-2 ${isRoot ? 'text-purple-100' : 'text-gray-600'}`}>
+            <div className={`text-sm mb-2 ${isRoot ? 'text-dark-base' : 'text-neutral-600'}`}>
               <FiMail className="h-3 w-3 inline mr-1" />
               {node.email}
             </div>
-            
+
             {/* Referral Details */}
-            <div className={`grid grid-cols-2 gap-2 mt-2 text-xs ${isRoot ? 'text-purple-100' : 'text-gray-600'}`}>
+            <div className={`grid grid-cols-2 gap-2 mt-2 text-xs ${isRoot ? 'text-dark-base' : 'text-neutral-600'}`}>
               {node.referralCode && node.referralCode !== 'N/A' && (
                 <div className="flex items-center gap-1">
                   <FiHash className="h-3 w-3" />
@@ -167,9 +166,9 @@ const IBTree = () => {
                 </div>
               )}
             </div>
-            
+
             {/* Stats */}
-            <div className={`flex gap-4 mt-2 text-xs ${isRoot ? 'text-purple-100' : 'text-gray-500'}`}>
+            <div className={`flex gap-4 mt-2 text-xs ${isRoot ? 'text-dark-base' : 'text-neutral-500'}`}>
               <div>
                 <span className="font-medium">Lots: </span>
                 {Number(node.ownLots || 0).toFixed(2)}
@@ -185,7 +184,7 @@ const IBTree = () => {
                 </div>
               )}
             </div>
-            
+
 
           </div>
         </div>
@@ -203,15 +202,15 @@ const IBTree = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <AdminCard className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200">
+        <AdminCard className="bg-brand-50 border border-brand-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-purple-700">Your Lots</p>
-              <p className="text-2xl font-bold text-purple-900 mt-1">
+              <p className="text-sm font-medium text-brand-700">Your Lots</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">
                 {Number(stats.ownLots || 0).toFixed(2)}
               </p>
             </div>
-            <FiUser className="h-8 w-8 text-purple-600" />
+            <FiUser className="h-8 w-8 text-brand-600" />
           </div>
         </AdminCard>
 
@@ -257,7 +256,7 @@ const IBTree = () => {
                 render: (val, row) => (
                   <div className="flex items-center gap-2">
                     {row.hasChildren ? (
-                      <FiGitBranch className="h-4 w-4 text-purple-600" />
+                      <FiGitBranch className="h-4 w-4 text-brand-600" />
                     ) : (
                       <FiUser className="h-4 w-4 text-gray-400" />
                     )}
@@ -265,8 +264,8 @@ const IBTree = () => {
                   </div>
                 )
               },
-              { 
-                key: 'email', 
+              {
+                key: 'email',
                 label: 'Email',
                 render: (val) => (
                   <span className="text-sm text-gray-600">{val}</span>
@@ -276,12 +275,11 @@ const IBTree = () => {
                 key: 'levelName',
                 label: 'Level',
                 render: (val, row) => (
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                    row.level === 0 ? 'bg-purple-100 text-purple-800' :
-                    row.level === 1 ? 'bg-blue-100 text-blue-800' :
-                    row.level === 2 ? 'bg-green-100 text-green-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
+                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${row.level === 0 ? 'bg-brand-100 text-brand-800' :
+                      row.level === 1 ? 'bg-blue-100 text-blue-800' :
+                        row.level === 2 ? 'bg-green-100 text-green-800' :
+                          'bg-gray-100 text-gray-800'
+                    }`}>
                     {val}
                   </span>
                 )
@@ -290,13 +288,12 @@ const IBTree = () => {
                 key: 'status',
                 label: 'Status',
                 render: (val) => (
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                    val === 'approved' ? 'bg-green-100 text-green-800' : 
-                    val === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                    val === 'rejected' ? 'bg-red-100 text-red-800' :
-                    val === 'trader' ? 'bg-blue-100 text-blue-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
+                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${val === 'approved' ? 'bg-green-100 text-green-800' :
+                      val === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                        val === 'rejected' ? 'bg-red-100 text-red-800' :
+                          val === 'trader' ? 'bg-blue-100 text-blue-800' :
+                            'bg-gray-100 text-gray-800'
+                    }`}>
                     {val === 'trader' ? 'TRADER' : (val || 'pending')}
                   </span>
                 )
@@ -307,7 +304,7 @@ const IBTree = () => {
                 render: (val) => (
                   <div className="flex items-center gap-1">
                     <FiHash className="h-3 w-3 text-gray-400" />
-                    <span className="font-mono text-sm font-medium text-purple-600">
+                    <span className="font-mono text-sm font-medium text-brand-600">
                       {val || 'N/A'}
                     </span>
                   </div>

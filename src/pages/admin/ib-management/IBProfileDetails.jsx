@@ -147,7 +147,7 @@ const IBProfileDetails = () => {
               </tbody>
             </table>
             {Array.isArray(node.structures) && node.structures.length > 0 && (
-              <table className="w-full mt-1 text-[10px] border border-purple-200 rounded table-fixed">
+              <table className="w-full mt-1 text-[10px] border border-brand-200 rounded table-fixed">
                 <colgroup>
                   <col style={{ width: '50%' }} />
                   <col style={{ width: '25%' }} />
@@ -162,8 +162,8 @@ const IBProfileDetails = () => {
                 </thead>
                 <tbody>
                   {node.structures.slice(0, 3).map((s, i) => (
-                    <tr key={i} className="odd:bg-purple-50/40">
-                      <td className="py-1 pl-2 align-middle"><span className="inline-flex items-center px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200 leading-tight whitespace-nowrap">{s.structureName || 'Plan'}</span></td>
+                    <tr key={i} className="odd:bg-brand-50/40">
+                      <td className="py-1 pl-2 align-middle"><span className="inline-flex items-center px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 border border-brand-200 leading-tight whitespace-nowrap">{s.structureName || 'Plan'}</span></td>
                       <td className="py-1 text-right align-middle">{Number(s.usdPerLot || 0).toFixed(2)}</td>
                       <td className="py-1 text-right pr-1 align-middle">{Number(s.spreadSharePercentage || 0).toFixed(2)}%</td>
                     </tr>
@@ -1054,7 +1054,7 @@ const IBProfileDetails = () => {
                   <button
                     onClick={handleSyncCommission}
                     disabled={syncingCommission}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-purple-200"
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-brand-600 hover:text-brand-700 hover:bg-brand-50 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-brand-200"
                     title="Sync commission and save to database"
                   >
                     <FiRefreshCw className={`h-3.5 w-3.5 ${syncingCommission ? 'animate-spin' : ''}`} />
@@ -1136,7 +1136,7 @@ const IBProfileDetails = () => {
                   <label className="block text-sm font-medium text-gray-700">Commission Structures</label>
                   <button
                     onClick={() => setShowCommissionModal(true)}
-                    className="text-xs text-purple-600 hover:text-purple-800 font-medium flex items-center gap-1"
+                    className="text-xs text-brand-600 hover:text-brand-800 font-medium flex items-center gap-1"
                   >
                     <FiEdit className="h-3 w-3" />
                     Edit
@@ -1147,7 +1147,7 @@ const IBProfileDetails = () => {
                     {profile.commissionStructures.map((structure, idx) => (
                       <span
                         key={idx}
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
+                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-100 text-brand-800"
                       >
                         {structure}
                       </span>
@@ -1178,7 +1178,7 @@ const IBProfileDetails = () => {
                       <button
                         type="button"
                         onClick={() => setEditingReferralCode(true)}
-                        className="text-xs text-purple-600 hover:text-purple-700 font-medium"
+                        className="text-xs text-brand-600 hover:text-brand-700 font-medium"
                       >
                         Edit
                       </button>
@@ -1198,7 +1198,7 @@ const IBProfileDetails = () => {
                             }
                           }}
                           maxLength={8}
-                          className="flex-1 text-gray-900 font-mono font-semibold text-lg bg-gray-50 px-3 py-1.5 rounded border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          className="flex-1 text-gray-900 font-mono font-semibold text-lg bg-gray-50 px-3 py-1.5 rounded border border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
                           placeholder="Enter referral code (max 8 chars)"
                           disabled={updatingReferralCode}
                         />
@@ -1208,7 +1208,7 @@ const IBProfileDetails = () => {
                           type="button"
                           onClick={handleUpdateReferralCode}
                           disabled={updatingReferralCode}
-                          className="px-3 py-1.5 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-3 py-1.5 text-sm font-medium text-dark-base bg-brand-500 rounded-lg hover:bg-brand-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {updatingReferralCode ? 'Updating...' : 'Save'}
                         </button>
@@ -1241,7 +1241,7 @@ const IBProfileDetails = () => {
                               setTimeout(() => setCopied(false), 2000);
                             });
                           }}
-                          className="px-3 py-1.5 text-sm font-medium text-purple-600 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors flex items-center gap-2"
+                          className="px-3 py-1.5 text-sm font-medium text-brand-600 bg-brand-50 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors flex items-center gap-2"
                         >
                           {copied ? (
                             <>
@@ -1257,7 +1257,7 @@ const IBProfileDetails = () => {
                         </button>
                       </div>
                       <p className="text-xs text-gray-500 mt-2">
-                        Share this link to refer new partners: <span className="font-mono text-purple-600">{getReferralLink()}</span>
+                        Share this link to refer new partners: <span className="font-mono text-brand-600">{getReferralLink()}</span>
                       </p>
                     </>
                   )}
@@ -1279,7 +1279,7 @@ const IBProfileDetails = () => {
         {referredUsersLoading ? (
           <div className="relative">
             <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-full bg-purple-600 rounded-full animate-[progress_1.5s_ease-in-out_infinite]"></div>
+              <div className="h-full bg-brand-600 rounded-full animate-[progress_1.5s_ease-in-out_infinite]"></div>
             </div>
             <p className="text-xs text-gray-500 mt-2 text-center">Loading referred users data...</p>
             <div className="space-y-3 mt-4">
@@ -1385,7 +1385,7 @@ const IBProfileDetails = () => {
         {accountLoading ? (
           <div className="relative">
             <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-full bg-purple-600 rounded-full animate-[progress_1.5s_ease-in-out_infinite]"></div>
+              <div className="h-full bg-brand-600 rounded-full animate-[progress_1.5s_ease-in-out_infinite]"></div>
             </div>
             <p className="text-xs text-gray-500 mt-2 text-center">Loading trading accounts data...</p>
             <div className="space-y-3 mt-4">
@@ -1501,7 +1501,7 @@ const IBProfileDetails = () => {
                 render: (_, row) => (
                   <button
                     onClick={() => handleUserClick(row.userId)}
-                    className="text-xs px-3 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"
+                    className="text-xs px-3 py-1.5 bg-brand-500 text-dark-base rounded hover:bg-brand-600 transition-colors"
                   >
                     View Accounts
                   </button>
@@ -1534,11 +1534,11 @@ const IBProfileDetails = () => {
         {allAccountsLoading ? (
           <div className="space-y-4 py-12">
             <div className="w-full bg-gray-200 rounded-full h-2.5">
-              <div className="bg-purple-600 h-2.5 rounded-full animate-pulse" style={{ width: '60%' }}></div>
+              <div className="bg-brand-600 h-2.5 rounded-full animate-pulse" style={{ width: '60%' }}></div>
             </div>
             <div className="text-center text-sm text-gray-600">Loading MT5 accounts and fetching balance data...</div>
             <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
             </div>
           </div>
         ) : allAccounts.length === 0 ? (
@@ -1649,7 +1649,7 @@ const IBProfileDetails = () => {
               {userAccountsLoading ? (
                 <div className="space-y-4">
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div className="bg-purple-600 h-2.5 rounded-full animate-pulse" style={{ width: '60%' }}></div>
+                    <div className="bg-brand-600 h-2.5 rounded-full animate-pulse" style={{ width: '60%' }}></div>
                   </div>
                   <div className="text-center text-sm text-gray-600">Loading MT5 account data...</div>
                   <div className="space-y-3">
@@ -1725,7 +1725,7 @@ const IBProfileDetails = () => {
                             setSelectedAccountId(row.accountId);
                             setShowUserAccountsModal(false);
                           }}
-                          className="text-xs px-3 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"
+                          className="text-xs px-3 py-1.5 bg-brand-500 text-dark-base rounded hover:bg-brand-600 transition-colors"
                         >
                           View Trades
                         </button>

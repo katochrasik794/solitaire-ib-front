@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  FiLink, 
+import {
+  FiLink,
   FiSearch,
   FiRefreshCw,
   FiDownload,
@@ -131,7 +131,7 @@ const ClientLinking = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
-      
+
       // Find the selected user (userId is UUID string, not integer)
       const selectedUser = users.find(u => u.id === userId);
       if (!selectedUser) {
@@ -281,13 +281,13 @@ const ClientLinking = () => {
   const handleUserChange = (e) => {
     const userId = e.target.value;
     setSelectedUserId(userId);
-    
+
     // Filter available IBs when user is selected
     // Users cannot be assigned to their own IB (same ID cannot be assigned under each other)
     if (allIbs.length > 0) {
       filterAvailableIbs(allIbs, userId);
     }
-    
+
     // Clear selected IB if it becomes invalid
     if (!userId) {
       setSelectedIBId('');
@@ -303,9 +303,9 @@ const ClientLinking = () => {
   // Fetch full profile details for the selected user
   // Note: Users from User table are not IBs, so we don't need to fetch IB profile
   const fetchSelectedProfile = async (id) => {
-    if (!id) { 
-      setSelectedProfile(null); 
-      return; 
+    if (!id) {
+      setSelectedProfile(null);
+      return;
     }
     // Users from User table are regular users, not IBs
     // So we just set the profile to null
@@ -319,7 +319,7 @@ const ClientLinking = () => {
         title: 'Error!',
         text: 'Please select both user and IB',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
       return;
     }
@@ -341,7 +341,7 @@ const ClientLinking = () => {
         title: 'Error!',
         text: 'Invalid user or IB selection',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
       return;
     }
@@ -373,7 +373,7 @@ const ClientLinking = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
-      
+
       const response = await fetch('/api/admin/ib-requests/move-user', {
         method: 'POST',
         headers: {
@@ -401,7 +401,7 @@ const ClientLinking = () => {
         title: 'Success!',
         text: `User moved to ${selectedIB.name} successfully`,
         icon: 'success',
-        confirmButtonColor: '#6242a5',
+        confirmButtonColor: '#c8f300',
         timer: 2000
       }).then(() => {
         // Refresh data
@@ -416,7 +416,7 @@ const ClientLinking = () => {
         title: 'Error!',
         text: 'Failed to move user. Please try again.',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
     } finally {
       setLoading(false);
@@ -473,14 +473,13 @@ const ClientLinking = () => {
           <div className="text-xs text-gray-500">
             {item.to_ib_code && <span>{item.to_ib_code}</span>}
             {item.to_ib_type && (
-              <span className={`ml-2 px-1.5 py-0.5 rounded text-xs font-medium ${
-                item.to_ib_type === 'platinum' ? 'bg-purple-100 text-purple-800' :
-                item.to_ib_type === 'gold' ? 'bg-yellow-100 text-yellow-800' :
-                item.to_ib_type === 'silver' ? 'bg-gray-100 text-gray-800' :
-                item.to_ib_type === 'bronze' ? 'bg-orange-100 text-orange-800' :
-                item.to_ib_type === 'advanced' ? 'bg-blue-100 text-blue-800' :
-                'bg-green-100 text-green-800'
-              }`}>
+              <span className={`ml-2 px-1.5 py-0.5 rounded text-xs font-medium ${item.to_ib_type === 'platinum' ? 'bg-brand-100 text-brand-800' :
+                  item.to_ib_type === 'gold' ? 'bg-yellow-100 text-yellow-800' :
+                    item.to_ib_type === 'silver' ? 'bg-gray-100 text-gray-800' :
+                      item.to_ib_type === 'bronze' ? 'bg-orange-100 text-orange-800' :
+                        item.to_ib_type === 'advanced' ? 'bg-blue-100 text-blue-800' :
+                          'bg-green-100 text-green-800'
+                }`}>
                 {item.to_ib_type.charAt(0).toUpperCase() + item.to_ib_type.slice(1)}
               </span>
             )}
@@ -493,8 +492,8 @@ const ClientLinking = () => {
       label: 'Action',
       sortable: true,
       render: (item) => (
-        <StatusBadge 
-          status={item.action === 'moved' ? 'moved' : item.action} 
+        <StatusBadge
+          status={item.action === 'moved' ? 'moved' : item.action}
         />
       )
     },
@@ -622,7 +621,7 @@ const ClientLinking = () => {
               <select
                 value={selectedUserId}
                 onChange={handleUserChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white appearance-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white appearance-none"
                 style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")", backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', paddingRight: '2.5rem' }}
               >
                 <option value="">Select a user...</option>
@@ -642,7 +641,7 @@ const ClientLinking = () => {
               <select
                 value={selectedIBId}
                 onChange={(e) => setSelectedIBId(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white appearance-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white appearance-none"
                 style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")", backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', paddingRight: '2.5rem' }}
               >
                 <option value="">Select an IB...</option>
@@ -725,7 +724,7 @@ const ClientLinking = () => {
                             <div className="flex flex-wrap gap-2 mt-1">
                               {Array.isArray(selectedProfile.commissionStructures) && selectedProfile.commissionStructures.length > 0 ? (
                                 selectedProfile.commissionStructures.map((s, idx) => (
-                                  <span key={idx} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">{s}</span>
+                                  <span key={idx} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-100 text-brand-800">{s}</span>
                                 ))
                               ) : (
                                 <StatusBadge status={selectedProfile.ibType || 'Common'} />
@@ -756,7 +755,7 @@ const ClientLinking = () => {
                                 </Button>
                               </div>
                               <p className="text-xs text-gray-500 mt-1">
-                                Share this link to refer new partners: <span className="font-mono text-purple-600">{`${window.location.origin}/login?referralCode=${selectedProfile.referralCode}`}</span>
+                                Share this link to refer new partners: <span className="font-mono text-brand-600">{`${window.location.origin}/login?referralCode=${selectedProfile.referralCode}`}</span>
                               </p>
                             </div>
                           )}

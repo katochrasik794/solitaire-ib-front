@@ -59,14 +59,16 @@ const AdminLogin = () => {
           icon: 'error',
           title: 'Account Locked',
           text: 'Account is temporarily locked. Please try again in 15 minutes.',
-          confirmButtonColor: '#8B5CF6'
+          confirmButtonColor: '#C8F300',
+          confirmButtonText: '<span style="color:#081428">OK</span>'
         });
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Login Failed',
           text: message,
-          confirmButtonColor: '#8B5CF6'
+          confirmButtonColor: '#C8F300',
+          confirmButtonText: '<span style="color:#081428">OK</span>'
         });
       }
     } finally {
@@ -75,7 +77,7 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-neutral-50 flex items-center justify-center p-4 font-sans">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -87,8 +89,8 @@ const AdminLogin = () => {
           <div className="flex justify-center mb-4">
             <img src="/favicon.png" alt="Solitaire IB Admin" className="h-16 w-auto" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Portal</h1>
-          <p className="text-gray-600">Sign in to access the admin dashboard</p>
+          <h1 className="text-3xl font-bold text-dark-base mb-2 font-heading">Admin Portal</h1>
+          <p className="text-dark-base/60">Sign in to access the admin dashboard</p>
         </div>
 
         {/* Login Form */}
@@ -96,12 +98,12 @@ const AdminLogin = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white rounded-xl shadow-2xl p-8"
+          className="bg-white rounded-xl shadow-xl border border-neutral-200 p-8"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-dark-base/70 mb-2">
                 Email Address
               </label>
               <div className="relative">
@@ -115,7 +117,7 @@ const AdminLogin = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent transition-colors"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-colors text-sm"
                   placeholder="admin@example.com"
                 />
               </div>
@@ -123,7 +125,7 @@ const AdminLogin = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-dark-base/70 mb-2">
                 Password
               </label>
               <div className="relative">
@@ -137,7 +139,7 @@ const AdminLogin = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent transition-colors"
+                  className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-colors text-sm"
                   placeholder="Enter your password"
                 />
                 <button
@@ -162,11 +164,11 @@ const AdminLogin = () => {
               disabled={loading}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full bg-gradient-to-r from-[#8B5CF6] to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-brand hover:bg-brand-600 text-dark-base border border-brand py-3 px-4 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
               {loading ? (
                 <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-dark-base mr-2"></div>
                   Signing in...
                 </div>
               ) : (

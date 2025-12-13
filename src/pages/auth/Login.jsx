@@ -222,7 +222,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-neutral-900/5 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -238,21 +238,21 @@ const Login = () => {
                 className="h-16 w-auto"
               />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              <span className="text-[#6242a5]">Solitaire</span> Partners
+            <h1 className="text-2xl font-bold font-heading text-dark-base">
+              <span className="text-brand-500">Solitaire</span> Partners
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-dark-base/70 mt-2 font-sans">
               {mode === 'login' ? 'Access your Solitaire partner dashboard' : 'Apply to become a Solitaire partner'}
             </p>
           </div>
 
-          <div className="flex bg-gray-100 rounded-lg p-1 mb-6">
+          <div className="flex bg-neutral-100 rounded-lg p-1 mb-6">
             <button
               type="button"
               onClick={() => toggleMode('login')}
-              className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition ${mode === 'login'
-                ? 'bg-white shadow text-[#6242a5]'
-                : 'text-gray-600 hover:text-gray-800'
+              className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition font-sans ${mode === 'login'
+                ? 'bg-white shadow text-brand-900'
+                : 'text-dark-base/60 hover:text-dark-base'
                 }`}
             >
               Login as Partner
@@ -260,9 +260,9 @@ const Login = () => {
             <button
               type="button"
               onClick={() => toggleMode('apply')}
-              className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition ${mode === 'apply'
-                ? 'bg-white shadow text-[#6242a5]'
-                : 'text-gray-600 hover:text-gray-800'
+              className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition font-sans ${mode === 'apply'
+                ? 'bg-white shadow text-brand-900'
+                : 'text-dark-base/60 hover:text-dark-base'
                 }`}
             >
               Apply as Partner
@@ -281,7 +281,7 @@ const Login = () => {
                   name="email"
                   value={loginForm.email}
                   onChange={handleLoginChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6242a5] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent font-sans"
                   placeholder="Enter your email"
                   required
                   disabled={loading.login}
@@ -298,7 +298,7 @@ const Login = () => {
                   name="password"
                   value={loginForm.password}
                   onChange={handleLoginChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6242a5] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent font-sans"
                   placeholder="Enter your password"
                   required
                   disabled={loading.login}
@@ -316,7 +316,7 @@ const Login = () => {
                 Continue
               </Button>
 
-              <p className="text-xs text-gray-500 text-center">
+              <p className="text-xs text-dark-base/60 text-center font-sans">
                 Only approved IB partners can access the portal.
               </p>
             </form>
@@ -337,8 +337,8 @@ const Login = () => {
                   </p>
                 </div>
               )}
-              <div className="rounded-lg border border-[#6242a5]/30 bg-[#f5f0ff] p-4 text-xs text-[#3f2b80]">
-                <p className="text-sm font-semibold text-[#6242a5]">Use Your Account Credentials</p>
+              <div className="rounded-lg border border-brand-500/30 bg-brand-50/50 p-4 text-xs text-brand-900 font-sans">
+                <p className="text-sm font-semibold text-brand-700">Use Your Account Credentials</p>
                 <p className="mt-1 leading-relaxed">
                   Enter the same email and password you already use for your trading account so we can link
                   your partner application without delays.

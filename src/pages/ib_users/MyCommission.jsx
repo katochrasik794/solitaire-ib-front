@@ -154,7 +154,7 @@ const MyCommission = () => {
           });
         }
         setMt5Accounts(allAccounts);
-        
+
         // Also set availableAccounts for dropdown
         const accountSet = new Set();
         clients.forEach(client => {
@@ -204,22 +204,22 @@ const MyCommission = () => {
     try {
       setTransactionsLoading(true);
       const token = localStorage.getItem('token') || localStorage.getItem('userToken');
-      
+
       // Fetch all trades/transactions
       const response = await fetch('/api/user/trades?pageSize=1000', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
-      
+
       if (response.ok && data.success) {
         const trades = data.data?.trades || [];
-        
+
         // Process transactions (like ClientTransactions)
         const processedTransactions = trades.map(trade => {
           const volumeLots = Number(trade.volume_lots || trade.lots || 0);
           const profit = Number(trade.profit || 0);
           const spread = Number(trade.spread || 0);
-          
+
           return {
             clientAccount: trade.account_id || trade.mt5_account_id || '-',
             date: trade.close_time || trade.synced_at || trade.updated_at || trade.date,
@@ -230,7 +230,7 @@ const MyCommission = () => {
             profit: profit
           };
         });
-        
+
         setTransactions(processedTransactions);
       }
     } catch (error) {
@@ -259,7 +259,7 @@ const MyCommission = () => {
     try {
       setTradesLoading(true);
       setTradeError('');
-      
+
       const MT5_API_BASE = 'https://metaapi.Soliataire Cabinet.com';
       // Use wide date window like admin side
       const fromDate = '2024-01-01';
@@ -295,7 +295,7 @@ const MyCommission = () => {
       let usdPerLot = 0;
       let spreadPct = 0;
       const commissionStructures = [];
-      
+
       try {
         // Try to get commission structure from dashboard endpoint
         const dashboardRes = await fetch('/api/user/dashboard', {
@@ -326,8 +326,8 @@ const MyCommission = () => {
         const match = commissionStructures.find(s => {
           const groupId = String(s.groupId || '').toLowerCase();
           const groupName = String(s.groupName || '').toLowerCase();
-          return groupId === groupLower || groupName === groupLower || 
-                 groupId.includes(groupLower) || groupName.includes(groupLower);
+          return groupId === groupLower || groupName === groupLower ||
+            groupId.includes(groupLower) || groupName.includes(groupLower);
         });
         if (match) {
           return {
@@ -355,24 +355,24 @@ const MyCommission = () => {
           const lots = Number(t?.VolumeLots || 0);
           const profit = Number(t?.Profit || 0);
           const orderId = String(t?.OrderId || t?.DealId || '');
-          
+
           // Try to get group from trade comment or use default
           const tradeGroup = t?.Comment || t?.Group || null;
           const rates = getCommissionForGroup(tradeGroup);
           const tradeUsdPerLot = rates.usdPerLot;
           const tradeSpreadPct = rates.spreadPct;
-          
+
           // Compute fixed IB commission per-lot
           // Fixed commission = lots * USD per lot
           const fixedCommission = lots * tradeUsdPerLot;
           // Spread commission = lots * (spread percentage / 100)
           // Note: spreadPct is already a percentage (e.g., 50 means 50%)
           const spreadCommission = lots * (tradeSpreadPct / 100);
-          
+
           if (lots > 0 && (fixedCommission > 0 || spreadCommission > 0)) {
             console.log(`[fetchTrades] Trade commission: lots=${lots}, group=${tradeGroup}, usdPerLot=${tradeUsdPerLot}, spreadPct=${tradeSpreadPct}, fixed=${fixedCommission.toFixed(2)}, spread=${spreadCommission.toFixed(2)}`);
           }
-          
+
           // Extract close time - API returns ISO format like "2025-11-14T09:28:34.0000000Z"
           let closeTime = null;
           const rawClose = t?.CloseTime;
@@ -415,11 +415,11 @@ const MyCommission = () => {
 
       console.log('[fetchTrades] Setting trades - paged:', paged.length, 'total:', mapped.length);
 
-      setTrades({ 
-        trades: paged, 
-        total: mapped.length, 
-        page, 
-        pageSize 
+      setTrades({
+        trades: paged,
+        total: mapped.length,
+        page,
+        pageSize
       });
 
       // Don't update commission summary from individual account trades
@@ -438,7 +438,7 @@ const MyCommission = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-600"></div>
       </div>
     );
   }
@@ -482,12 +482,12 @@ const MyCommission = () => {
 
         <AdminCard>
           <div className="flex flex-col items-center text-center">
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-2">
-              <FiTrendingUp className="h-6 w-6 text-purple-600" />
+            <div className="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center mb-2">
+              <FiTrendingUp className="h-6 w-6 text-brand-600" />
             </div>
             <div>
               <p className="text-sm font-medium text-gray-600">Spread Share</p>
-              <p className="text-2xl font-bold text-purple-600 mt-1">
+              <p className="text-2xl font-bold text-brand-600 mt-1">
                 ${commission.spreadShare.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             </div>
@@ -526,19 +526,19 @@ const MyCommission = () => {
             accountType: acc.accountType
           }))}
           columns={[
-            { 
-              key: 'clientAccount', 
+            {
+              key: 'clientAccount',
               label: 'Client account',
               sortable: true
             },
-            { 
-              key: 'profit', 
+            {
+              key: 'profit',
               label: 'Profit',
               sortable: true,
               render: (v) => Number(v).toFixed(2)
             },
-            { 
-              key: 'volume', 
+            {
+              key: 'volume',
               label: 'Volume',
               sortable: true,
               headerRender: (sortBy) => (
@@ -550,11 +550,10 @@ const MyCommission = () => {
                         e.stopPropagation();
                         setVolumeUnit('mlnUSD');
                       }}
-                      className={`px-2 py-0.5 rounded text-xs ${
-                        volumeUnit === 'mlnUSD' 
-                          ? 'bg-gray-700 text-white' 
+                      className={`px-2 py-0.5 rounded text-xs ${volumeUnit === 'mlnUSD'
+                          ? 'bg-gray-700 text-white'
                           : 'bg-gray-200 text-gray-600'
-                      }`}
+                        }`}
                     >
                       Mln. USD
                     </button>
@@ -563,11 +562,10 @@ const MyCommission = () => {
                         e.stopPropagation();
                         setVolumeUnit('lots');
                       }}
-                      className={`px-2 py-0.5 rounded text-xs ${
-                        volumeUnit === 'lots' 
-                          ? 'bg-gray-700 text-white' 
+                      className={`px-2 py-0.5 rounded text-xs ${volumeUnit === 'lots'
+                          ? 'bg-gray-700 text-white'
                           : 'bg-gray-200 text-gray-600'
-                      }`}
+                        }`}
                     >
                       Lots
                     </button>
@@ -579,35 +577,35 @@ const MyCommission = () => {
                 volumeUnit === 'mlnUSD' ? Number(row.volumeMlnUSD || 0).toFixed(4) : Number(row.volumeLots || 0).toFixed(4)
               )
             },
-            { 
-              key: 'clientId', 
+            {
+              key: 'clientId',
               label: 'Client ID',
               sortable: true
             },
-            { 
-              key: 'partnerCode', 
+            {
+              key: 'partnerCode',
               label: 'Partner code',
               sortable: true
             },
-            { 
-              key: 'signupDate', 
+            {
+              key: 'signupDate',
               label: 'Sign-up date',
               sortable: true,
               render: (v) => formatDate(v)
             },
-            { 
-              key: 'lastTradingDate', 
+            {
+              key: 'lastTradingDate',
               label: 'Last trading date',
               sortable: true,
               render: (v) => formatDate(v)
             },
-            { 
-              key: 'country', 
+            {
+              key: 'country',
               label: 'Country',
               sortable: true
             },
-            { 
-              key: 'accountType', 
+            {
+              key: 'accountType',
               label: 'Account type',
               sortable: true
             }
@@ -637,29 +635,29 @@ const MyCommission = () => {
             profit: t.profit
           }))}
           columns={[
-            { 
-              key: 'clientAccount', 
+            {
+              key: 'clientAccount',
               label: 'Client account',
               sortable: true
             },
-            { 
-              key: 'date', 
+            {
+              key: 'date',
               label: 'Date',
               sortable: true,
               render: (v) => formatDate(v)
             },
-            { 
-              key: 'instrument', 
+            {
+              key: 'instrument',
               label: 'Instrument',
               sortable: true
             },
-            { 
-              key: 'spread', 
+            {
+              key: 'spread',
               label: 'Spread',
               sortable: true
             },
-            { 
-              key: 'volume', 
+            {
+              key: 'volume',
               label: 'Volume',
               sortable: true,
               headerRender: (sortBy) => (
@@ -671,11 +669,10 @@ const MyCommission = () => {
                         e.stopPropagation();
                         setVolumeUnit('mlnUSD');
                       }}
-                      className={`px-2 py-0.5 rounded text-xs ${
-                        volumeUnit === 'mlnUSD' 
-                          ? 'bg-gray-700 text-white' 
+                      className={`px-2 py-0.5 rounded text-xs ${volumeUnit === 'mlnUSD'
+                          ? 'bg-gray-700 text-white'
                           : 'bg-gray-200 text-gray-600'
-                      }`}
+                        }`}
                     >
                       Mln. USD
                     </button>
@@ -684,11 +681,10 @@ const MyCommission = () => {
                         e.stopPropagation();
                         setVolumeUnit('lots');
                       }}
-                      className={`px-2 py-0.5 rounded text-xs ${
-                        volumeUnit === 'lots' 
-                          ? 'bg-gray-700 text-white' 
+                      className={`px-2 py-0.5 rounded text-xs ${volumeUnit === 'lots'
+                          ? 'bg-gray-700 text-white'
                           : 'bg-gray-200 text-gray-600'
-                      }`}
+                        }`}
                     >
                       Lots
                     </button>
@@ -700,8 +696,8 @@ const MyCommission = () => {
                 volumeUnit === 'mlnUSD' ? Number(row.volumeMlnUSD || 0).toFixed(4) : Number(row.volumeLots || 0).toFixed(4)
               )
             },
-            { 
-              key: 'profit', 
+            {
+              key: 'profit',
               label: 'Profit',
               sortable: true,
               render: (v) => Number(v).toFixed(2)
@@ -731,23 +727,25 @@ const MyCommission = () => {
           { key: 'dealId', label: 'Deal ID' },
           { key: 'mt5Account', label: 'MT5 Account' },
           { key: 'symbol', label: 'Symbol' },
-          { key: 'lots', label: 'Lots', render: (v)=> Number(v).toFixed(2) },
-          { key: 'profit', label: 'Profit', render: (v)=> (
-              <span className={Number(v)>=0? 'text-green-600 font-medium':'text-red-600 font-medium'}>
+          { key: 'lots', label: 'Lots', render: (v) => Number(v).toFixed(2) },
+          {
+            key: 'profit', label: 'Profit', render: (v) => (
+              <span className={Number(v) >= 0 ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
                 ${Number(v).toFixed(2)}
               </span>
             )
           },
-          { key: 'fixedCommission', label: 'Fixed Commission', render: (v)=> `$${Number(v).toFixed(2)}` },
-          { key: 'spreadCommission', label: 'Spread Commission', render: (v)=> `$${Number(v).toFixed(2)}` },
-          { key: 'ibCommission', label: 'IB Commission', render: (v)=> `$${Number(v).toFixed(2)}` },
-          { key: 'closeTime', label: 'Close Time', render: (v)=> {
+          { key: 'fixedCommission', label: 'Fixed Commission', render: (v) => `$${Number(v).toFixed(2)}` },
+          { key: 'spreadCommission', label: 'Spread Commission', render: (v) => `$${Number(v).toFixed(2)}` },
+          { key: 'ibCommission', label: 'IB Commission', render: (v) => `$${Number(v).toFixed(2)}` },
+          {
+            key: 'closeTime', label: 'Close Time', render: (v) => {
               try { return new Date(v).toLocaleString(); } catch { return v || '-'; }
             }
           }
         ]}
         filters={{
-          searchKeys: ['dealId','symbol','mt5Account','group'],
+          searchKeys: ['dealId', 'symbol', 'mt5Account', 'group'],
           selects: [],
           dateKey: 'closeTime'
         }}
@@ -764,13 +762,13 @@ const MyCommission = () => {
             value={pageSize}
             onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); fetchTrades(); }}
           >
-            {[50,100,200].map(s => (<option key={s} value={s}>{s}/page</option>))}
+            {[50, 100, 200].map(s => (<option key={s} value={s}>{s}/page</option>))}
           </select>
-          <button className="px-2 py-1 border rounded text-sm" disabled={page<=1} onClick={()=> setPage(p=> Math.max(1,p-1))}>Prev</button>
+          <button className="px-2 py-1 border rounded text-sm" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Prev</button>
           <span className="text-sm text-gray-600">Page {trades.page}</span>
-          <button className="px-2 py-1 border rounded text-sm" disabled={(trades.page * trades.pageSize) >= trades.total} onClick={()=> setPage(p=> p+1)}>Next</button>
+          <button className="px-2 py-1 border rounded text-sm" disabled={(trades.page * trades.pageSize) >= trades.total} onClick={() => setPage(p => p + 1)}>Next</button>
         </div>
-        <button className="px-3 py-1.5 bg-purple-600 text-white rounded text-sm inline-flex items-center gap-2" onClick={()=> fetchTrades()}>
+        <button className="px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-dark-base rounded text-sm inline-flex items-center gap-2" onClick={() => fetchTrades()}>
           <FiRefreshCw className="h-4 w-4" /> Refresh
         </button>
       </div>

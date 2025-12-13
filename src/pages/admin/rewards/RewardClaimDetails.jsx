@@ -76,7 +76,7 @@ const RewardClaimDetails = ({ claim, onClose, onStatusUpdate }) => {
         {/* Content */}
         <div className="p-6 space-y-6">
           {/* Reward Information */}
-          <div className="bg-purple-50 p-4 rounded-lg">
+          <div className="bg-brand-50 p-4 rounded-lg">
             <h3 className="font-semibold text-gray-900 mb-2">Reward Information</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -196,7 +196,7 @@ const RewardClaimDetails = ({ claim, onClose, onStatusUpdate }) => {
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
                 >
                   <option value="pending">Pending</option>
                   <option value="approved">Approved</option>
@@ -211,7 +211,7 @@ const RewardClaimDetails = ({ claim, onClose, onStatusUpdate }) => {
                 <textarea
                   value={adminNotes}
                   onChange={(e) => setAdminNotes(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
                   rows="4"
                   placeholder="Add notes about this status update..."
                 />
@@ -220,7 +220,7 @@ const RewardClaimDetails = ({ claim, onClose, onStatusUpdate }) => {
                 <button
                   onClick={handleStatusUpdate}
                   disabled={updating}
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-dark-base rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {updating ? 'Updating...' : 'Update Status'}
                 </button>

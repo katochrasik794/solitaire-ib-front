@@ -21,22 +21,22 @@ const RewardHistory = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token') || localStorage.getItem('userToken');
-      
+
       // Fetch claimed rewards from the rewards API
       const claimsResponse = await fetch('/api/user/rewards/claims', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const claimsData = await claimsResponse.json();
-      
+
       if (claimsResponse.ok && claimsData.success) {
         const claims = claimsData.data?.claims || [];
-        
+
         // Process reward claims
         const processedRewards = claims.map((claim) => {
           // Map reward value to display format
           const rewardValue = claim.rewardValue || claim.reward_value || '';
           const rewardDescription = claim.rewardDescription || claim.reward_description || 'Reward';
-          
+
           return {
             id: claim.id,
             claimId: `CLAIM-${claim.id}`,
@@ -61,13 +61,13 @@ const RewardHistory = () => {
             profit: 0
           };
         });
-        
+
         setRewards(processedRewards);
-        
+
         // Calculate stats from claims
         const totalVolumeMlnUSD = processedRewards.reduce((sum, r) => sum + r.volumeMlnUSD, 0);
         const totalVolumeLots = totalVolumeMlnUSD * 10; // Convert MLN to lots (1 MLN = 10 lots)
-        
+
         setStats({
           profitUSD: 0, // Rewards don't have profit
           volumeLots: totalVolumeLots,
@@ -139,31 +139,31 @@ const RewardHistory = () => {
           volumeMlnUSD: r.volumeMlnUSD
         }))}
         columns={[
-          { 
-            key: 'paymentDate', 
+          {
+            key: 'paymentDate',
             label: 'Claimed Date',
             sortable: true,
             render: (v) => formatDate(v)
           },
-          { 
-            key: 'orderInMT', 
+          {
+            key: 'orderInMT',
             label: 'Claim ID',
             sortable: true
           },
-          { 
-            key: 'rewardDescription', 
+          {
+            key: 'rewardDescription',
             label: 'Reward',
             sortable: true,
             render: (v) => <span className="font-medium text-gray-900">{v}</span>
           },
-          { 
-            key: 'rewardValue', 
+          {
+            key: 'rewardValue',
             label: 'Reward Value',
             sortable: true,
-            render: (v) => <span className="text-purple-600 font-semibold">{v} MLN</span>
+            render: (v) => <span className="text-brand-600 font-semibold">{v} MLN</span>
           },
-          { 
-            key: 'status', 
+          {
+            key: 'status',
             label: 'Status',
             sortable: true,
             render: (v) => {
@@ -180,8 +180,8 @@ const RewardHistory = () => {
               );
             }
           },
-          { 
-            key: 'volume', 
+          {
+            key: 'volume',
             label: 'Volume at Claim',
             sortable: true,
             headerRender: (sortBy) => (
@@ -193,11 +193,10 @@ const RewardHistory = () => {
                       e.stopPropagation();
                       setVolumeUnit('mlnUSD');
                     }}
-                    className={`px-2 py-0.5 rounded text-xs ${
-                      volumeUnit === 'mlnUSD' 
-                        ? 'bg-gray-700 text-white' 
+                    className={`px-2 py-0.5 rounded text-xs ${volumeUnit === 'mlnUSD'
+                        ? 'bg-gray-700 text-white'
                         : 'bg-gray-200 text-gray-600'
-                    }`}
+                      }`}
                   >
                     Mln. USD
                   </button>
@@ -206,11 +205,10 @@ const RewardHistory = () => {
                       e.stopPropagation();
                       setVolumeUnit('lots');
                     }}
-                    className={`px-2 py-0.5 rounded text-xs ${
-                      volumeUnit === 'lots' 
-                        ? 'bg-gray-700 text-white' 
+                    className={`px-2 py-0.5 rounded text-xs ${volumeUnit === 'lots'
+                        ? 'bg-gray-700 text-white'
                         : 'bg-gray-200 text-gray-600'
-                    }`}
+                      }`}
                   >
                     Lots
                   </button>

@@ -259,7 +259,7 @@ const GroupManagement = () => {
       label: 'Structures',
       sortable: false,
       render: (group) => (
-        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-brand-100 text-brand-800">
           {group.commissionStructures?.length || 0} structures
         </span>
       )
@@ -273,7 +273,7 @@ const GroupManagement = () => {
           <select
             value={editForm.status}
             onChange={(e) => handleChange('status', e.target.value)}
-            className="px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-brand-500 focus:border-transparent"
           >
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
@@ -420,8 +420,8 @@ const GroupManagement = () => {
               <p className="text-sm font-medium text-gray-600">Total Members</p>
               <p className="text-2xl font-bold text-gray-900">{totalMembers}</p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <FiUsers className="h-6 w-6 text-purple-600" />
+            <div className="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center">
+              <FiUsers className="h-6 w-6 text-brand-600" />
             </div>
           </div>
         </AdminCard>
@@ -480,9 +480,9 @@ const GroupManagement = () => {
               <li>• Advanced reports</li>
             </ul>
           </div>
-          <div className="p-4 bg-purple-50 rounded-lg">
-            <h4 className="font-medium text-purple-900 mb-2">Premium Access</h4>
-            <ul className="text-sm text-purple-700 space-y-1">
+          <div className="p-4 bg-brand-50 rounded-lg">
+            <h4 className="font-medium text-brand-900 mb-2">Premium Access</h4>
+            <ul className="text-sm text-brand-700 space-y-1">
               <li>• All standard permissions</li>
               <li>• Advanced analytics</li>
               <li>• API access</li>
@@ -506,7 +506,7 @@ const GroupManagement = () => {
                 {groups.map(group => (
                   <div key={group.group_id} className="flex-shrink-0 w-80 p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+                      <div className="w-10 h-10 bg-gradient-to-r from-brand-500 to-brand-600 rounded-full flex items-center justify-center">
                         <span className="text-white text-sm font-bold">{group.name.charAt(0)}</span>
                       </div>
                       <div className="flex-1">

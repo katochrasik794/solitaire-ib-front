@@ -58,15 +58,30 @@ export default {
             },
             colors: {
                 brand: {
-                    50: '#C8F300', // Flat scale for now as per guidelines
-                    500: '#C8F300',
-                    900: '#C8F300',
+                    50: '#effe92',
+                    100: '#e5fc66',
+                    200: '#dbfb3d',
+                    300: '#d1f91b',
+                    400: '#c8f300',
+                    500: '#c8f300', // Base
+                    600: '#a3c600',
+                    700: '#7e9a00',
+                    800: '#5b6f00',
+                    900: '#394600',
+                    950: '#151b00',
                     DEFAULT: '#C8F300',
                 },
                 neutral: {
-                    50: '#F1F6EC',
-                    500: '#F1F6EC',
-                    900: '#F1F6EC',
+                    50: '#F1F6EC', // Brand Off-White
+                    100: '#e2e8f0', // Slate-200
+                    200: '#cbd5e1', // Slate-300
+                    300: '#94a3b8', // Slate-400
+                    400: '#64748b', // Slate-500
+                    500: '#F1F6EC', // Keep as base for now to avoid breaking existing custom
+                    600: '#475569', // Slate-600
+                    700: '#334155', // Slate-700
+                    800: '#1e293b', // Slate-800
+                    900: '#0f172a', // Slate-900
                 },
                 dark: {
                     base: '#081428',

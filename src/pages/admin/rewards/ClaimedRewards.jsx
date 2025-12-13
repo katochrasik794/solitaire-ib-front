@@ -43,7 +43,7 @@ const ClaimedRewards = () => {
         page: pagination.page.toString(),
         pageSize: pagination.pageSize.toString()
       });
-      
+
       if (filters.status && filters.status !== 'all') {
         params.append('status', filters.status);
       }
@@ -65,7 +65,7 @@ const ClaimedRewards = () => {
       });
 
       const data = await response.json();
-      
+
       if (response.ok && data.success) {
         setClaims(data.data?.claims || []);
         setPagination(prev => ({
@@ -92,7 +92,7 @@ const ClaimedRewards = () => {
       });
 
       const data = await response.json();
-      
+
       if (response.ok && data.success) {
         setStats({
           total: data.data?.total || 0,
@@ -196,7 +196,7 @@ const ClaimedRewards = () => {
         <div className="flex gap-2">
           <button
             onClick={handleExport}
-            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-dark-base rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
           >
             <FiDownload className="h-4 w-4" />
             Export CSV
@@ -291,7 +291,7 @@ const ClaimedRewards = () => {
             render: (v, row) => (
               <button
                 onClick={() => handleViewDetails(row)}
-                className="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm flex items-center gap-1"
+                className="px-3 py-1 bg-brand-500 hover:bg-brand-600 text-dark-base rounded text-sm flex items-center gap-1"
               >
                 <FiEye className="h-4 w-4" />
                 View

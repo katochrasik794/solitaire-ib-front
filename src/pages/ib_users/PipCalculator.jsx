@@ -33,7 +33,7 @@ const PipCalculator = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token') || localStorage.getItem('userToken');
-      
+
       const response = await fetch('/api/user/symbols', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -57,7 +57,7 @@ const PipCalculator = () => {
   const fetchIBRate = async () => {
     try {
       const token = localStorage.getItem('token') || localStorage.getItem('userToken');
-      
+
       // Try to get IB rate from user profile or IB request
       const response = await fetch('/api/ib-requests/me', {
         headers: {
@@ -134,11 +134,11 @@ const PipCalculator = () => {
 
   const formatTime = (date) => {
     if (!date) return '';
-    return date.toLocaleTimeString('en-US', { 
-      hour: 'numeric', 
-      minute: '2-digit', 
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
       second: '2-digit',
-      hour12: true 
+      hour12: true
     });
   };
 
@@ -154,7 +154,7 @@ const PipCalculator = () => {
         {/* Input Form - Left Panel */}
         <AdminCard>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Input Parameters</h2>
-          
+
           <div className="space-y-4">
             {/* Symbol Dropdown */}
             <div>
@@ -165,7 +165,7 @@ const PipCalculator = () => {
                 name="symbol"
                 value={formData.symbol}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
                 disabled={loading}
               >
                 <option value="">Select Symbol</option>
@@ -186,7 +186,7 @@ const PipCalculator = () => {
                 name="accountCurrency"
                 value={formData.accountCurrency}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
               >
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
@@ -208,7 +208,7 @@ const PipCalculator = () => {
                 min="0"
                 step="0.01"
                 placeholder="Enter pips"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
               />
             </div>
 
@@ -225,7 +225,7 @@ const PipCalculator = () => {
                 min="0"
                 step="0.01"
                 placeholder="Enter lots"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
               />
             </div>
           </div>
@@ -234,7 +234,7 @@ const PipCalculator = () => {
         {/* Calculation Output - Middle Panel */}
         <AdminCard>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Calculation Results</h2>
-          
+
           {calculation ? (
             <div className="space-y-6">
               {/* Estimated Pip Value - Large Display */}
@@ -291,7 +291,7 @@ const PipCalculator = () => {
         {/* Notes/Disclaimers - Right Panel */}
         <AdminCard className="bg-gray-50">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Notes</h2>
-          
+
           <div className="space-y-4">
             <div className="flex items-start gap-3">
               <FiInfo className="h-5 w-5 text-gray-600 flex-shrink-0 mt-0.5" />
@@ -299,14 +299,14 @@ const PipCalculator = () => {
                 Pip USD per lot can vary by symbol and broker settings.
               </p>
             </div>
-            
+
             <div className="flex items-start gap-3">
               <FiInfo className="h-5 w-5 text-gray-600 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-gray-700">
                 The above tool is for estimation only; live trading may differ.
               </p>
             </div>
-            
+
             <div className="flex items-start gap-3">
               <FiInfo className="h-5 w-5 text-gray-600 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-gray-700">

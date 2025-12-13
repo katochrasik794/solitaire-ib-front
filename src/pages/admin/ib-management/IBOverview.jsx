@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  FiPlus, 
-  FiSearch, 
-  FiFilter, 
-  FiEye, 
-  FiUserPlus, 
-  FiUsers, 
-  FiClock, 
-  FiDollarSign, 
-  FiTrendingUp, 
-  FiCheckCircle, 
+import {
+  FiPlus,
+  FiSearch,
+  FiFilter,
+  FiEye,
+  FiUserPlus,
+  FiUsers,
+  FiClock,
+  FiDollarSign,
+  FiTrendingUp,
+  FiCheckCircle,
   FiLayers,
   FiActivity
 } from 'react-icons/fi';
@@ -134,10 +134,10 @@ const IBOverview = () => {
     const totalLots = profiles.reduce((sum, ib) => sum + (Number(ib.totalLotsTraded) || 0), 0);
     const totalTrades = profiles.reduce((sum, ib) => sum + (Number(ib.totalTrades) || 0), 0);
     const totalReferrals = totalClients; // Referrals are typically the clients/referrals
-    
+
     // Calculate volume in lots (approximate: 1 lot = $100,000 for standard lot)
     const totalVolumeLots = totalLots > 0 ? totalLots : Number((totalVolume / 100000).toFixed(1));
-    
+
     // System Summary calculations
     const approvalRate = totalIBs > 0 ? ((approvedIBs / totalIBs) * 100).toFixed(1) : '0.0';
     const avgVolumePerTrade = totalTrades > 0 ? (totalVolumeLots / totalTrades).toFixed(2) : '0.00';
@@ -146,13 +146,13 @@ const IBOverview = () => {
     const volumePerIB = approvedIBs > 0 ? (totalVolumeLots / approvedIBs).toFixed(2) : '0.00';
     const commissionPerIB = approvedIBs > 0 ? (totalCommissions / approvedIBs).toFixed(2) : '0.00';
     const referralsPerIB = approvedIBs > 0 ? (totalReferrals / approvedIBs).toFixed(1) : '0.0';
-    
-    return { 
-      totalIBs, 
-      approvedIBs, 
-      pendingIBs, 
-      totalClients, 
-      totalVolume, 
+
+    return {
+      totalIBs,
+      approvedIBs,
+      pendingIBs,
+      totalClients,
+      totalVolume,
       totalCommissions,
       totalLots,
       totalVolumeLots,
@@ -311,8 +311,8 @@ const IBOverview = () => {
               <p className="text-xl sm:text-2xl font-bold text-gray-900">{loading ? '...' : totals.totalReferrals}</p>
               <p className="text-xs text-gray-500 mt-1">Network growth</p>
             </div>
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 ml-2">
-              <FiTrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0 ml-2">
+              <FiTrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-brand-600" />
             </div>
           </div>
         </AdminCard>
@@ -374,7 +374,7 @@ const IBOverview = () => {
                   placeholder="Search IBs..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -383,7 +383,7 @@ const IBOverview = () => {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full sm:w-auto"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent w-full sm:w-auto"
               >
                 {statusOptions.map(option => (
                   <option key={option.value} value={option.value}>
@@ -421,7 +421,7 @@ const IBOverview = () => {
           <div className="border-b border-gray-200 pb-4">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900">System Summary</h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {/* IB Statistics */}
             <div className="space-y-4">

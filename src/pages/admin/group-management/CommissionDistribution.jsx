@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   FiSearch,
   FiRefreshCw,
   FiUsers,
@@ -41,7 +41,7 @@ const CommissionDistribution = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('adminToken') || localStorage.getItem('admin_token') || null;
-      
+
       if (!token) {
         throw new Error('No authentication token found');
       }
@@ -86,7 +86,7 @@ const CommissionDistribution = () => {
         title: 'Error',
         text: error.message || 'Failed to fetch commission distribution data',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
     } finally {
       setLoading(false);
@@ -97,7 +97,7 @@ const CommissionDistribution = () => {
   const fetchStats = async () => {
     try {
       const token = localStorage.getItem('adminToken') || localStorage.getItem('admin_token') || null;
-      
+
       if (!token) return;
 
       const response = await fetch('/api/admin/commission-distribution/stats', {
@@ -127,7 +127,7 @@ const CommissionDistribution = () => {
   const fetchRates = async () => {
     try {
       const token = localStorage.getItem('adminToken') || localStorage.getItem('admin_token') || null;
-      
+
       if (!token) return;
 
       const response = await fetch('/api/admin/commission-distribution/rates', {
@@ -171,7 +171,7 @@ const CommissionDistribution = () => {
             <p class="text-sm text-gray-600"><strong>Total Referrals:</strong> ${ib.total_referrals}</p>
           </div>
           <div class="pt-2">
-            <p class="text-sm font-semibold text-purple-600"><strong>Total Commission:</strong> $${ib.commission.toFixed(2)}</p>
+            <p className="text-sm font-semibold text-brand-600"><strong>Total Commission:</strong> $${ib.commission.toFixed(2)}</p>
             <p class="text-sm text-gray-700"><strong>Fixed Commission:</strong> $${ib.fixed_commission.toFixed(2)}</p>
             <p class="text-sm text-gray-700"><strong>Spread Share Commission:</strong> $${ib.spread_share_commission.toFixed(2)}</p>
             <p class="text-sm text-gray-600"><strong>Total Balance:</strong> $${ib.total_balance.toFixed(2)}</p>
@@ -179,7 +179,7 @@ const CommissionDistribution = () => {
         </div>
       `,
       icon: 'info',
-      confirmButtonColor: '#6242a5',
+      confirmButtonColor: '#c8f300',
       width: '500px'
     });
   };
@@ -189,7 +189,7 @@ const CommissionDistribution = () => {
       title: 'Edit IB Commission',
       text: 'Edit functionality coming soon',
       icon: 'info',
-      confirmButtonColor: '#6242a5'
+      confirmButtonColor: '#c8f300'
     });
   };
 
@@ -198,7 +198,7 @@ const CommissionDistribution = () => {
       title: 'Send Commission',
       text: 'Send commission functionality coming soon',
       icon: 'info',
-      confirmButtonColor: '#6242a5'
+      confirmButtonColor: '#c8f300'
     });
   };
 
@@ -285,14 +285,14 @@ const CommissionDistribution = () => {
               placeholder="Search by name or email"
               value={filters.search}
               onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             />
           </div>
 
           <select
             value={filters.rate_filter}
             onChange={(e) => setFilters(prev => ({ ...prev, rate_filter: e.target.value }))}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white"
           >
             <option value="all">All Rates</option>
             {rates.map(rate => (
@@ -303,7 +303,7 @@ const CommissionDistribution = () => {
           <select
             value={filters.sort_by}
             onChange={(e) => setFilters(prev => ({ ...prev, sort_by: e.target.value }))}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white"
           >
             <option value="approved_at">Approval Date</option>
             <option value="name">Name</option>
@@ -346,8 +346,8 @@ const CommissionDistribution = () => {
           }))}
           columns={[
             { key: 'srNo', label: 'Sr No.' },
-            { 
-              key: 'name', 
+            {
+              key: 'name',
               label: 'IB Details',
               render: (v, row) => (
                 <div className="text-sm">
@@ -357,8 +357,8 @@ const CommissionDistribution = () => {
                 </div>
               )
             },
-            { 
-              key: 'ibRate', 
+            {
+              key: 'ibRate',
               label: 'IB Rate',
               render: (v) => (
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -366,8 +366,8 @@ const CommissionDistribution = () => {
                 </span>
               )
             },
-            { 
-              key: 'directClients', 
+            {
+              key: 'directClients',
               label: 'Direct Clients',
               render: (v) => (
                 <span className="inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -375,8 +375,8 @@ const CommissionDistribution = () => {
                 </span>
               )
             },
-            { 
-              key: 'subIbs', 
+            {
+              key: 'subIbs',
               label: 'Sub-IBs',
               render: (v) => (
                 <span className="inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -384,8 +384,8 @@ const CommissionDistribution = () => {
                 </span>
               )
             },
-            { 
-              key: 'totalReferrals', 
+            {
+              key: 'totalReferrals',
               label: 'Total Referrals',
               render: (v) => (
                 <span className="inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -393,30 +393,30 @@ const CommissionDistribution = () => {
                 </span>
               )
             },
-            { 
-              key: 'totalBalance', 
+            {
+              key: 'totalBalance',
               label: 'Total Balance',
               render: (v) => `$${Number(v).toFixed(2)}`
             },
-            { 
-              key: 'commission', 
+            {
+              key: 'commission',
               label: 'Total Commission',
               render: (v) => (
-                <span className="font-semibold text-purple-600">${Number(v).toFixed(2)}</span>
+                <span className="font-semibold text-brand-600">${Number(v).toFixed(2)}</span>
               )
             },
-            { 
-              key: 'fixedCommission', 
+            {
+              key: 'fixedCommission',
               label: 'Fixed Commission',
               render: (v) => `$${Number(v).toFixed(2)}`
             },
-            { 
-              key: 'spreadShareCommission', 
+            {
+              key: 'spreadShareCommission',
               label: 'Spread Share Commission',
               render: (v) => `$${Number(v).toFixed(2)}`
             },
-            { 
-              key: 'actions', 
+            {
+              key: 'actions',
               label: 'Actions',
               render: (v, row) => {
                 const ib = ibs.find(i => i.id === row.id);

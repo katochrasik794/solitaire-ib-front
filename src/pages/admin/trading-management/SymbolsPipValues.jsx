@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  FiPlus, 
-  FiEdit, 
-  FiTrash2, 
-  FiTrendingUp, 
-  FiDollarSign, 
-  FiActivity, 
+import {
+  FiPlus,
+  FiEdit,
+  FiTrash2,
+  FiTrendingUp,
+  FiDollarSign,
+  FiActivity,
   FiSettings,
   FiRefreshCw,
   FiInfo,
@@ -225,7 +225,7 @@ const SymbolsPipValues = () => {
           title: 'Success!',
           text: 'Symbol updated successfully',
           icon: 'success',
-          confirmButtonColor: '#6242a5',
+          confirmButtonColor: '#c8f300',
           timer: 2000,
           showConfirmButton: true
         }).then(() => {
@@ -244,7 +244,7 @@ const SymbolsPipValues = () => {
         title: 'Error!',
         text: error.message || 'Failed to update symbol. Please try again.',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
       throw error;
     }
@@ -283,7 +283,7 @@ const SymbolsPipValues = () => {
           title: 'Deleted!',
           text: 'Symbol deleted successfully',
           icon: 'success',
-          confirmButtonColor: '#6242a5',
+          confirmButtonColor: '#c8f300',
           timer: 2000,
           showConfirmButton: true
         }).then(() => {
@@ -300,7 +300,7 @@ const SymbolsPipValues = () => {
         title: 'Error!',
         text: error.message || 'Failed to delete symbol. Please try again.',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
     } finally {
       setDeletingId(null);
@@ -313,7 +313,7 @@ const SymbolsPipValues = () => {
       setTogglingId(id);
       const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
       const token = localStorage.getItem('adminToken');
-      
+
       const response = await fetch(`/api/admin/symbols-with-categories/${id}`, {
         method: 'PUT',
         headers: {
@@ -336,7 +336,7 @@ const SymbolsPipValues = () => {
         title: 'Error!',
         text: error.message || 'Failed to update status. Please try again.',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
     } finally {
       setTogglingId(null);
@@ -450,7 +450,7 @@ const SymbolsPipValues = () => {
       render: (symbol) => {
         const isActive = (symbol.status || 'active') === 'active';
         const isToggling = togglingId === symbol.id;
-        
+
         return (
           <label className="relative inline-flex items-center cursor-pointer">
             <input
@@ -460,7 +460,7 @@ const SymbolsPipValues = () => {
               disabled={isToggling}
               className="sr-only peer"
             />
-            <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500 ${isToggling ? 'opacity-50 cursor-not-allowed' : ''}`}></div>
+            <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500 ${isToggling ? 'opacity-50 cursor-not-allowed' : ''}`}></div>
             <span className={`ml-3 text-sm font-medium ${isActive ? 'text-green-600' : 'text-gray-500'}`}>
               {isToggling ? 'Updating...' : (isActive ? 'Active' : 'Inactive')}
             </span>
@@ -677,7 +677,7 @@ const SymbolsPipValues = () => {
               placeholder="Search symbol..."
               value={filters.search}
               onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             />
           </div>
 
@@ -689,8 +689,8 @@ const SymbolsPipValues = () => {
           >
             + Add Symbol
           </Button>
-          </div>
-        </AdminCard>
+        </div>
+      </AdminCard>
 
       {/* Debug Info Bar */}
       <AdminCard className="bg-blue-50 border-blue-200">

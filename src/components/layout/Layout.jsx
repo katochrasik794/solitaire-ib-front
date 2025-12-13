@@ -18,7 +18,7 @@ const Layout = ({ children }) => {
   const sidebarOffset = vw >= 1024 ? (sidebarOpen ? 280 : 80) : 0; // lg breakpoint
 
   return (
-    <div className="min-h-screen bg-gray-50" style={{ paddingLeft: sidebarOffset }}>
+    <div className="min-h-screen bg-neutral-50 font-sans" style={{ paddingLeft: sidebarOffset }}>
       <Header />
       {/* Fixed sidebar sits outside normal flow; we reserve space via padding-left above */}
       <Sidebar />

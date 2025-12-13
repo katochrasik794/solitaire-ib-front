@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-   FiUsers,
-   FiTrendingUp,
-   FiDollarSign,
-   FiActivity,
-   FiUserCheck,
-   FiClock,
-   FiCheckCircle,
-   FiAlertCircle,
-   FiBarChart,
-   FiPieChart,
-   FiSettings,
-   FiDownload,
-   FiRefreshCw,
-   FiTrendingDown,
-   FiHash,
-   FiCreditCard,
-   FiArrowDown,
-   FiLayers
- } from 'react-icons/fi';
+  FiUsers,
+  FiTrendingUp,
+  FiDollarSign,
+  FiActivity,
+  FiUserCheck,
+  FiClock,
+  FiCheckCircle,
+  FiAlertCircle,
+  FiBarChart,
+  FiPieChart,
+  FiSettings,
+  FiDownload,
+  FiRefreshCw,
+  FiTrendingDown,
+  FiHash,
+  FiCreditCard,
+  FiArrowDown,
+  FiLayers
+} from 'react-icons/fi';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import AdminCard from '../../components/admin/AdminCard';
 import Button from '../../components/common/Button';
@@ -98,8 +98,8 @@ const IBDashboard = () => {
 
           // Use backend summary for key metrics
           let totalIBs = 0, activeIBs = 0, totalVolume = 0, totalRevenue = 0,
-              totalCommissionGenerated = 0, totalCommissionPaid = 0,
-              withdrawalPending = 0, totalWithdrawal = 0, overallLotsTraded = 0;
+            totalCommissionGenerated = 0, totalCommissionPaid = 0,
+            withdrawalPending = 0, totalWithdrawal = 0, overallLotsTraded = 0;
           if (summaryResponse.ok) {
             const summary = await summaryResponse.json();
             const s = summary?.data || {};
@@ -237,8 +237,8 @@ const IBDashboard = () => {
       title: 'Total Volume',
       value: loading ? '...' : `$${(totalVolume / 1000000).toFixed(1)}M`,
       icon: FiTrendingUp,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100',
+      color: 'text-brand-900',
+      bgColor: 'bg-brand-100',
       change: loading ? '...' : `+${Math.floor(Math.random() * 25)}%`,
       changeType: 'increase'
     },
@@ -344,11 +344,10 @@ const IBDashboard = () => {
                 <div className="flex-1 min-w-0">
                   <p className="text-xs lg:text-sm font-medium text-gray-600">{card.title}</p>
                   <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mt-0.5 sm:mt-1">{card.value}</p>
-                  <p className={`text-xs lg:text-sm mt-0.5 sm:mt-1 ${
-                    card.changeType === 'increase' ? 'text-green-600' :
+                  <p className={`text-xs lg:text-sm mt-0.5 sm:mt-1 ${card.changeType === 'increase' ? 'text-green-600' :
                     card.changeType === 'neutral' ? 'text-gray-600' :
-                    'text-red-600'
-                  }`}>
+                      'text-red-600'
+                    }`}>
                     {card.change} from last month
                   </p>
                 </div>
@@ -366,15 +365,15 @@ const IBDashboard = () => {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={performanceData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" tick={{fontSize: 12}} />
-                <YAxis tick={{fontSize: 12}} />
+                <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
                 <Tooltip formatter={(value, name) => [
                   name === 'volume' ? `$${(value / 1000000).toFixed(1)}M` : `$${value.toLocaleString()}`,
                   name === 'ibs' ? 'IBs' : name === 'volume' ? 'Volume' : 'Revenue'
                 ]} />
-                <Line type="monotone" dataKey="ibs" stroke="#8B5CF6" strokeWidth={2} name="IBs" />
-                <Line type="monotone" dataKey="volume" stroke="#16A34A" strokeWidth={2} name="volume" />
-                <Line type="monotone" dataKey="revenue" stroke="#F59E0B" strokeWidth={2} name="revenue" />
+                <Line type="monotone" dataKey="ibs" stroke="#C8F300" strokeWidth={2} name="IBs" />
+                <Line type="monotone" dataKey="volume" stroke="#081428" strokeWidth={2} name="volume" />
+                <Line type="monotone" dataKey="revenue" stroke="#A3C600" strokeWidth={2} name="revenue" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -386,10 +385,10 @@ const IBDashboard = () => {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={statusData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" tick={{fontSize: 12}} />
-                <YAxis tick={{fontSize: 12}} />
+                <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
                 <Tooltip />
-                <Bar dataKey="value" fill="#8B5CF6" />
+                <Bar dataKey="value" fill="#C8F300" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -440,11 +439,10 @@ const IBDashboard = () => {
             ) : recentActivity.length > 0 ? (
               recentActivity.map((activity) => (
                 <div key={activity.id} className="flex items-start gap-2 sm:gap-3">
-                  <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
-                    activity.icon === 'green' ? 'bg-green-400' :
+                  <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${activity.icon === 'green' ? 'bg-green-400' :
                     activity.icon === 'blue' ? 'bg-blue-400' :
-                    activity.icon === 'purple' ? 'bg-purple-400' : 'bg-gray-400'
-                  }`}></div>
+                      activity.icon === 'purple' ? 'bg-brand-400' : 'bg-gray-400'
+                    }`}></div>
                   <div className="min-w-0">
                     <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">{activity.message}</p>
                     <p className="text-xs text-gray-600">

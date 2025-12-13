@@ -36,10 +36,10 @@ const Withdrawal = () => {
         const methods = json.data?.paymentMethods || [];
         setPaymentMethods(methods);
         if (methods.length) {
-          setFormData(prev => ({ 
-            ...prev, 
+          setFormData(prev => ({
+            ...prev,
             paymentMethod: methods[0].id,
-            accountDetails: methods[0].details 
+            accountDetails: methods[0].details
           }));
         }
       }
@@ -68,10 +68,10 @@ const Withdrawal = () => {
       setPending(p);
       // Mark statuses for clarity
       setProcessed([
-        ...a.map(x => ({...x, _status: 'approved'})),
-        ...paid.map(x => ({...x, _status: 'paid'})),
-        ...comp.map(x => ({...x, _status: 'completed'})),
-        ...r.map(x => ({...x, _status: 'rejected'}))
+        ...a.map(x => ({ ...x, _status: 'approved' })),
+        ...paid.map(x => ({ ...x, _status: 'paid' })),
+        ...comp.map(x => ({ ...x, _status: 'completed' })),
+        ...r.map(x => ({ ...x, _status: 'rejected' }))
       ]);
     } catch (e) {
       console.error('Fetch withdrawals error:', e);
@@ -103,7 +103,7 @@ const Withdrawal = () => {
           title: 'Success!',
           text: 'Withdrawal request submitted successfully!',
           icon: 'success',
-          confirmButtonColor: '#6242a5'
+          confirmButtonColor: '#c8f300'
         });
         setFormData({ amount: '', paymentMethod: 'usdt-trc20', accountDetails: '' });
       } else {
@@ -111,7 +111,7 @@ const Withdrawal = () => {
           title: 'Error',
           text: json.message || 'Failed to submit withdrawal request',
           icon: 'error',
-          confirmButtonColor: '#6242a5'
+          confirmButtonColor: '#c8f300'
         });
       }
     } catch (e) {
@@ -120,7 +120,7 @@ const Withdrawal = () => {
         title: 'Error',
         text: 'Failed to submit withdrawal request',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
     } finally {
       setLoading(false);
@@ -153,7 +153,7 @@ const Withdrawal = () => {
                   min="1"
                   step="0.01"
                   placeholder="Enter withdrawal amount"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
                 />
               </div>
 
@@ -173,7 +173,7 @@ const Withdrawal = () => {
                   }}
                   required
                   disabled={paymentMethods.length === 0}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 disabled:bg-gray-100 disabled:text-gray-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:bg-gray-100 disabled:text-gray-500"
                 >
                   {paymentMethods.length === 0 ? (
                     <option value="">No approved payment method found</option>
@@ -203,8 +203,8 @@ const Withdrawal = () => {
 
               <Button
                 type="submit"
-                disabled={loading || !formData.amount || Number(formData.amount)<=0 || paymentMethods.length === 0}
-                className="w-full bg-gradient-to-r from-[#6242a5] to-[#8b6ec8] text-white hover:from-[#533a94] hover:to-[#7a5db7]"
+                disabled={loading || !formData.amount || Number(formData.amount) <= 0 || paymentMethods.length === 0}
+                className="w-full bg-brand-500 text-dark-base hover:bg-brand-600 font-medium transition-colors"
               >
                 {loading ? 'Processing...' : 'Submit Withdrawal Request'}
               </Button>
@@ -238,7 +238,7 @@ const Withdrawal = () => {
             </div>
             {summaryLoading ? (
               <div className="flex items-center gap-2">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-brand-600"></div>
                 <p className="text-sm text-gray-500">Loading...</p>
               </div>
             ) : (
@@ -258,7 +258,7 @@ const Withdrawal = () => {
       <div className="grid grid-cols-1 gap-6">
         <ProTable
           title="Pending Withdrawal Requests"
-          rows={pending.map(r => ({ id: r.id, created_at: r.created_at, amount: Number(r.amount||0), method: r.method, account: r.account_details }))}
+          rows={pending.map(r => ({ id: r.id, created_at: r.created_at, amount: Number(r.amount || 0), method: r.method, account: r.account_details }))}
           columns={[
             { key: 'id', label: 'ID' },
             { key: 'created_at', label: 'Date', render: v => (v ? new Date(v).toLocaleString() : '-') },
@@ -266,19 +266,19 @@ const Withdrawal = () => {
             { key: 'method', label: 'Method' },
             { key: 'account', label: 'Account' }
           ]}
-          filters={{ searchKeys: ['id','method','account'], dateKey: 'created_at', selects: [] }}
+          filters={{ searchKeys: ['id', 'method', 'account'], dateKey: 'created_at', selects: [] }}
           pageSize={10}
           searchPlaceholder="Search pending..."
         />
 
         <ProTable
           title="Withdrawal History"
-          rows={processed.map(r => ({ 
-            id: r.id, 
-            created_at: r.created_at, 
-            amount: Number(r.amount||0), 
-            method: r.method, 
-            account: r.account_details, 
+          rows={processed.map(r => ({
+            id: r.id,
+            created_at: r.created_at,
+            amount: Number(r.amount || 0),
+            method: r.method,
+            account: r.account_details,
             status: (r._status || r.status || '').toString().toUpperCase(),
             transaction_id: r.transaction_id || '-'
           }))}
@@ -288,27 +288,31 @@ const Withdrawal = () => {
             { key: 'amount', label: 'Amount', render: v => `$${Number(v).toFixed(2)}` },
             { key: 'method', label: 'Method' },
             { key: 'account', label: 'Account' },
-            { key: 'status', label: 'Status', render: v => {
-              const statusLower = String(v).toLowerCase();
-              let bgColor = 'bg-gray-100 text-gray-700';
-              if (statusLower === 'approved' || statusLower === 'paid' || statusLower === 'completed') {
-                bgColor = 'bg-green-100 text-green-700';
-              } else if (statusLower === 'rejected') {
-                bgColor = 'bg-red-100 text-red-700';
-              } else if (statusLower === 'pending') {
-                bgColor = 'bg-yellow-100 text-yellow-700';
+            {
+              key: 'status', label: 'Status', render: v => {
+                const statusLower = String(v).toLowerCase();
+                let bgColor = 'bg-gray-100 text-gray-700';
+                if (statusLower === 'approved' || statusLower === 'paid' || statusLower === 'completed') {
+                  bgColor = 'bg-green-100 text-green-700';
+                } else if (statusLower === 'rejected') {
+                  bgColor = 'bg-red-100 text-red-700';
+                } else if (statusLower === 'pending') {
+                  bgColor = 'bg-yellow-100 text-yellow-700';
+                }
+                return <span className={`px-2 py-1 rounded-full text-xs font-semibold ${bgColor}`}>{v}</span>;
               }
-              return <span className={`px-2 py-1 rounded-full text-xs font-semibold ${bgColor}`}>{v}</span>;
-            }},
-            { key: 'transaction_id', label: 'Transaction ID', render: v => (
-              v && v !== '-' ? (
-                <span className="text-xs font-mono text-gray-700">{v}</span>
-              ) : (
-                <span className="text-xs text-gray-400">-</span>
+            },
+            {
+              key: 'transaction_id', label: 'Transaction ID', render: v => (
+                v && v !== '-' ? (
+                  <span className="text-xs font-mono text-gray-700">{v}</span>
+                ) : (
+                  <span className="text-xs text-gray-400">-</span>
+                )
               )
-            )}
+            }
           ]}
-          filters={{ searchKeys: ['id','method','account','status','transaction_id'], dateKey: 'created_at', selects: [] }}
+          filters={{ searchKeys: ['id', 'method', 'account', 'status', 'transaction_id'], dateKey: 'created_at', selects: [] }}
           pageSize={10}
           searchPlaceholder="Search withdrawal history..."
         />

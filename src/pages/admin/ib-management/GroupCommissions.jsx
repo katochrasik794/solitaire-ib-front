@@ -174,7 +174,7 @@ const GroupCommissions = () => {
       label: 'Level',
       sortable: true,
       render: (item) => (
-        <span className="font-medium text-purple-600">Level {item.level_order || 1}</span>
+        <span className="font-medium text-brand-600">Level {item.level_order || 1}</span>
       )
     },
     {
@@ -196,7 +196,7 @@ const GroupCommissions = () => {
             step="0.01"
             value={editForm.usdPerLot}
             onChange={(e) => setEditForm(prev => ({ ...prev, usdPerLot: e.target.value }))}
-            className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-brand-500 focus:border-transparent"
           />
         ) : (
           <span className="font-medium">${item.usd_per_lot}</span>
@@ -215,7 +215,7 @@ const GroupCommissions = () => {
               step="0.01"
               value={editForm.spreadSharePercentage}
               onChange={(e) => setEditForm(prev => ({ ...prev, spreadSharePercentage: e.target.value }))}
-              className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-brand-500 focus:border-transparent"
             />
             <span className="text-sm text-gray-600">%</span>
           </div>
@@ -340,7 +340,7 @@ const GroupCommissions = () => {
               filterable={false}
               emptyMessage="No commission structures defined for this group"
             />
-            
+
             {/* Edit Form Modal */}
             {editingId && (
               <div className="mt-6 border-t pt-6">
@@ -353,7 +353,7 @@ const GroupCommissions = () => {
                         type="text"
                         value={editForm.structureName}
                         onChange={(e) => setEditForm(prev => ({ ...prev, structureName: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -363,7 +363,7 @@ const GroupCommissions = () => {
                         step="0.01"
                         value={editForm.usdPerLot}
                         onChange={(e) => setEditForm(prev => ({ ...prev, usdPerLot: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -373,11 +373,11 @@ const GroupCommissions = () => {
                         step="0.01"
                         value={editForm.spreadSharePercentage}
                         onChange={(e) => setEditForm(prev => ({ ...prev, spreadSharePercentage: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                       />
                     </div>
                   </div>
-                  
+
                   <div className="border-t pt-4">
                     <h5 className="text-sm font-semibold text-gray-900 mb-3">Qualification Criteria</h5>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -388,7 +388,7 @@ const GroupCommissions = () => {
                           min="1"
                           value={editForm.levelOrder}
                           onChange={(e) => setEditForm(prev => ({ ...prev, levelOrder: e.target.value }))}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                         />
                       </div>
                       <div>
@@ -399,7 +399,7 @@ const GroupCommissions = () => {
                           min="0"
                           value={editForm.minTradingVolume}
                           onChange={(e) => setEditForm(prev => ({ ...prev, minTradingVolume: e.target.value }))}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                         />
                       </div>
                       <div>
@@ -411,7 +411,7 @@ const GroupCommissions = () => {
                           value={editForm.maxTradingVolume}
                           onChange={(e) => setEditForm(prev => ({ ...prev, maxTradingVolume: e.target.value }))}
                           placeholder="Leave empty for no limit"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                         />
                       </div>
                       <div>
@@ -421,12 +421,12 @@ const GroupCommissions = () => {
                           min="0"
                           value={editForm.minActiveClients}
                           onChange={(e) => setEditForm(prev => ({ ...prev, minActiveClients: e.target.value }))}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                         />
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex gap-2">
                     <Button
                       variant="success"
@@ -466,7 +466,7 @@ const GroupCommissions = () => {
                   value={newForm.structureName}
                   onChange={(e) => setNewForm(prev => ({ ...prev, structureName: e.target.value }))}
                   placeholder="e.g., Common, Advanced, Bronze"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                 />
               </div>
               <div>
@@ -477,7 +477,7 @@ const GroupCommissions = () => {
                   value={newForm.usdPerLot}
                   onChange={(e) => setNewForm(prev => ({ ...prev, usdPerLot: e.target.value }))}
                   placeholder="0.00"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                 />
               </div>
               <div>
@@ -488,7 +488,7 @@ const GroupCommissions = () => {
                   value={newForm.spreadSharePercentage}
                   onChange={(e) => setNewForm(prev => ({ ...prev, spreadSharePercentage: e.target.value }))}
                   placeholder="0.00"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -507,7 +507,7 @@ const GroupCommissions = () => {
                     value={newForm.levelOrder}
                     onChange={(e) => setNewForm(prev => ({ ...prev, levelOrder: e.target.value }))}
                     placeholder="1, 2, 3..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                   />
                   <p className="text-xs text-gray-500 mt-1">Order of levels (1 = lowest)</p>
                 </div>
@@ -520,7 +520,7 @@ const GroupCommissions = () => {
                     value={newForm.minTradingVolume}
                     onChange={(e) => setNewForm(prev => ({ ...prev, minTradingVolume: e.target.value }))}
                     placeholder="0.00"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                   />
                   <p className="text-xs text-gray-500 mt-1">Minimum in millions USD</p>
                 </div>
@@ -533,7 +533,7 @@ const GroupCommissions = () => {
                     value={newForm.maxTradingVolume}
                     onChange={(e) => setNewForm(prev => ({ ...prev, maxTradingVolume: e.target.value }))}
                     placeholder="Leave empty for no limit"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                   />
                   <p className="text-xs text-gray-500 mt-1">Optional: max for range</p>
                 </div>
@@ -545,7 +545,7 @@ const GroupCommissions = () => {
                     value={newForm.minActiveClients}
                     onChange={(e) => setNewForm(prev => ({ ...prev, minActiveClients: e.target.value }))}
                     placeholder="0"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                   />
                   <p className="text-xs text-gray-500 mt-1">Minimum active clients</p>
                 </div>

@@ -54,9 +54,9 @@ const MyClients = () => {
     if (!dateString) return 'N/A';
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'short', 
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
@@ -90,8 +90,8 @@ const MyClients = () => {
         title="My Clients"
         rows={clients}
         columns={[
-          { 
-            key: 'name', 
+          {
+            key: 'name',
             label: 'Name',
             render: (val, row) => (
               <div className="flex items-center gap-2">
@@ -100,8 +100,8 @@ const MyClients = () => {
               </div>
             )
           },
-          { 
-            key: 'email', 
+          {
+            key: 'email',
             label: 'Email',
             render: (val) => (
               <div className="flex items-center gap-2">
@@ -114,13 +114,12 @@ const MyClients = () => {
             key: 'status',
             label: 'Status',
             render: (val) => (
-              <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                val === 'approved' ? 'bg-green-100 text-green-800' : 
-                val === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                val === 'rejected' ? 'bg-red-100 text-red-800' :
-                val === 'trader' ? 'bg-blue-100 text-blue-800' :
-                'bg-gray-100 text-gray-800'
-              }`}>
+              <span className={`px-2 py-1 text-xs font-medium rounded-full ${val === 'approved' ? 'bg-green-100 text-green-800' :
+                  val === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                    val === 'rejected' ? 'bg-red-100 text-red-800' :
+                      val === 'trader' ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-800'
+                }`}>
                 {val === 'trader' ? 'TRADER' : (val || 'pending')}
               </span>
             )
@@ -131,7 +130,7 @@ const MyClients = () => {
             render: (val) => (
               <div className="flex items-center gap-2">
                 <FiHash className="h-3 w-3 text-gray-400" />
-                <span className="font-mono text-sm font-medium text-purple-600">{val || 'N/A'}</span>
+                <span className="font-mono text-sm font-medium text-brand-600">{val || 'N/A'}</span>
               </div>
             )
           },

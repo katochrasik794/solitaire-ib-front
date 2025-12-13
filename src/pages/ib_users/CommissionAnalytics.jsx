@@ -71,7 +71,7 @@ const CommissionAnalytics = () => {
   const [timeFilter, setTimeFilter] = useState('30');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(20);
-  
+
   // Data state
   const [stats, setStats] = useState({
     totalCommission: 0,
@@ -84,7 +84,7 @@ const CommissionAnalytics = () => {
     totalVolume: 0,
     totalProfit: 0
   });
-  
+
   const [topSymbols, setTopSymbols] = useState([]);
   const [recentLedger, setRecentLedger] = useState([]);
   const [monthlyTrend, setMonthlyTrend] = useState([]);
@@ -179,10 +179,10 @@ const CommissionAnalytics = () => {
       }
 
       const result = await response.json();
-      
+
       if (result.success && result.data) {
         const data = result.data;
-        
+
         // Update state
         setStats(data.stats || {
           totalCommission: 0,
@@ -293,9 +293,9 @@ const CommissionAnalytics = () => {
     if (!dateString) return 'N/A';
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric', 
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
@@ -311,7 +311,7 @@ const CommissionAnalytics = () => {
   };
 
   // Chart colors
-  const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4'];
+  const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#c8f300', '#EC4899', '#06B6D4'];
 
   return (
     <div className="space-y-6">
@@ -324,7 +324,7 @@ const CommissionAnalytics = () => {
         <button
           onClick={handleRefresh}
           disabled={refreshing || loading}
-          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-colors"
+          className="px-4 py-2 bg-brand-500 text-dark-base rounded-lg hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-colors"
         >
           {refreshing || loading ? (
             <>
@@ -373,16 +373,16 @@ const CommissionAnalytics = () => {
           </div>
         </AdminCard>
 
-        <AdminCard className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200">
+        <AdminCard className="bg-gradient-to-br from-brand-50 to-brand-100 border border-brand-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-purple-700">Avg Daily</p>
-              <p className="text-3xl font-bold text-purple-900 mt-2">
+              <p className="text-sm font-medium text-brand-700">Avg Daily</p>
+              <p className="text-3xl font-bold text-brand-900 mt-2">
                 {formatCurrency(stats.avgDaily)}
               </p>
             </div>
-            <div className="w-14 h-14 bg-purple-200 rounded-full flex items-center justify-center">
-              <FiTrendingUp className="h-7 w-7 text-purple-700" />
+            <div className="w-14 h-14 bg-brand-200 rounded-full flex items-center justify-center">
+              <FiTrendingUp className="h-7 w-7 text-brand-700" />
             </div>
           </div>
         </AdminCard>
@@ -409,7 +409,7 @@ const CommissionAnalytics = () => {
           <select
             value={timeFilter}
             onChange={(e) => handleTimeFilterChange(e.target.value)}
-            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
           >
             <option value="7">Last 7 days</option>
             <option value="30">Last 30 days</option>
@@ -417,10 +417,10 @@ const CommissionAnalytics = () => {
             <option value="365">Last year</option>
           </select>
         </div>
-        
+
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
           </div>
         ) : topSymbols.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
@@ -480,7 +480,7 @@ const CommissionAnalytics = () => {
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
           </div>
         ) : recentLedger.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
@@ -516,20 +516,18 @@ const CommissionAnalytics = () => {
                         {item.symbol}
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          item.orderType === 'buy' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
-                        }`}>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.orderType === 'buy'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'
+                          }`}>
                           {item.orderType?.toUpperCase() || 'N/A'}
                         </span>
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         {item.volumeLots.toFixed(2)}
                       </td>
-                      <td className={`px-4 py-4 whitespace-nowrap text-sm font-medium ${
-                        item.profit >= 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
+                      <td className={`px-4 py-4 whitespace-nowrap text-sm font-medium ${item.profit >= 0 ? 'text-green-600' : 'text-red-600'
+                        }`}>
                         {formatCurrency(item.profit)}
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap text-sm font-bold text-green-600">
@@ -546,7 +544,7 @@ const CommissionAnalytics = () => {
                 </tbody>
               </table>
             </div>
-            
+
             {/* Pagination */}
             {pagination.totalPages > 1 && (
               <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
@@ -585,10 +583,10 @@ const CommissionAnalytics = () => {
               Live Data
             </span>
           </div>
-          
+
           {loading ? (
             <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
             </div>
           ) : monthlyTrend.length === 0 ? (
             <div className="flex items-center justify-center h-64 text-gray-500">
@@ -599,12 +597,12 @@ const CommissionAnalytics = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={monthlyTrend}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                  <XAxis 
-                    dataKey="month" 
+                  <XAxis
+                    dataKey="month"
                     stroke="#6B7280"
                     style={{ fontSize: '12px' }}
                   />
-                  <YAxis 
+                  <YAxis
                     stroke="#6B7280"
                     style={{ fontSize: '12px' }}
                     tickFormatter={(value) => `$${value.toFixed(0)}`}
@@ -617,12 +615,12 @@ const CommissionAnalytics = () => {
                     }}
                     formatter={(value) => [formatCurrency(value), 'Commission']}
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="commission" 
-                    stroke="#6242a5" 
+                  <Line
+                    type="monotone"
+                    dataKey="commission"
+                    stroke="#c8f300"
                     strokeWidth={2}
-                    dot={{ fill: '#6242a5', r: 4 }}
+                    dot={{ fill: '#c8f300', r: 4 }}
                     activeDot={{ r: 6 }}
                   />
                 </LineChart>
@@ -634,10 +632,10 @@ const CommissionAnalytics = () => {
         {/* Commission by Category */}
         <AdminCard>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Commission by Category</h2>
-          
+
           {loading ? (
             <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600"></div>
             </div>
           ) : categoryData.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-64 text-gray-500">
@@ -686,7 +684,7 @@ const CommissionAnalytics = () => {
             From Trade History
           </span>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Performance Metrics */}
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
@@ -736,19 +734,19 @@ const CommissionAnalytics = () => {
 
           {/* Most Active Symbol */}
           {reportData.mostActiveSymbol && (
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-lg border border-purple-200">
-              <h3 className="text-lg font-semibold text-purple-900 mb-4">Most Active</h3>
+            <div className="bg-gradient-to-br from-brand-50 to-brand-100 p-6 rounded-lg border border-brand-200">
+              <h3 className="text-lg font-semibold text-brand-900 mb-4">Most Active</h3>
               <div className="space-y-2">
-                <div className="text-2xl font-bold text-purple-900">
+                <div className="text-2xl font-bold text-brand-900">
                   {reportData.mostActiveSymbol.symbol}
                 </div>
-                <div className="text-sm text-purple-700">
+                <div className="text-sm text-brand-700">
                   Total Trades: {reportData.mostActiveSymbol.trades}
                 </div>
-                <div className="text-sm text-purple-700">
+                <div className="text-sm text-brand-700">
                   Category: {reportData.mostActiveSymbol.category || 'N/A'}
                 </div>
-                <div className="text-sm text-purple-700">
+                <div className="text-sm text-brand-700">
                   Commission: {formatCurrency(reportData.mostActiveSymbol.commission || 0)}
                 </div>
               </div>

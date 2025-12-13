@@ -203,9 +203,8 @@ const AllSymbols = () => {
       label: 'Status',
       sortable: true,
       render: (symbol) => (
-        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-          symbol.enable ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-        }`}>
+        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${symbol.enable ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+          }`}>
           {symbol.enable ? 'Active' : 'Inactive'}
         </span>
       )
@@ -262,10 +261,10 @@ const AllSymbols = () => {
           <div className="flex items-center justify-between h-full">
             <div className="flex-1 min-w-0">
               <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Total Groups</p>
-              <p className="text-xl sm:text-2xl font-bold text-purple-600 mt-0.5 sm:mt-1">{stats.total_groups}</p>
+              <p className="text-xl sm:text-2xl font-bold text-brand-600 mt-0.5 sm:mt-1">{stats.total_groups}</p>
             </div>
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 ml-3">
-              <FiDatabase className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0 ml-3">
+              <FiDatabase className="h-5 w-5 sm:h-6 sm:w-6 text-brand-600" />
             </div>
           </div>
         </AdminCard>

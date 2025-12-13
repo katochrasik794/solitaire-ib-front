@@ -16,7 +16,7 @@ const Header = () => {
             {/* Menu button (visible on all screens) */}
             <button
               onClick={toggleSidebar}
-              className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#8B5CF6]"
+              className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none lg:hidden"
               aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
             >
               <FiMenu className="h-6 w-6" />
@@ -26,7 +26,7 @@ const Header = () => {
           {/* Right side - Notifications and User Menu */}
           <div className="flex items-center space-x-4">
             {/* Notifications */}
-            <button className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]">
+            <button className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-brand-500">
               <FiBell className="h-5 w-5" />
             </button>
 
@@ -34,7 +34,7 @@ const Header = () => {
             <div className="relative">
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]"
+                className="flex items-center p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-brand-500"
               >
                 <FiUser className="h-5 w-5" />
               </button>
@@ -46,13 +46,13 @@ const Header = () => {
                     <p className="text-sm font-medium text-gray-900">{user.name}</p>
                     <p className="text-sm text-gray-500">{user.email}</p>
                   </div>
-                  
+
                   <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                     <FiSettings className="mr-3 h-4 w-4" />
                     Account
                   </button>
-                  
-                  <button 
+
+                  <button
                     onClick={async () => {
                       setUserMenuOpen(false);
                       await logout();
@@ -71,8 +71,8 @@ const Header = () => {
 
       {/* Click outside to close user menu */}
       {userMenuOpen && (
-        <div 
-          className="fixed inset-0 z-30" 
+        <div
+          className="fixed inset-0 z-30"
           onClick={() => setUserMenuOpen(false)}
         />
       )}

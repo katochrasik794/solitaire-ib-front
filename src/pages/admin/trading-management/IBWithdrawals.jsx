@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  FiDollarSign, 
+import {
+  FiDollarSign,
   FiSearch,
   FiFilter,
   FiRefreshCw,
@@ -48,7 +48,7 @@ const ApprovalModal = ({ isOpen, onClose, withdrawal, onComplete }) => {
         title: 'Error',
         text: 'Please enter a transaction ID',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
       return;
     }
@@ -101,7 +101,7 @@ const ApprovalModal = ({ isOpen, onClose, withdrawal, onComplete }) => {
                   <span className="text-sm font-medium text-gray-600">Account Details:</span>
                   <button
                     onClick={() => handleCopy(withdrawal.account_details || '')}
-                    className="text-purple-600 hover:text-purple-700 flex items-center gap-1 text-sm"
+                    className="text-brand-600 hover:text-brand-700 flex items-center gap-1 text-sm"
                   >
                     <FiCopy className="h-4 w-4" />
                     Copy
@@ -128,7 +128,7 @@ const ApprovalModal = ({ isOpen, onClose, withdrawal, onComplete }) => {
               value={transactionId}
               onChange={(e) => setTransactionId(e.target.value)}
               placeholder="Enter transaction ID after completing manual payment"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
               disabled={submitting}
             />
             <p className="mt-1 text-xs text-gray-500">
@@ -360,7 +360,7 @@ const IBWithdrawals = () => {
           title: 'Success!',
           text: 'Withdrawal approved and transaction completed successfully',
           icon: 'success',
-          confirmButtonColor: '#6242a5'
+          confirmButtonColor: '#c8f300'
         });
         fetchWithdrawals();
         fetchStats();
@@ -373,7 +373,7 @@ const IBWithdrawals = () => {
         title: 'Error',
         text: error.message || 'Failed to complete transaction',
         icon: 'error',
-        confirmButtonColor: '#6242a5'
+        confirmButtonColor: '#c8f300'
       });
       throw error;
     }
@@ -489,8 +489,8 @@ const IBWithdrawals = () => {
                 ${parseFloat(stats.total_amount || 0).toFixed(2)}
               </p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <FiTrendingDown className="h-6 w-6 text-purple-600" />
+            <div className="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center">
+              <FiTrendingDown className="h-6 w-6 text-brand-600" />
             </div>
           </div>
         </AdminCard>
@@ -502,7 +502,7 @@ const IBWithdrawals = () => {
           <select
             value={filters.status}
             onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white"
           >
             <option value="all">All Status</option>
             <option value="pending">Pending</option>
@@ -517,7 +517,7 @@ const IBWithdrawals = () => {
               placeholder="Search by IB name or ID..."
               value={filters.search}
               onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             />
           </div>
         </div>

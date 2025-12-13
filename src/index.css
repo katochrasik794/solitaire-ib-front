@@ -5,6 +5,39 @@
   --font-avantgarde: 'AvantGarde', system-ui, sans-serif;
 }
 
+@theme {
+  --font-sans: var(--font-satoshi);
+  --font-heading: var(--font-avantgarde);
+  --font-body: var(--font-satoshi);
+
+  --color-brand-50: #effe92;
+  --color-brand-100: #e5fc66;
+  --color-brand-200: #dbfb3d;
+  --color-brand-300: #d1f91b;
+  --color-brand-400: #c8f300;
+  --color-brand-500: #c8f300;
+  --color-brand-600: #a3c600;
+  --color-brand-700: #7e9a00;
+  --color-brand-800: #5b6f00;
+  --color-brand-900: #394600;
+  --color-brand-950: #151b00;
+  --color-brand: #c8f300;
+
+  --color-neutral-50: #F1F6EC;
+  --color-neutral-100: #e2e8f0;
+  --color-neutral-200: #cbd5e1;
+  --color-neutral-300: #94a3b8;
+  --color-neutral-400: #64748b;
+  --color-neutral-500: #F1F6EC;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+
+  --color-dark-base: #081428;
+  --color-dark: #081428;
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
@@ -39,6 +72,7 @@ html {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

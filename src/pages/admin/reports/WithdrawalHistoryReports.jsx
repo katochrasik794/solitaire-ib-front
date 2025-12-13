@@ -43,7 +43,7 @@ const WithdrawalHistoryReports = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
-      
+
       // Build query params
       const params = new URLSearchParams();
       if (dateRange.from) params.append('fromDate', dateRange.from);
@@ -116,7 +116,7 @@ const WithdrawalHistoryReports = () => {
     { name: 'Pending', value: summary.pending, color: '#F59E0B' },
     { name: 'Approved', value: summary.approved, color: '#10B981' },
     { name: 'Paid', value: summary.paid, color: '#3B82F6' },
-    { name: 'Completed', value: summary.completed, color: '#8B5CF6' },
+    { name: 'Completed', value: summary.completed, color: '#c8f300' },
     { name: 'Rejected', value: summary.rejected, color: '#EF4444' }
   ];
 
@@ -174,7 +174,7 @@ const WithdrawalHistoryReports = () => {
               type="date"
               value={dateRange.from}
               onChange={(e) => setDateRange(prev => ({ ...prev, from: e.target.value }))}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -183,7 +183,7 @@ const WithdrawalHistoryReports = () => {
               type="date"
               value={dateRange.to}
               onChange={(e) => setDateRange(prev => ({ ...prev, to: e.target.value }))}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -192,7 +192,7 @@ const WithdrawalHistoryReports = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             >
               <option value="all">All Status</option>
               <option value="pending">Pending</option>
@@ -249,10 +249,10 @@ const WithdrawalHistoryReports = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Completed</p>
-              <p className="text-2xl font-bold text-purple-600">{summary.completed + summary.paid}</p>
+              <p className="text-2xl font-bold text-brand-600">{summary.completed + summary.paid}</p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <FiCheckCircle className="h-6 w-6 text-purple-600" />
+            <div className="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center">
+              <FiCheckCircle className="h-6 w-6 text-brand-600" />
             </div>
           </div>
         </AdminCard>
@@ -292,7 +292,7 @@ const WithdrawalHistoryReports = () => {
               <YAxis />
               <Tooltip formatter={(value) => `$${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} />
               <Legend />
-              <Bar dataKey="amount" fill="#8B5CF6" name="Amount ($)" />
+              <Bar dataKey="amount" fill="#c8f300" name="Amount ($)" />
             </RechartsBarChart>
           </ResponsiveContainer>
         </AdminCard>
@@ -356,25 +356,29 @@ const WithdrawalHistoryReports = () => {
             { key: 'ibName', label: 'IB Name', sortable: true },
             { key: 'amount', label: 'Amount', sortable: true, render: v => `$${Number(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` },
             { key: 'method', label: 'Payment Method', sortable: true },
-            { key: 'status', label: 'Status', sortable: true, render: v => {
-              const statusLower = String(v).toLowerCase();
-              let bgColor = 'bg-gray-100 text-gray-700';
-              if (statusLower === 'approved' || statusLower === 'paid' || statusLower === 'completed') {
-                bgColor = 'bg-green-100 text-green-700';
-              } else if (statusLower === 'rejected') {
-                bgColor = 'bg-red-100 text-red-700';
-              } else if (statusLower === 'pending') {
-                bgColor = 'bg-yellow-100 text-yellow-700';
+            {
+              key: 'status', label: 'Status', sortable: true, render: v => {
+                const statusLower = String(v).toLowerCase();
+                let bgColor = 'bg-gray-100 text-gray-700';
+                if (statusLower === 'approved' || statusLower === 'paid' || statusLower === 'completed') {
+                  bgColor = 'bg-green-100 text-green-700';
+                } else if (statusLower === 'rejected') {
+                  bgColor = 'bg-red-100 text-red-700';
+                } else if (statusLower === 'pending') {
+                  bgColor = 'bg-yellow-100 text-yellow-700';
+                }
+                return <span className={`px-2 py-1 rounded-full text-xs font-semibold ${bgColor}`}>{String(v).toUpperCase()}</span>;
               }
-              return <span className={`px-2 py-1 rounded-full text-xs font-semibold ${bgColor}`}>{String(v).toUpperCase()}</span>;
-            }},
-            { key: 'transactionId', label: 'Transaction ID', sortable: false, render: v => (
-              v && v !== '-' ? (
-                <span className="text-xs font-mono text-gray-700">{v}</span>
-              ) : (
-                <span className="text-xs text-gray-400">-</span>
+            },
+            {
+              key: 'transactionId', label: 'Transaction ID', sortable: false, render: v => (
+                v && v !== '-' ? (
+                  <span className="text-xs font-mono text-gray-700">{v}</span>
+                ) : (
+                  <span className="text-xs text-gray-400">-</span>
+                )
               )
-            )},
+            },
             { key: 'createdAt', label: 'Request Date', sortable: true, render: v => v ? new Date(v).toLocaleString() : '-' },
             { key: 'updatedAt', label: 'Last Updated', sortable: true, render: v => v ? new Date(v).toLocaleString() : '-' }
           ]}

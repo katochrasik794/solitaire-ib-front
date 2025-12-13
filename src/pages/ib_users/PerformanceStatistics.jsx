@@ -37,31 +37,31 @@ const PerformanceStatistics = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token') || localStorage.getItem('userToken');
-      
+
       // Fetch referrals/registrations
       const clientsResponse = await fetch('/api/user/clients', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const clientsData = await clientsResponse.json();
-      
+
       // Fetch trades
       const tradesResponse = await fetch('/api/user/trades?pageSize=10000', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const tradesData = await tradesResponse.json();
-      
+
       if (clientsResponse.ok && tradesResponse.ok) {
         const clients = clientsData.success ? (clientsData.data?.clients || []) : [];
         const trades = tradesData.success ? (tradesData.data?.trades || []) : [];
-        
+
         if (newReport) {
           // New report view - detailed
           const dayMap = new Map();
-          
+
           clients.forEach(client => {
             const date = new Date(client.joinDate || client.createdAt || client.submitted_at);
             const dayKey = date.toISOString().split('T')[0];
-            
+
             if (!dayMap.has(dayKey)) {
               dayMap.set(dayKey, {
                 day: dayKey,
@@ -73,18 +73,18 @@ const PerformanceStatistics = () => {
                 profit: 0
               });
             }
-            
+
             const dayData = dayMap.get(dayKey);
             dayData.registrations += 1;
             if (client.lastTrade) {
               dayData.startTrading += 1;
             }
           });
-          
+
           trades.forEach(trade => {
             const date = new Date(trade.close_time || trade.synced_at || trade.updated_at);
             const dayKey = date.toISOString().split('T')[0];
-            
+
             if (!dayMap.has(dayKey)) {
               dayMap.set(dayKey, {
                 day: dayKey,
@@ -96,21 +96,21 @@ const PerformanceStatistics = () => {
                 profit: 0
               });
             }
-            
+
             const dayData = dayMap.get(dayKey);
             const volumeLots = Number(trade.volume_lots || trade.lots || 0);
             dayData.volumeLots += volumeLots;
             dayData.volumeMlnUSD += volumeLots * 100000 / 1000000;
             dayData.profit += Number(trade.profit || 0);
           });
-          
+
           const processedData = Array.from(dayMap.values()).map(d => ({
             ...d,
             conversion: d.registrations > 0 ? (d.startTrading / d.registrations * 100) : 0
           }));
-          
+
           setData(processedData);
-          
+
           // Calculate totals
           const totals = processedData.reduce((acc, d) => ({
             clicks: acc.clicks + d.clicks,
@@ -120,7 +120,7 @@ const PerformanceStatistics = () => {
             volumeMlnUSD: acc.volumeMlnUSD + d.volumeMlnUSD,
             profit: acc.profit + d.profit
           }), { clicks: 0, registrations: 0, startTrading: 0, volumeLots: 0, volumeMlnUSD: 0, profit: 0 });
-          
+
           setStats({
             clicks: totals.clicks,
             registrations: totals.registrations,
@@ -133,11 +133,11 @@ const PerformanceStatistics = () => {
         } else {
           // Simple report view
           const dateMap = new Map();
-          
+
           clients.forEach(client => {
             const date = new Date(client.joinDate || client.createdAt || client.submitted_at);
             const dateKey = date.toISOString().split('T')[0];
-            
+
             if (!dateMap.has(dateKey)) {
               dateMap.set(dateKey, {
                 date: dateKey,
@@ -145,7 +145,7 @@ const PerformanceStatistics = () => {
                 firstTimeDeposits: 0
               });
             }
-            
+
             const dateData = dateMap.get(dateKey);
             dateData.registrations += 1;
             // First-time deposit is when client has made their first trade/deposit
@@ -153,15 +153,15 @@ const PerformanceStatistics = () => {
               dateData.firstTimeDeposits += 1;
             }
           });
-          
+
           const processedSimpleData = Array.from(dateMap.values());
           setSimpleData(processedSimpleData);
-          
+
           const totals = processedSimpleData.reduce((acc, d) => ({
             registrations: acc.registrations + d.registrations,
             firstTimeDeposits: acc.firstTimeDeposits + d.firstTimeDeposits
           }), { registrations: 0, firstTimeDeposits: 0 });
-          
+
           setSimpleStats(totals);
         }
       }
@@ -181,7 +181,7 @@ const PerformanceStatistics = () => {
   };
 
   const handleAddGroupBy = () => {
-    const available = newReport 
+    const available = newReport
       ? groupByOptions.filter(opt => !groupBy.includes(opt))
       : simpleGroupByOptions.filter(opt => !groupBy.includes(opt));
     if (available.length > 0) {
@@ -265,14 +265,12 @@ const PerformanceStatistics = () => {
           <span className="text-sm text-gray-600">Switch to new performance report</span>
           <button
             onClick={() => setNewReport(!newReport)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              newReport ? 'bg-purple-600' : 'bg-gray-300'
-            }`}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${newReport ? 'bg-brand-500' : 'bg-gray-300'
+              }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                newReport ? 'translate-x-6' : 'translate-x-1'
-              }`}
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${newReport ? 'translate-x-6' : 'translate-x-1'
+                }`}
             />
           </button>
         </div>
@@ -288,7 +286,7 @@ const PerformanceStatistics = () => {
               <button
                 key={option}
                 onClick={() => handleRemoveGroupBy(option)}
-                className="flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded-full text-sm hover:bg-purple-700 transition-colors"
+                className="flex items-center gap-1 px-3 py-1 bg-brand-500 text-dark-base rounded-full text-sm hover:bg-brand-600 transition-colors"
               >
                 <span>{option}</span>
                 <FiX className="h-3 w-3" />
@@ -323,7 +321,7 @@ const PerformanceStatistics = () => {
                   className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
                 />
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <label className="text-sm text-gray-600">Country:</label>
                 <select
@@ -337,7 +335,7 @@ const PerformanceStatistics = () => {
                   <option value="CA">CA</option>
                 </select>
               </div>
-              
+
               <button
                 onClick={handleClearFilters}
                 className="flex items-center gap-1 px-3 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition-colors"
@@ -345,19 +343,19 @@ const PerformanceStatistics = () => {
                 <FiX className="h-4 w-4" />
                 <span>Clear filters</span>
               </button>
-              
+
               <button
                 onClick={handleApply}
                 className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg text-sm font-medium transition-colors"
               >
                 Apply
               </button>
-              
+
               <button className="p-2 text-gray-600 hover:text-gray-900 transition-colors">
                 <FiSettings className="h-5 w-5" />
               </button>
             </div>
-            
+
             <div className="flex items-center gap-2 text-sm text-blue-600">
               <FiInfo className="h-4 w-4" />
               <span>The report is updated once in 2 hours.</span>
@@ -378,47 +376,47 @@ const PerformanceStatistics = () => {
               profitUSD: d.profit
             }))}
             columns={[
-              { 
-                key: 'day', 
+              {
+                key: 'day',
                 label: 'Day',
                 sortable: true,
                 render: (v) => formatDate(v)
               },
-              { 
-                key: 'clicks', 
+              {
+                key: 'clicks',
                 label: 'Clicks',
                 sortable: true
               },
-              { 
-                key: 'registrations', 
+              {
+                key: 'registrations',
                 label: 'Registrations',
                 sortable: true
               },
-              { 
-                key: 'conversion', 
+              {
+                key: 'conversion',
                 label: 'Conversion',
                 sortable: true,
                 render: (v) => `${Number(v).toFixed(2)} %`
               },
-              { 
-                key: 'startTrading', 
+              {
+                key: 'startTrading',
                 label: 'Start Trading',
                 sortable: true
               },
-              { 
-                key: 'volumeMlnUSD', 
+              {
+                key: 'volumeMlnUSD',
                 label: 'Volume (Mln. USD)',
                 sortable: true,
                 render: (v) => Number(v).toFixed(4)
               },
-              { 
-                key: 'volumeLots', 
+              {
+                key: 'volumeLots',
                 label: 'Volume (lots)',
                 sortable: true,
                 render: (v) => Number(v).toFixed(4)
               },
-              { 
-                key: 'profitUSD', 
+              {
+                key: 'profitUSD',
                 label: 'Profit (USD)',
                 sortable: true,
                 render: (v) => Number(v).toFixed(2)
@@ -444,7 +442,7 @@ const PerformanceStatistics = () => {
               <button
                 key={option}
                 onClick={() => handleRemoveGroupBy(option)}
-                className="flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded-full text-sm hover:bg-purple-700 transition-colors"
+                className="flex items-center gap-1 px-3 py-1 bg-brand-500 text-dark-base rounded-full text-sm hover:bg-brand-600 transition-colors"
               >
                 <span>{option}</span>
                 <FiX className="h-3 w-3" />
@@ -471,7 +469,7 @@ const PerformanceStatistics = () => {
                 </span>
               )}
             </button>
-            
+
             <button className="p-2 text-gray-600 hover:text-gray-900 transition-colors">
               <FiSettings className="h-5 w-5" />
             </button>
@@ -510,12 +508,12 @@ const PerformanceStatistics = () => {
                     <td className="px-6 py-4 text-center border-r border-gray-200">{simpleStats.registrations}</td>
                     <td className="px-6 py-4 text-center">{simpleStats.firstTimeDeposits}</td>
                   </tr>
-                  
+
                   {loading ? (
                     <tr>
                       <td colSpan={3} className="px-6 py-12 text-center bg-gray-50">
                         <div className="flex items-center justify-center gap-3">
-                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-500"></div>
                           <span className="text-gray-600 font-medium">Loading...</span>
                         </div>
                       </td>

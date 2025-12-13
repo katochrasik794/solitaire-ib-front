@@ -58,15 +58,17 @@ const TradersProfile = () => {
     { key: 'traderName', label: 'Trader Name' },
     { key: 'traderEmail', label: 'Trader Email' },
     { key: 'traderPhone', label: 'Contact' },
-    { key: 'referredByName', label: 'Referred By', render: (val, row) => (
-      <div className="flex flex-col">
-        <span className="font-medium">{val || 'N/A'}</span>
-        <span className="text-xs text-gray-600">{row.referredByEmail || ''}</span>
-        <span className="text-xs text-gray-600">{row.referredByPhone || ''}</span>
-        {row.referredByCode && (<span className="text-xs text-gray-500 font-mono">Code: {row.referredByCode}</span>)}
-      </div>
-    ) },
-    { key: 'referralCode', label: 'Referral Code', render: (v) => <span className="font-mono text-purple-600">{v}</span> },
+    {
+      key: 'referredByName', label: 'Referred By', render: (val, row) => (
+        <div className="flex flex-col">
+          <span className="font-medium">{val || 'N/A'}</span>
+          <span className="text-xs text-gray-600">{row.referredByEmail || ''}</span>
+          <span className="text-xs text-gray-600">{row.referredByPhone || ''}</span>
+          {row.referredByCode && (<span className="text-xs text-gray-500 font-mono">Code: {row.referredByCode}</span>)}
+        </div>
+      )
+    },
+    { key: 'referralCode', label: 'Referral Code', render: (v) => <span className="font-mono text-brand-600">{v}</span> },
     { key: 'source', label: 'Source' },
     { key: 'createdAt', label: 'Created At', render: (v) => new Date(v).toLocaleString() }
   ]), []);

@@ -188,7 +188,7 @@ const CommissionModal = ({ isOpen, onClose, request, onApprove }) => {
 
         // Get structure name - check both structure_name and structureName fields
         const structureName = structure?.structure_name || structure?.structureName || null;
-        
+
         console.log('[APPROVE] Group data:', {
           groupId: group.groupId,
           structureId: group.structureId,
@@ -275,16 +275,16 @@ const CommissionModal = ({ isOpen, onClose, request, onApprove }) => {
                     <label className="block text-sm font-medium text-gray-700">
                       MT5 Groups & Commission Structure
                     </label>
-            <div className="relative" ref={groupMenuRef}>
-              <button
-                type="button"
-                onClick={() => setIsGroupMenuOpen((prev) => !prev)}
-                className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors"
-                disabled={loadingOptions || availableGroups.length === 0}
-              >
-                Add Group
-                <FiChevronDown className="ml-1 h-3 w-3" />
-              </button>
+                    <div className="relative" ref={groupMenuRef}>
+                      <button
+                        type="button"
+                        onClick={() => setIsGroupMenuOpen((prev) => !prev)}
+                        className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-dark-base bg-brand-500 rounded-md hover:bg-brand-600 transition-colors"
+                        disabled={loadingOptions || availableGroups.length === 0}
+                      >
+                        Add Group
+                        <FiChevronDown className="ml-1 h-3 w-3" />
+                      </button>
                       <AnimatePresence>
                         {isGroupMenuOpen && (
                           <motion.div
@@ -303,7 +303,7 @@ const CommissionModal = ({ isOpen, onClose, request, onApprove }) => {
                                     key={group.group_id}
                                     type="button"
                                     onClick={() => handleGroupSelection(group.group_id)}
-                                    className="flex w-full flex-col gap-1 border-b border-gray-100 px-3 py-3 text-left hover:bg-blue-50 last:border-b-0"
+                                    className="flex w-full flex-col gap-1 border-b border-gray-100 px-3 py-3 text-left hover:bg-brand-50 last:border-b-0"
                                   >
                                     <div className="flex items-center justify-between">
                                       <div className="font-medium text-gray-900">{group.name}</div>
@@ -349,7 +349,7 @@ const CommissionModal = ({ isOpen, onClose, request, onApprove }) => {
                                 Active
                               </span>
                               {selectedStructure && (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-brand-100 text-brand-900">
                                   {selectedStructure.structure_name}
                                 </span>
                               )}
@@ -364,69 +364,69 @@ const CommissionModal = ({ isOpen, onClose, request, onApprove }) => {
                             </button>
                           </div>
 
-                        {/* Commission Structure Selector */}
-                        {structures.length > 0 && (
-                          <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Commission Structure
-                            </label>
-                            <select
-                              value={selectedGroup.structureId || ''}
-                              onChange={(e) => handleStructureChange(selectedGroup.groupId, Number(e.target.value))}
-                              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-                            >
-                              {structures.map(structure => (
-                                <option key={structure.id} value={structure.id}>
-                                  {structure.structure_name} — ${structure.usd_per_lot}/lot — {structure.spread_share_percentage}% spread
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        )}
-
-                        {/* Commission Configuration for this group */}
-                        <div className="grid gap-4 md:grid-cols-2">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              USD per Lot
-                            </label>
-                            <div className="relative">
-                              <input
-                                type="number"
-                                step="0.01"
-                                min="0"
-                                value={selectedGroup.usdPerLot}
-                                onChange={(e) => handleCommissionChange(selectedGroup.groupId, 'usdPerLot', e.target.value)}
-                                className="w-full rounded-lg border border-gray-300 px-3 py-2 pr-12 text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-                                placeholder="15.00"
-                              />
-                              <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-gray-500">
-                                USD
-                              </span>
+                          {/* Commission Structure Selector */}
+                          {structures.length > 0 && (
+                            <div className="mb-4">
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Commission Structure
+                              </label>
+                              <select
+                                value={selectedGroup.structureId || ''}
+                                onChange={(e) => handleStructureChange(selectedGroup.groupId, Number(e.target.value))}
+                                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500"
+                              >
+                                {structures.map(structure => (
+                                  <option key={structure.id} value={structure.id}>
+                                    {structure.structure_name} — ${structure.usd_per_lot}/lot — {structure.spread_share_percentage}% spread
+                                  </option>
+                                ))}
+                              </select>
                             </div>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Spread Share Percentage
-                            </label>
-                            <div className="relative">
-                              <input
-                                type="number"
-                                step="0.01"
-                                min="0"
-                                max="100"
-                                value={selectedGroup.spreadSharePercentage}
-                                onChange={(e) => handleCommissionChange(selectedGroup.groupId, 'spreadSharePercentage', e.target.value)}
-                                className="w-full rounded-lg border border-gray-300 px-3 py-2 pr-12 text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-                                placeholder="50.00"
-                              />
-                              <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-gray-500">
-                                %
-                              </span>
+                          )}
+
+                          {/* Commission Configuration for this group */}
+                          <div className="grid gap-4 md:grid-cols-2">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                USD per Lot
+                              </label>
+                              <div className="relative">
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  value={selectedGroup.usdPerLot}
+                                  onChange={(e) => handleCommissionChange(selectedGroup.groupId, 'usdPerLot', e.target.value)}
+                                  className="w-full rounded-lg border border-gray-300 px-3 py-2 pr-12 text-gray-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/40"
+                                  placeholder="15.00"
+                                />
+                                <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-gray-500">
+                                  USD
+                                </span>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Spread Share Percentage
+                              </label>
+                              <div className="relative">
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  max="100"
+                                  value={selectedGroup.spreadSharePercentage}
+                                  onChange={(e) => handleCommissionChange(selectedGroup.groupId, 'spreadSharePercentage', e.target.value)}
+                                  className="w-full rounded-lg border border-gray-300 px-3 py-2 pr-12 text-gray-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/40"
+                                  placeholder="50.00"
+                                />
+                                <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-gray-500">
+                                  %
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
                       );
                     })}
                   </div>
@@ -702,15 +702,15 @@ const IBRequests = () => {
         // For pending/rejected/banned IBs, show "Not Assigned" or "N/A"
         const structures = request.commissionStructures || [];
         const isApproved = request.status?.toLowerCase() === 'approved';
-        
+
         if (isApproved && structures.length > 0) {
           // Approved with commission structures - show them
           return (
             <div className="flex flex-col gap-1">
               {structures.map((structure, idx) => (
-                <span 
+                <span
                   key={idx}
-                  className="inline-block px-2 py-1 text-xs font-medium text-purple-700 bg-purple-100 rounded-md"
+                  className="inline-block px-2 py-1 text-xs font-medium text-brand-900 bg-brand-100 rounded-md"
                 >
                   {structure}
                 </span>
@@ -752,18 +752,18 @@ const IBRequests = () => {
         return (
           <div className="text-sm">
             <div className="font-medium text-gray-900">
-              {date.toLocaleDateString('en-US', { 
-                month: '2-digit', 
-                day: '2-digit', 
-                year: 'numeric' 
+              {date.toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric'
               })}
             </div>
             <div className="text-gray-500">
-              {date.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit', 
+              {date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
                 second: '2-digit',
-                hour12: false 
+                hour12: false
               })}
             </div>
           </div>
@@ -780,7 +780,7 @@ const IBRequests = () => {
             <div className="font-medium text-gray-900">{request.referrer.name}</div>
             <div className="text-gray-500">{request.referrer.email}</div>
             {request.referrer.referralCode && (
-              <div className="text-xs text-purple-600 font-mono mt-0.5">
+              <div className="text-xs text-brand-700 font-mono mt-0.5">
                 Code: {request.referrer.referralCode}
               </div>
             )}
@@ -943,8 +943,8 @@ const IBRequests = () => {
               <p className="text-xl sm:text-2xl font-bold text-gray-600 mt-0.5 sm:mt-1">{stats.banned_requests}</p>
             </div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 ml-3">
-               <FiSlash className="h-5 w-5 sm:h-6 sm:w-6 text-gray-600" />
-             </div>
+              <FiSlash className="h-5 w-5 sm:h-6 sm:w-6 text-gray-600" />
+            </div>
           </div>
         </AdminCard>
       </div>
