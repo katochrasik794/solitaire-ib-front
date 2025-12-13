@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head><title>Token Check</title></head>
+<body>
+<h1>Admin Token Check</h1>
+<pre id="output"></pre>
+<script>
+const output = document.getElementById('output');
+const token = localStorage.getItem('adminToken');
+output.textContent = `Admin Token: ${token ? 'EXISTS' : 'MISSING'}\n\n`;
+if (token) {
+  output.textContent += `Token: ${token.substring(0, 50)}...\n\n`;
+  output.textContent += `Length: ${token.length} characters\n\n`;
+  
+  // Try to decode JWT
+  try {
+    const parts = token.split('.');
+    if (parts.length === 3) {
+      const payload = JSON.parse(atob(parts[1]));
+      output.textContent += `Decoded:\n${JSON.stringify(payload, null, 2)}\n\n`;
+      
+      const exp = payload.exp * 1000;
+      const now = Date.now();
+      const expired = exp < now;
+      
+      output.textContent += `Expires: ${new Date(exp).toLocaleString()}\n`;
+      output.textContent += `Status: ${expired ? '❌ EXPIRED' : '✅ VALID'}\n`;
+    }
+  } catch (e) {
+    output.textContent += `Error decoding: ${e.message}`;
+  }
+} else {
+  output.textContent += '❌ NO TOKEN FOUND - You need to login!\n\n';
+  output.textContent += 'Go to /admin/login and login again.';
+}
+</script>
+</body>
+</html>
