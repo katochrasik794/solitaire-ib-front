@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+:root {
+  --font-satoshi: 'Satoshi', system-ui, sans-serif;
+  --font-avantgarde: 'AvantGarde', system-ui, sans-serif;
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
