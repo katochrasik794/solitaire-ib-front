@@ -21,13 +21,13 @@ const AdminHeader = () => {
             >
               <FiMenu className="h-5 w-5" />
             </button>
-            
+
             {/* Logo */}
             <div className="flex items-center ml-3 lg:ml-0">
               <div className="flex-shrink-0">
-                <img src="/ib_images/logo.webp" alt="Zuperior Admin" className="h-7 w-auto" /> 
+                <img src="/favicon.png" alt="Solitaire IB Admin" className="h-7 w-auto" />
               </div>
-              <h1 className="ml-2 text-lg font-bold text-[#8B5CF6]">Zuperior Partners</h1>
+              <h1 className="ml-2 text-lg font-bold text-[#8B5CF6]">Solitaire IB Partners</h1>
             </div>
           </div>
 
@@ -54,12 +54,12 @@ const AdminHeader = () => {
                     <p className="text-sm font-medium text-gray-900">{adminUser.name}</p>
                     <p className="text-sm text-gray-500">{adminUser.email}</p>
                   </div>
-                  
+
                   <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                     <FiSettings className="mr-3 h-4 w-4" />
                     Settings
                   </button>
-                  
+
                   <button
                     onClick={async () => {
                       try {
@@ -89,8 +89,8 @@ const AdminHeader = () => {
 
       {/* Click outside to close user menu */}
       {userMenuOpen && (
-        <div 
-          className="fixed inset-0 z-30" 
+        <div
+          className="fixed inset-0 z-30"
           onClick={() => setUserMenuOpen(false)}
         />
       )}

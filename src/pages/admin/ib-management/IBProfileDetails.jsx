@@ -122,15 +122,15 @@ const IBProfileDetails = () => {
                 </tr>
                 <tr className="odd:bg-gray-50">
                   <td className="py-0.5 pl-2">Own Lots</td>
-                  <td className="py-0.5 pr-2 text-right font-medium">{Number(node.ownLots||0).toFixed(2)}</td>
+                  <td className="py-0.5 pr-2 text-right font-medium">{Number(node.ownLots || 0).toFixed(2)}</td>
                 </tr>
                 <tr className="odd:bg-gray-50">
                   <td className="py-0.5 pl-2">Team Lots</td>
-                  <td className="py-0.5 pr-2 text-right font-medium">{Number(node.teamLots||0).toFixed(2)}</td>
+                  <td className="py-0.5 pr-2 text-right font-medium">{Number(node.teamLots || 0).toFixed(2)}</td>
                 </tr>
                 <tr className="odd:bg-gray-50">
                   <td className="py-0.5 pl-2">Trades</td>
-                  <td className="py-0.5 pr-2 text-right font-medium">{Number(node.tradeCount||0)}</td>
+                  <td className="py-0.5 pr-2 text-right font-medium">{Number(node.tradeCount || 0)}</td>
                 </tr>
                 <tr className="odd:bg-gray-50">
                   <td className="py-0.5 pl-2">Fixed Commission</td>
@@ -161,11 +161,11 @@ const IBProfileDetails = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {node.structures.slice(0,3).map((s, i) => (
+                  {node.structures.slice(0, 3).map((s, i) => (
                     <tr key={i} className="odd:bg-purple-50/40">
                       <td className="py-1 pl-2 align-middle"><span className="inline-flex items-center px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200 leading-tight whitespace-nowrap">{s.structureName || 'Plan'}</span></td>
-                      <td className="py-1 text-right align-middle">{Number(s.usdPerLot||0).toFixed(2)}</td>
-                      <td className="py-1 text-right pr-1 align-middle">{Number(s.spreadSharePercentage||0).toFixed(2)}%</td>
+                      <td className="py-1 text-right align-middle">{Number(s.usdPerLot || 0).toFixed(2)}</td>
+                      <td className="py-1 text-right pr-1 align-middle">{Number(s.spreadSharePercentage || 0).toFixed(2)}%</td>
                     </tr>
                   ))}
                 </tbody>
@@ -372,7 +372,7 @@ const IBProfileDetails = () => {
       const token = localStorage.getItem('adminToken');
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 30000);
-      
+
       const response = await fetch(`/api/admin/ib-requests/profiles/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -380,7 +380,7 @@ const IBProfileDetails = () => {
         },
         signal: controller.signal
       });
-      
+
       clearTimeout(timeout);
 
       if (response.ok) {
@@ -555,7 +555,7 @@ const IBProfileDetails = () => {
       // Default dev fallback if not configured explicitly
       return 'http://localhost:3000';
     }
-    return 'https://dashboard.zuperior.com';
+    return 'https://dashboard.solitaire-ib.com';
   };
 
   const getReferralLink = () => {
@@ -601,7 +601,7 @@ const IBProfileDetails = () => {
       const token = localStorage.getItem('adminToken');
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 30000);
-      
+
       const response = await fetch(`/api/admin/ib-requests/profiles/${id}/account-stats`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -609,7 +609,7 @@ const IBProfileDetails = () => {
         },
         signal: controller.signal
       });
-      
+
       clearTimeout(timeout);
 
       if (response.ok) {
@@ -670,27 +670,27 @@ const IBProfileDetails = () => {
       setTradeLoading(true);
       setTradeError('');
       const token = localStorage.getItem('adminToken');
-      
+
       // If sync is requested, call the sync endpoint first
       if (sync && selectedAccountId) {
         try {
           // Use dynamic dates or defaults
           const syncFromDate = fromDate || new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString();
           const syncToDate = toDate || new Date().toISOString();
-          
+
           const syncResponse = await fetch(`/api/admin/mt5-trades/sync/${selectedAccountId}`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
               ibRequestId: profile.id,
               fromDate: syncFromDate,
               toDate: syncToDate
             })
           });
-          
+
           if (!syncResponse.ok) {
             console.warn('Sync failed, continuing with cached data');
           } else {
@@ -701,7 +701,7 @@ const IBProfileDetails = () => {
           console.error('Sync error:', syncError);
         }
       }
-      
+
       // Fetch trades from backend endpoint with authentication
       if (!selectedAccountId) {
         setTradeHistory({ trades: [], total: 0, page: 1, pageSize });
@@ -711,7 +711,7 @@ const IBProfileDetails = () => {
       // Use dynamic dates or defaults (default to 1 year ago to now)
       const defaultFromDate = fromDate || new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString();
       const defaultToDate = toDate || new Date().toISOString();
-      
+
       // Format dates to ISO string format if needed
       const formattedFromDate = defaultFromDate.includes('T') ? defaultFromDate : `${defaultFromDate}T00:00:00Z`;
       const formattedToDate = defaultToDate.includes('T') ? defaultToDate : `${defaultToDate}T23:59:59Z`;
@@ -792,11 +792,11 @@ const IBProfileDetails = () => {
           const profit = Number(t?.Profit || 0);
           const dealId = String(t?.DealId || t?.OrderId || '');
           const orderId = String(t?.OrderId || t?.DealId || '');
-          
+
           // Compute fixed IB commission per-lot using available rate (using divided lots)
           const ibCommission = lots * Number(usdPerLot || 0);
           const spreadCommission = lots * (Number(spreadPct || 0) / 100);
-          
+
           // Parse close time (trades-closed API provides CloseTime as ISO string)
           let closeTime = null;
           const rawClose = t?.CloseTime;
@@ -812,7 +812,7 @@ const IBProfileDetails = () => {
               closeTime = new Date(ms).toISOString();
             }
           }
-          
+
           return {
             account_id: String(selectedAccountId),
             mt5_deal_id: dealId,
@@ -840,17 +840,17 @@ const IBProfileDetails = () => {
       // Use pagination from API response if available, otherwise use client-side pagination
       const totalCount = payload?.data?.totalCount || mapped.length;
       const totalPages = payload?.data?.totalPages || Math.ceil(totalCount / pageSize);
-      
+
       // If API provides pagination, use the items as-is, otherwise paginate client-side
       const paged = payload?.data?.totalPages ? mapped : mapped.slice((page - 1) * pageSize, page * pageSize);
 
-      setTradeHistory({ 
-        trades: paged, 
-        total: totalCount, 
-        page: parseInt(page), 
+      setTradeHistory({
+        trades: paged,
+        total: totalCount,
+        page: parseInt(page),
         pageSize: parseInt(pageSize),
         totalPages: totalPages,
-        totals: totalsAll 
+        totals: totalsAll
       });
     } catch (error) {
       console.error('Error fetching trade history:', error);
@@ -1066,30 +1066,31 @@ const IBProfileDetails = () => {
             </AdminCard>
 
             {(() => {
-              const fallbackTrades = Array.isArray(profile?.groups) ? profile.groups.reduce((s,g)=> s + Number(g.totalTrades||0), 0) : 0;
-              const fallbackLots = Array.isArray(profile?.groups) ? profile.groups.reduce((s,g)=> s + Number(g.totalLots||0), 0) : 0;
+              const fallbackTrades = Array.isArray(profile?.groups) ? profile.groups.reduce((s, g) => s + Number(g.totalTrades || 0), 0) : 0;
+              const fallbackLots = Array.isArray(profile?.groups) ? profile.groups.reduce((s, g) => s + Number(g.totalLots || 0), 0) : 0;
               const totalTrades = totalsFromTrades ? totalsFromTrades.count : (Number(accountSummary.tradeSummary?.totalTrades || 0) || fallbackTrades);
               const totalLots = totalsFromTrades ? totalsFromTrades.lots : (Number(accountSummary.tradeSummary?.totalVolume || 0) || fallbackLots);
               return (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <AdminCard className="bg-orange-50 border border-orange-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-orange-700 text-sm font-medium">Total Trades</p>
-                    <p className="text-2xl font-bold text-orange-900">{Number(totalTrades).toLocaleString()}</p>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <AdminCard className="bg-orange-50 border border-orange-100">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-orange-700 text-sm font-medium">Total Trades</p>
+                        <p className="text-2xl font-bold text-orange-900">{Number(totalTrades).toLocaleString()}</p>
+                      </div>
+                    </div>
+                  </AdminCard>
+                  <AdminCard className="bg-teal-50 border border-teal-100">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-teal-700 text-sm font-medium">Traded Lots</p>
+                        <p className="text-2xl font-bold text-teal-900">{Number(totalLots).toFixed(2)}</p>
+                      </div>
+                    </div>
+                  </AdminCard>
                 </div>
-              </AdminCard>
-              <AdminCard className="bg-teal-50 border border-teal-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-teal-700 text-sm font-medium">Traded Lots</p>
-                    <p className="text-2xl font-bold text-teal-900">{Number(totalLots).toFixed(2)}</p>
-                  </div>
-                </div>
-              </AdminCard>
-            </div>
-            );})()}
+              );
+            })()}
           </>
         );
       })()}
@@ -1097,176 +1098,176 @@ const IBProfileDetails = () => {
       <div>
         {/* IB Information */}
         <AdminCard>
-            <div className="flex items-center gap-2 mb-6">
-              <FiUser className="h-5 w-5 text-blue-600" />
-              <h2 className="text-lg font-semibold text-gray-900">IB Information</h2>
-            </div>
+          <div className="flex items-center gap-2 mb-6">
+            <FiUser className="h-5 w-5 text-blue-600" />
+            <h2 className="text-lg font-semibold text-gray-900">IB Information</h2>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                  <div className="flex items-center gap-2">
-                    <FiUser className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-900">{profile.fullName}</span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                  <div className="flex items-center gap-2">
-                    <FiMail className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-900">{profile.email}</span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                  <div className="flex items-center gap-2">
-                    <FiPhone className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-900">{profile.phone || 'N/A'}</span>
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <div className="flex items-center gap-2">
+                  <FiUser className="h-4 w-4 text-gray-400" />
+                  <span className="text-gray-900">{profile.fullName}</span>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block text-sm font-medium text-gray-700">Commission Structures</label>
-                    <button
-                      onClick={() => setShowCommissionModal(true)}
-                      className="text-xs text-purple-600 hover:text-purple-800 font-medium flex items-center gap-1"
-                    >
-                      <FiEdit className="h-3 w-3" />
-                      Edit
-                    </button>
-                  </div>
-                  {profile.commissionStructures && profile.commissionStructures.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {profile.commissionStructures.map((structure, idx) => (
-                        <span
-                          key={idx}
-                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
-                        >
-                          {structure}
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    <StatusBadge status={profile.ibType || 'Common'} />
-                  )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <div className="flex items-center gap-2">
+                  <FiMail className="h-4 w-4 text-gray-400" />
+                  <span className="text-gray-900">{profile.email}</span>
                 </div>
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Approved Date</label>
-                  <div className="flex items-center gap-2">
-                    <FiCalendar className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-900">
-                      {profile.approvedDate ? new Date(profile.approvedDate).toLocaleDateString() : 'N/A'}
-                    </span>
-                  </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                <div className="flex items-center gap-2">
+                  <FiPhone className="h-4 w-4 text-gray-400" />
+                  <span className="text-gray-900">{profile.phone || 'N/A'}</span>
                 </div>
+              </div>
+            </div>
 
-                {profile.referralCode && (
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="block text-sm font-medium text-gray-700">
-                        {profile.fullName}'s Referral Code
-                      </label>
-                      {!editingReferralCode && (
-                        <button
-                          type="button"
-                          onClick={() => setEditingReferralCode(true)}
-                          className="text-xs text-purple-600 hover:text-purple-700 font-medium"
-                        >
-                          Edit
-                        </button>
-                      )}
-                    </div>
-                    {editingReferralCode ? (
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <FiHash className="h-4 w-4 text-gray-400" />
-                          <input
-                            type="text"
-                            value={referralCodeInput}
-                            onChange={(e) => {
-                              const value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-                              if (value.length <= 8) {
-                                setReferralCodeInput(value);
-                              }
-                            }}
-                            maxLength={8}
-                            className="flex-1 text-gray-900 font-mono font-semibold text-lg bg-gray-50 px-3 py-1.5 rounded border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Enter referral code (max 8 chars)"
-                            disabled={updatingReferralCode}
-                          />
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={handleUpdateReferralCode}
-                            disabled={updatingReferralCode}
-                            className="px-3 py-1.5 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            {updatingReferralCode ? 'Updating...' : 'Save'}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={handleCancelEditReferralCode}
-                            disabled={updatingReferralCode}
-                            className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                        <p className="text-xs text-gray-500">
-                          Maximum 8 characters (letters and numbers only)
-                        </p>
-                      </div>
-                    ) : (
-                      <>
-                        <div className="flex items-center gap-2">
-                          <FiHash className="h-4 w-4 text-gray-400" />
-                          <span className="text-gray-900 font-mono font-semibold text-lg bg-gray-50 px-3 py-1.5 rounded border border-gray-200 flex-1">
-                            {profile.referralCode}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const referralLink = getReferralLink();
-                              navigator.clipboard.writeText(referralLink).then(() => {
-                                setCopied(true);
-                                setTimeout(() => setCopied(false), 2000);
-                              });
-                            }}
-                            className="px-3 py-1.5 text-sm font-medium text-purple-600 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors flex items-center gap-2"
-                          >
-                            {copied ? (
-                              <>
-                                <FiCheck className="h-4 w-4" />
-                                Copied!
-                              </>
-                            ) : (
-                              <>
-                                <FiCopy className="h-4 w-4" />
-                                Copy Link
-                              </>
-                            )}
-                          </button>
-                        </div>
-                        <p className="text-xs text-gray-500 mt-2">
-                          Share this link to refer new partners: <span className="font-mono text-purple-600">{getReferralLink()}</span>
-                        </p>
-                      </>
-                    )}
+            <div className="space-y-4">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-medium text-gray-700">Commission Structures</label>
+                  <button
+                    onClick={() => setShowCommissionModal(true)}
+                    className="text-xs text-purple-600 hover:text-purple-800 font-medium flex items-center gap-1"
+                  >
+                    <FiEdit className="h-3 w-3" />
+                    Edit
+                  </button>
+                </div>
+                {profile.commissionStructures && profile.commissionStructures.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {profile.commissionStructures.map((structure, idx) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
+                      >
+                        {structure}
+                      </span>
+                    ))}
                   </div>
+                ) : (
+                  <StatusBadge status={profile.ibType || 'Common'} />
                 )}
               </div>
-            </div>
-          </AdminCard>
 
-          {/* Groups & Commission Breakdown section removed per request */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Approved Date</label>
+                <div className="flex items-center gap-2">
+                  <FiCalendar className="h-4 w-4 text-gray-400" />
+                  <span className="text-gray-900">
+                    {profile.approvedDate ? new Date(profile.approvedDate).toLocaleDateString() : 'N/A'}
+                  </span>
+                </div>
+              </div>
+
+              {profile.referralCode && (
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      {profile.fullName}'s Referral Code
+                    </label>
+                    {!editingReferralCode && (
+                      <button
+                        type="button"
+                        onClick={() => setEditingReferralCode(true)}
+                        className="text-xs text-purple-600 hover:text-purple-700 font-medium"
+                      >
+                        Edit
+                      </button>
+                    )}
+                  </div>
+                  {editingReferralCode ? (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <FiHash className="h-4 w-4 text-gray-400" />
+                        <input
+                          type="text"
+                          value={referralCodeInput}
+                          onChange={(e) => {
+                            const value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                            if (value.length <= 8) {
+                              setReferralCodeInput(value);
+                            }
+                          }}
+                          maxLength={8}
+                          className="flex-1 text-gray-900 font-mono font-semibold text-lg bg-gray-50 px-3 py-1.5 rounded border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="Enter referral code (max 8 chars)"
+                          disabled={updatingReferralCode}
+                        />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleUpdateReferralCode}
+                          disabled={updatingReferralCode}
+                          className="px-3 py-1.5 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {updatingReferralCode ? 'Updating...' : 'Save'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleCancelEditReferralCode}
+                          disabled={updatingReferralCode}
+                          className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        Maximum 8 characters (letters and numbers only)
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-2">
+                        <FiHash className="h-4 w-4 text-gray-400" />
+                        <span className="text-gray-900 font-mono font-semibold text-lg bg-gray-50 px-3 py-1.5 rounded border border-gray-200 flex-1">
+                          {profile.referralCode}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const referralLink = getReferralLink();
+                            navigator.clipboard.writeText(referralLink).then(() => {
+                              setCopied(true);
+                              setTimeout(() => setCopied(false), 2000);
+                            });
+                          }}
+                          className="px-3 py-1.5 text-sm font-medium text-purple-600 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors flex items-center gap-2"
+                        >
+                          {copied ? (
+                            <>
+                              <FiCheck className="h-4 w-4" />
+                              Copied!
+                            </>
+                          ) : (
+                            <>
+                              <FiCopy className="h-4 w-4" />
+                              Copy Link
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2">
+                        Share this link to refer new partners: <span className="font-mono text-purple-600">{getReferralLink()}</span>
+                      </p>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </AdminCard>
+
+        {/* Groups & Commission Breakdown section removed per request */}
       </div>
 
       {/* Users Referred by IB */}
@@ -1340,9 +1341,8 @@ const IBProfileDetails = () => {
                 key: 'isActive',
                 label: 'Status',
                 render: (val) => (
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    val ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                  }`}>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${val ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    }`}>
                     {val ? 'Active' : 'Inactive'}
                   </span>
                 )
@@ -1405,43 +1405,43 @@ const IBProfileDetails = () => {
             rows={referredUsers
               .filter(user => user.accountCount > 0)
               .map(user => {
-              // Calculate totals from accountSummary for this user
-              const userAccounts = tradingAccounts.filter(acc => {
-                // Match by userId if available, otherwise match by email
-                return acc.userId === user.userId || acc.userEmail === user.email;
-              });
-              
-              const totalBalance = userAccounts.reduce((sum, acc) => sum + Number(acc.balance || 0), 0);
-              const totalEquity = userAccounts.reduce((sum, acc) => sum + Number(acc.equity || 0), 0);
-              const totalCommission = user.totalCommission || userAccounts.reduce((sum, acc) => sum + Number(acc.ibCommission || 0), 0);
-              
-              // Get total volume from account-stats (more accurate) or fallback to referred users data
-              const totalVolumeFromAccounts = userAccounts.reduce((sum, acc) => {
-                // Find matching account in accountSummary for volume data
-                const accountData = accountSummary.accounts.find(a => 
-                  String(a.accountId || a.mtsId) === String(acc.accountId)
-                );
-                return sum + Number(accountData?.totalVolume || acc.totalVolume || 0);
-              }, 0);
-              const totalVolume = totalVolumeFromAccounts > 0 ? totalVolumeFromAccounts : (user.totalVolume || 0);
-              
-              // Get trade count from accounts or user data
-              const tradeCountFromAccounts = userAccounts.reduce((sum, acc) => sum + Number(acc.tradeCount || 0), 0);
-              const tradeCount = tradeCountFromAccounts > 0 ? tradeCountFromAccounts : (user.tradeCount || 0);
+                // Calculate totals from accountSummary for this user
+                const userAccounts = tradingAccounts.filter(acc => {
+                  // Match by userId if available, otherwise match by email
+                  return acc.userId === user.userId || acc.userEmail === user.email;
+                });
 
-              return {
-                userId: user.userId,
-                email: user.email,
-                name: user.name,
-                accountCount: user.accountCount,
-                totalBalance,
-                totalEquity,
-                totalCommission,
-                totalVolume,
-                tradeCount,
-                isActive: user.isActive
-              };
-            })}
+                const totalBalance = userAccounts.reduce((sum, acc) => sum + Number(acc.balance || 0), 0);
+                const totalEquity = userAccounts.reduce((sum, acc) => sum + Number(acc.equity || 0), 0);
+                const totalCommission = user.totalCommission || userAccounts.reduce((sum, acc) => sum + Number(acc.ibCommission || 0), 0);
+
+                // Get total volume from account-stats (more accurate) or fallback to referred users data
+                const totalVolumeFromAccounts = userAccounts.reduce((sum, acc) => {
+                  // Find matching account in accountSummary for volume data
+                  const accountData = accountSummary.accounts.find(a =>
+                    String(a.accountId || a.mtsId) === String(acc.accountId)
+                  );
+                  return sum + Number(accountData?.totalVolume || acc.totalVolume || 0);
+                }, 0);
+                const totalVolume = totalVolumeFromAccounts > 0 ? totalVolumeFromAccounts : (user.totalVolume || 0);
+
+                // Get trade count from accounts or user data
+                const tradeCountFromAccounts = userAccounts.reduce((sum, acc) => sum + Number(acc.tradeCount || 0), 0);
+                const tradeCount = tradeCountFromAccounts > 0 ? tradeCountFromAccounts : (user.tradeCount || 0);
+
+                return {
+                  userId: user.userId,
+                  email: user.email,
+                  name: user.name,
+                  accountCount: user.accountCount,
+                  totalBalance,
+                  totalEquity,
+                  totalCommission,
+                  totalVolume,
+                  tradeCount,
+                  isActive: user.isActive
+                };
+              })}
             columns={[
               {
                 key: 'email',
@@ -1488,9 +1488,8 @@ const IBProfileDetails = () => {
                 key: 'isActive',
                 label: 'Status',
                 render: (val) => (
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    val ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                  }`}>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${val ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    }`}>
                     {val ? 'Active' : 'Inactive'}
                   </span>
                 )
@@ -1531,7 +1530,7 @@ const IBProfileDetails = () => {
           <FiDatabase className="h-5 w-5 text-blue-600" />
           <h2 className="text-lg font-semibold text-gray-900">Client Accounts</h2>
           <span className="text-sm text-gray-500 ml-2">({allAccounts.length} accounts)</span>
-                  </div>
+        </div>
         {allAccountsLoading ? (
           <div className="space-y-4 py-12">
             <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -1565,53 +1564,53 @@ const IBProfileDetails = () => {
               accountType: acc.accountType
             }))}
             columns={[
-              { 
-                key: 'clientAccount', 
+              {
+                key: 'clientAccount',
                 label: 'Client account',
                 sortable: true,
                 render: (val) => val ? `MT5 #${val}` : 'N/A'
               },
-              { 
-                key: 'profit', 
+              {
+                key: 'profit',
                 label: 'Profit',
                 sortable: true,
                 render: (v) => Number(v).toFixed(2)
               },
-              { 
-                key: 'lots', 
+              {
+                key: 'lots',
                 label: 'Lots',
                 sortable: true,
                 render: (v) => Number(v || 0).toFixed(2)
               },
-              { 
-                key: 'clientId', 
+              {
+                key: 'clientId',
                 label: 'Client ID',
                 sortable: true
               },
-              { 
-                key: 'partnerCode', 
+              {
+                key: 'partnerCode',
                 label: 'Partner code',
                 sortable: true
               },
-              { 
-                key: 'signupDate', 
+              {
+                key: 'signupDate',
                 label: 'Sign-up date',
                 sortable: true,
                 render: (v) => formatDate(v)
               },
-              { 
-                key: 'lastTradingDate', 
+              {
+                key: 'lastTradingDate',
                 label: 'Last trading date',
                 sortable: true,
                 render: (v) => formatDate(v)
               },
-              { 
-                key: 'country', 
+              {
+                key: 'country',
                 label: 'Country',
                 sortable: true
               },
-              { 
-                key: 'accountType', 
+              {
+                key: 'accountType',
                 label: 'Account type',
                 sortable: true
               }
@@ -1675,65 +1674,65 @@ const IBProfileDetails = () => {
                     };
                   })}
                   columns={[
-              {
-                key: 'accountId',
-                label: 'Account',
-                render: (val, row) => (
-                  <div className="flex flex-col">
-                    <span className="font-semibold text-gray-900">MT5 #{val}</span>
+                    {
+                      key: 'accountId',
+                      label: 'Account',
+                      render: (val, row) => (
+                        <div className="flex flex-col">
+                          <span className="font-semibold text-gray-900">MT5 #{val}</span>
                           {row.isEligibleForCommission && row.commissionStructure && (
-                      <span className="text-xs font-medium text-green-700 mt-0.5">
-                        {row.commissionStructure}
-                      </span>
-                    )}
-                  </div>
-                )
-              },
-              { key: 'group', label: 'Group' },
-              { 
-                key: 'balance', 
-                label: 'Balance',
-                render: (val) => `$${Number(val).toFixed(2)}`
-              },
-              { 
-                key: 'equity', 
-                label: 'Equity',
-                render: (val) => `$${Number(val).toFixed(2)}`
-              },
-              { 
-                key: 'profit', 
-                label: 'Profit',
-                render: (val) => (
-                  <span className={val > 0 ? 'text-green-600 font-medium' : val < 0 ? 'text-red-600 font-medium' : 'text-gray-900'}>
-                    ${Number(val || 0).toFixed(2)}
-                  </span>
-                )
-              },
-              { 
+                            <span className="text-xs font-medium text-green-700 mt-0.5">
+                              {row.commissionStructure}
+                            </span>
+                          )}
+                        </div>
+                      )
+                    },
+                    { key: 'group', label: 'Group' },
+                    {
+                      key: 'balance',
+                      label: 'Balance',
+                      render: (val) => `$${Number(val).toFixed(2)}`
+                    },
+                    {
+                      key: 'equity',
+                      label: 'Equity',
+                      render: (val) => `$${Number(val).toFixed(2)}`
+                    },
+                    {
+                      key: 'profit',
+                      label: 'Profit',
+                      render: (val) => (
+                        <span className={val > 0 ? 'text-green-600 font-medium' : val < 0 ? 'text-red-600 font-medium' : 'text-gray-900'}>
+                          ${Number(val || 0).toFixed(2)}
+                        </span>
+                      )
+                    },
+                    {
                       key: 'totalCommission',
                       label: 'Commission',
                       render: (val) => (
                         <span className="font-semibold text-green-700">${Number(val || 0).toFixed(2)}</span>
-                )
-              },
-              {
-                key: 'action',
-                label: 'Action',
-                sortable: false,
-                render: (_, row) => (
-                  <button
+                      )
+                    },
+                    {
+                      key: 'action',
+                      label: 'Action',
+                      sortable: false,
+                      render: (_, row) => (
+                        <button
                           onClick={() => {
                             setSelectedAccountId(row.accountId);
                             setShowUserAccountsModal(false);
                           }}
-                    className="text-xs px-3 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"
-                  >
-                    View Trades
-                  </button>
-                )
-              }
-            ]}
-            pageSize={10}
+                          className="text-xs px-3 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"
+                        >
+                          View Trades
+                        </button>
+                      )
+                    }
+                  ]}
+                  pageSize={10}
                 />
               )}
             </div>
@@ -1760,9 +1759,9 @@ const IBProfileDetails = () => {
               {accountSummary.accounts.map((account, idx) => {
                 const userEmail = account.userEmail || referredUsers.find(u => u.userId === account.userId)?.email || 'Unknown';
                 return (
-                <option key={account.accountId || account.mtsId || idx} value={account.accountId || account.mtsId || ''}>
+                  <option key={account.accountId || account.mtsId || idx} value={account.accountId || account.mtsId || ''}>
                     {userEmail} - MT5 #{account.accountId || account.mtsId || ''}
-                </option>
+                  </option>
                 );
               })}
             </select>
@@ -1811,7 +1810,7 @@ const IBProfileDetails = () => {
                 {tradeHistory.trades.map((trade) => {
                   const lots = Number(trade.volume_lots || 0);
                   const profit = Number(trade.profit || 0);
-                  
+
                   // Get account-level plan (preferred over profile defaults)
                   const accountRow = accountSummary.accounts.find(a => String(a.accountId || a.mtsId) === String(selectedAccountId));
                   // Resolve per-lot rate from account -> groups -> profile
@@ -1852,19 +1851,20 @@ const IBProfileDetails = () => {
                     : (lots * (spreadPct / 100));
 
                   const totalIbCommission = fixedCommission + spreadCommission;
-                  
+
                   return (
-                  <tr key={`${trade.account_id}-${trade.mt5_deal_id || trade.order_id}`}>
-                    <td className="px-4 py-2 font-medium text-gray-900">{trade.mt5_deal_id || trade.order_id}</td>
-                    <td className="px-4 py-2 text-gray-700">{trade.symbol || '-'}</td>
-                    <td className="px-4 py-2 text-gray-700">{lots.toFixed(2)}</td>
-                    <td className={`px-4 py-2 font-medium ${profit > 0 ? 'text-green-600' : profit < 0 ? 'text-red-600' : 'text-gray-700'}`}>${profit.toFixed(2)}</td>
-                    <td className="px-4 py-2 text-gray-700">${fixedCommission.toFixed(2)}</td>
-                    <td className="px-4 py-2 text-gray-700">${spreadCommission.toFixed(2)}</td>
-                    <td className="px-4 py-2 font-semibold text-green-700">${totalIbCommission.toFixed(2)}</td>
-                    <td className="px-4 py-2 text-gray-600">{trade.close_time ? new Date(trade.close_time).toLocaleString() : '—'}</td>
-                  </tr>
-                );})}
+                    <tr key={`${trade.account_id}-${trade.mt5_deal_id || trade.order_id}`}>
+                      <td className="px-4 py-2 font-medium text-gray-900">{trade.mt5_deal_id || trade.order_id}</td>
+                      <td className="px-4 py-2 text-gray-700">{trade.symbol || '-'}</td>
+                      <td className="px-4 py-2 text-gray-700">{lots.toFixed(2)}</td>
+                      <td className={`px-4 py-2 font-medium ${profit > 0 ? 'text-green-600' : profit < 0 ? 'text-red-600' : 'text-gray-700'}`}>${profit.toFixed(2)}</td>
+                      <td className="px-4 py-2 text-gray-700">${fixedCommission.toFixed(2)}</td>
+                      <td className="px-4 py-2 text-gray-700">${spreadCommission.toFixed(2)}</td>
+                      <td className="px-4 py-2 font-semibold text-green-700">${totalIbCommission.toFixed(2)}</td>
+                      <td className="px-4 py-2 text-gray-600">{trade.close_time ? new Date(trade.close_time).toLocaleString() : '—'}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
             <div className="flex items-center justify-between mt-4 px-4">
@@ -1877,7 +1877,7 @@ const IBProfileDetails = () => {
                   value={tradePageSize}
                   onChange={(e) => { const size = Number(e.target.value); setTradePageSize(size); setTradePage(1); fetchTradeHistoryData({ page: 1, pageSize: size }); }}
                 >
-                  {[50,100,200,500].map(s => (<option key={s} value={s}>{s}/page</option>))}
+                  {[50, 100, 200, 500].map(s => (<option key={s} value={s}>{s}/page</option>))}
                 </select>
                 <Button
                   variant="outline"
@@ -1908,7 +1908,7 @@ const IBProfileDetails = () => {
             <FiTrendingUp className="h-5 w-5 text-green-600" />
             <h2 className="text-lg font-semibold text-gray-900">IB Level UP History</h2>
           </div>
-          
+
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>

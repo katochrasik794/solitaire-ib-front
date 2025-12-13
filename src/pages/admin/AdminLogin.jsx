@@ -75,7 +75,7 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#8B5CF6] via-purple-600 to-indigo-700 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#F3F4F6] flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -85,10 +85,10 @@ const AdminLogin = () => {
         {/* Logo and Title */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img src="/ib_images/logo.webp" alt="Zuperior Admin" className="h-16 w-auto" />
+            <img src="/favicon.png" alt="Solitaire IB Admin" className="h-16 w-auto" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Admin Portal</h1>
-          <p className="text-purple-100">Sign in to access the admin dashboard</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Portal</h1>
+          <p className="text-gray-600">Sign in to access the admin dashboard</p>
         </div>
 
         {/* Login Form */}
@@ -179,8 +179,8 @@ const AdminLogin = () => {
 
           {/* Footer */}
           <div className="text-center mt-8">
-            <p className="text-purple-100 text-sm">
-              © 2024 Zuperior Partners. All rights reserved.
+            <p className="text-gray-500 text-sm">
+              © 2024 Solitaire IB Partners. All rights reserved.
             </p>
           </div>
         </motion.div>

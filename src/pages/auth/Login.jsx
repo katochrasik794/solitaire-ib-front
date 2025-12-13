@@ -222,7 +222,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#6242a5] to-[#8b6ec8] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#F3F4F6] flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -233,7 +233,7 @@ const Login = () => {
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <img
-                src="/ib_images/logo.svg"
+                src="/favicon.png"
                 alt="Solitaire IB"
                 className="h-16 w-auto"
               />
@@ -251,8 +251,8 @@ const Login = () => {
               type="button"
               onClick={() => toggleMode('login')}
               className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition ${mode === 'login'
-                  ? 'bg-white shadow text-[#6242a5]'
-                  : 'text-gray-600 hover:text-gray-800'
+                ? 'bg-white shadow text-[#6242a5]'
+                : 'text-gray-600 hover:text-gray-800'
                 }`}
             >
               Login as Partner
@@ -261,8 +261,8 @@ const Login = () => {
               type="button"
               onClick={() => toggleMode('apply')}
               className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition ${mode === 'apply'
-                  ? 'bg-white shadow text-[#6242a5]'
-                  : 'text-gray-600 hover:text-gray-800'
+                ? 'bg-white shadow text-[#6242a5]'
+                : 'text-gray-600 hover:text-gray-800'
                 }`}
             >
               Apply as Partner
