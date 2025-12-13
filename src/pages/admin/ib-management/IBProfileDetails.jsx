@@ -555,7 +555,7 @@ const IBProfileDetails = () => {
       // Default dev fallback if not configured explicitly
       return 'http://localhost:3000';
     }
-    return 'https://dashboard.zuperior.com';
+    return 'https://dashboard.Soliataire Cabinet.com';
   };
 
   const getReferralLink = () => {

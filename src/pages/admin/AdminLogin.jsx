@@ -85,7 +85,7 @@ const AdminLogin = () => {
         {/* Logo and Title */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img src="/ib_images/logo.webp" alt="Zuperior Admin" className="h-16 w-auto" />
+            <img src="/ib_images/logo.webp" alt="Soliataire Cabinet Admin" className="h-16 w-auto" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Admin Portal</h1>
           <p className="text-purple-100">Sign in to access the admin dashboard</p>
@@ -180,7 +180,7 @@ const AdminLogin = () => {
           {/* Footer */}
           <div className="text-center mt-8">
             <p className="text-purple-100 text-sm">
-              © 2024 Zuperior Partners. All rights reserved.
+              © 2024 Soliataire Cabinates. All rights reserved.
             </p>
           </div>
         </motion.div>

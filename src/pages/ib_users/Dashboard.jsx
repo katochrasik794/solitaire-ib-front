@@ -247,7 +247,7 @@ const Dashboard = () => {
       // Default dev fallback if not configured explicitly
       return 'http://localhost:3000';
     }
-    return 'https://dashboard.zuperior.com';
+    return 'https://dashboard.Soliataire Cabinet.com';
   };
 
   const getCrmReferralLink = () => {
@@ -383,7 +383,7 @@ const Dashboard = () => {
       {/* Page Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600">Welcome to your Zuperior Partners portal</p>
+        <p className="text-gray-600">Welcome to your Soliataire Cabinates portal</p>
       </div>
 
       {/* Two Column Layout: Left (3 cards stacked) + Right (1 large card) */}

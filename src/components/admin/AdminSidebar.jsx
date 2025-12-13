@@ -176,10 +176,10 @@ const AdminSidebar = () => {
             {/* Header */}
             <div className="flex items-center justify-between p-3 border-b border-gray-200">
               <div className="flex items-center min-w-0">
-                <img src="/ib_images/logo.webp" alt="Zuperior Admin" className="h-7 w-auto flex-shrink-0" />
+                <img src="/ib_images/logo.webp" alt="Soliataire Cabinet Admin" className="h-7 w-auto flex-shrink-0" />
                 <div className="ml-2 leading-tight min-w-0">
                   <span className="block text-sm font-semibold text-gray-900 truncate">Admin Panel</span>
-                  <span className="block text-xs font-medium text-gray-600 truncate">Zuperior</span>
+                  <span className="block text-xs font-medium text-gray-600 truncate">Soliataire Cabinet</span>
                 </div>
               </div>
 

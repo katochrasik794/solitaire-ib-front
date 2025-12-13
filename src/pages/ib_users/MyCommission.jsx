@@ -260,7 +260,7 @@ const MyCommission = () => {
       setTradesLoading(true);
       setTradeError('');
       
-      const MT5_API_BASE = 'https://metaapi.zuperior.com';
+      const MT5_API_BASE = 'https://metaapi.Soliataire Cabinet.com';
       // Use wide date window like admin side
       const fromDate = '2024-01-01';
       const toDate = '2085-12-31';
