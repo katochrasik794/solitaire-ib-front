@@ -25,9 +25,15 @@ const AdminHeader = () => {
             {/* Logo */}
             <div className="flex items-center ml-3 lg:ml-0">
               <div className="flex-shrink-0">
+<<<<<<< HEAD
                 <img src="/favicon.png" alt="Solitaire IB Admin" className="h-7 w-auto" />
               </div>
               <h1 className="ml-2 text-lg font-bold text-[#8B5CF6]">Solitaire IB Partners</h1>
+=======
+                <img src="/ib_images/logo.webp" alt="Soliataire Cabinet Admin" className="h-7 w-auto" /> 
+              </div>
+              <h1 className="ml-2 text-lg font-bold text-[#8B5CF6]">Soliataire Cabinates</h1>
+>>>>>>> 91d101c6ddfc32096611f195ff1c356c17ad46f1
             </div>
           </div>
 

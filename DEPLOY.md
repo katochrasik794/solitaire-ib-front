@@ -19,7 +19,7 @@ Value: https://zup-ib-back.onrender.com/api
 
 **Option A - Git Push (Recommended):**
 ```bash
-cd /Users/macmini/Desktop/zuperior-Final/ib-portal/client
+cd /Users/macmini/Desktop/Soliataire Cabinet-Final/ib-portal/client
 git add .
 git commit -m "fix: configure production API URL"
 git push
@@ -27,7 +27,7 @@ git push
 
 **Option B - Vercel CLI:**
 ```bash
-cd /Users/macmini/Desktop/zuperior-Final/ib-portal/client
+cd /Users/macmini/Desktop/Soliataire Cabinet-Final/ib-portal/client
 vercel --prod
 ```
 

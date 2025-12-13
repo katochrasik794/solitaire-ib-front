@@ -1,5 +1,5 @@
 <!-- 8e007b8e-87b0-4376-a545-e32ad38b7288 cd76c09c-a8e3-471d-a2a0-6ede41ecc325 -->
-# Zuperior Partners IB Portal - Frontend Implementation Plan
+# Soliataire Cabinates IB Portal - Frontend Implementation Plan
 
 ## Project Setup & Dependencies
 
@@ -47,7 +47,7 @@ client/
 │   │       ├── promo/
 │   │       │   ├── PromoMaterials.jsx
 │   │       │   ├── RegistrationTools.jsx
-│   │       │   ├── ZuperiorOverview.jsx
+│   │       │   ├── Soliataire CabinetOverview.jsx
 │   │       │   └── AdvertisingGuidelines.jsx
 │   │       └── support/
 │   │           ├── HelpCenter.jsx
@@ -62,7 +62,7 @@ client/
 ## Brand Customization
 
 - Primary color: `#6242a5`
-- Brand name: "Zuperior Partners"
+- Brand name: "Soliataire Cabinates"
 - Light theme with gradient accents using primary color
 - Custom logo placement in header
 
@@ -72,7 +72,7 @@ client/
 
 #### Header (`components/layout/Header.jsx`)
 
-- Brand logo "Zuperior Partners" (left)
+- Brand logo "Soliataire Cabinates" (left)
 - Bell notification icon (right)
 - User profile icon with dropdown (right)
 - Account settings & Sign out options
@@ -102,7 +102,7 @@ client/
   - Promo (megaphone icon) - expandable submenu
     - Promo Materials
     - Registration tools
-    - Zuperior overview
+    - Soliataire Cabinet overview
     - Advertising guidelines
   - Support (help icon) - expandable submenu
     - Help Center
@@ -148,7 +148,7 @@ client/
 - Simple centered form
 - Email/password fields (not validated)
 - "Continue" button navigates to "/" without checks
-- Zuperior Partners branding
+- Soliataire Cabinates branding
 - Purple gradient background
 
 ### IB Users Pages
@@ -278,7 +278,7 @@ Based on images 2-5:
 
     1. "Choose from a variety of metals" - Banners (3), Videos (1)
     2. "Trade with enhanced stop-out protection" - Banners (4), Videos (4)
-    3. "Experience next-level trading with Zuperior" - Banners (11), Videos (1)
+    3. "Experience next-level trading with Soliataire Cabinet" - Banners (11), Videos (1)
 
 - Grid layout, responsive
 
@@ -288,8 +288,8 @@ Based on images 2-5:
 - Description: "You can configure your codes, links and campaigns binding here"
 - Partner code section:
   - Description with link to registration page
-  - Domain selector: one.Zuperioroneli.com
-  - Note: "Can be used only for client registering on Zuperior website"
+  - Domain selector: one.Soliataire Cabinetoneli.com
+  - Note: "Can be used only for client registering on Soliataire Cabinet website"
   - Partner code display: "i4qglwamoc" with Copy button
 - Web link section:
   - Target page selector: Main page
@@ -301,7 +301,7 @@ Based on images 2-5:
   - Note: "This link can be used in all countries except: China"
   - Mobile link display with Copy button
 
-**Zuperior Overview** & **Advertising Guidelines**: Simple content pages with text and links
+**Soliataire Cabinet Overview** & **Advertising Guidelines**: Simple content pages with text and links
 
 #### Support Pages
 
@@ -328,11 +328,11 @@ Based on images 2-5:
   - Preventing Money Laundering
 - Company information:
   - Vanvest Limited registration details
-  - Zuperior brand authorization
+  - Soliataire Cabinet brand authorization
   - Risk warning about CFDs
   - PCI DSS compliance statement
-  - Email: support@Zuperior.vu
-  - Copyright: © 2008 - 2025 Zuperior
+  - Email: support@Soliataire Cabinet.vu
+  - Copyright: © 2008 - 2025 Soliataire Cabinet
 
 ## Responsive Design Strategy
 
@@ -428,7 +428,7 @@ Routes:
 /payments/transaction-history
 /promo/materials
 /promo/registration-tools
-/promo/Zuperior-overview
+/promo/Soliataire Cabinet-overview
 /promo/advertising-guidelines
 /support
 /support/contacts
@@ -493,7 +493,7 @@ Routes:
 - [ ] Create Transaction History page with filters
 - [ ] Build Promo Materials page with tabs and category cards
 - [ ] Create Registration Tools page with partner codes and links
-- [ ] Create Zuperior Overview page (content page)
+- [ ] Create Soliataire Cabinet Overview page (content page)
 - [ ] Create Advertising Guidelines page (content page)
 - [ ] Build Support/Help Center page with language availability table
 - [ ] Create Contacts support page

@@ -85,7 +85,11 @@ const AdminLogin = () => {
         {/* Logo and Title */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
+<<<<<<< HEAD
             <img src="/favicon.png" alt="Solitaire IB Admin" className="h-16 w-auto" />
+=======
+            <img src="/ib_images/logo.webp" alt="Soliataire Cabinet Admin" className="h-16 w-auto" />
+>>>>>>> 91d101c6ddfc32096611f195ff1c356c17ad46f1
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Portal</h1>
           <p className="text-gray-600">Sign in to access the admin dashboard</p>
@@ -179,8 +183,13 @@ const AdminLogin = () => {
 
           {/* Footer */}
           <div className="text-center mt-8">
+<<<<<<< HEAD
             <p className="text-gray-500 text-sm">
               © 2024 Solitaire IB Partners. All rights reserved.
+=======
+            <p className="text-purple-100 text-sm">
+              © 2024 Soliataire Cabinates. All rights reserved.
+>>>>>>> 91d101c6ddfc32096611f195ff1c356c17ad46f1
             </p>
           </div>
         </motion.div>

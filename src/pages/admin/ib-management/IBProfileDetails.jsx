@@ -555,7 +555,11 @@ const IBProfileDetails = () => {
       // Default dev fallback if not configured explicitly
       return 'http://localhost:3000';
     }
+<<<<<<< HEAD
     return 'https://dashboard.solitaire-ib.com';
+=======
+    return 'https://dashboard.Soliataire Cabinet.com';
+>>>>>>> 91d101c6ddfc32096611f195ff1c356c17ad46f1
   };
 
   const getReferralLink = () => {
