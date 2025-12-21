@@ -17,7 +17,12 @@ const CommissionStructures = () => {
   const fetchStructures = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
+      const token = localStorage.getItem('adminToken') || localStorage.getItem('admin_token');
+      if (!token) {
+        console.error('No admin token found. Redirecting to login...');
+        navigate('/admin/login');
+        return;
+      }
       const response = await fetch('/api/admin/ib-requests/commission-structures', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -49,8 +54,13 @@ const CommissionStructures = () => {
           })
         }));
         setGroupStructures(sortedGroups);
+      } else if (response.status === 401) {
+        console.error('Unauthorized. Redirecting to login...');
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('admin_token');
+        navigate('/admin/login');
       } else {
-        console.error('Failed to fetch structures');
+        console.error('Failed to fetch structures:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Error fetching structures:', error);

@@ -22,7 +22,12 @@ const Groups = () => {
   const fetchGroups = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
+      const token = localStorage.getItem('adminToken') || localStorage.getItem('admin_token');
+      if (!token) {
+        console.error('No admin token found. Redirecting to login...');
+        navigate('/admin/login');
+        return;
+      }
       const response = await fetch('/api/admin/ib-requests/groups', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -33,8 +38,13 @@ const Groups = () => {
       if (response.ok) {
         const data = await response.json();
         setGroups(data.data.groups);
+      } else if (response.status === 401) {
+        console.error('Unauthorized. Redirecting to login...');
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('admin_token');
+        navigate('/admin/login');
       } else {
-        console.error('Failed to fetch groups');
+        console.error('Failed to fetch groups:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Error fetching groups:', error);
@@ -253,7 +263,7 @@ const Groups = () => {
 
   return (
     <div className="space-y-6">
-      <style jsx>{`
+      <style>{`
         .group-row:hover .edit-button {
           opacity: 1 !important;
         }
