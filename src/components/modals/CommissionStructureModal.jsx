@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FiChevronDown, FiMail, FiPercent, FiUser, FiX } from 'react-icons/fi';
+import { FiChevronDown, FiMail, FiPercent, FiUser, FiX, FiInfo } from 'react-icons/fi';
+import { apiFetch } from '../../utils/api';
 
 // Commission Structure selection modal usable for approve and edit flows
 // Props:
@@ -26,7 +27,13 @@ export default function CommissionStructureModal({
   const [loadingAction, setLoadingAction] = useState(false);
   const [validationError, setValidationError] = useState('');
   const [isGroupMenuOpen, setIsGroupMenuOpen] = useState(false);
+  const [structureSets, setStructureSets] = useState([]);
+  const [selectedStructureSet, setSelectedStructureSet] = useState('');
+  const [selectedStructureSetData, setSelectedStructureSetData] = useState(null);
+  const [loadingStructureSets, setLoadingStructureSets] = useState(false);
+  const [isStructureSetMenuOpen, setIsStructureSetMenuOpen] = useState(false);
   const groupMenuRef = useRef(null);
+  const structureSetMenuRef = useRef(null);
 
   // Load approval options when opened
   useEffect(() => {
@@ -35,13 +42,7 @@ export default function CommissionStructureModal({
     const fetchOptions = async () => {
       try {
         setLoadingOptions(true);
-        const token = localStorage.getItem('adminToken');
-        const response = await fetch('/api/admin/ib-requests/approval-options', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
+        const response = await apiFetch('/admin/ib-requests/approval-options');
         if (!response.ok) {
           console.error('Failed to fetch approval options');
           setAvailableGroups([]);
@@ -52,6 +53,17 @@ export default function CommissionStructureModal({
           (g) => Array.isArray(g.commissionStructures) && g.commissionStructures.length > 0
         );
         setAvailableGroups(groupsWithStructures);
+
+        // Fetch structure sets
+        try {
+          const setsResponse = await apiFetch('/admin/ib-requests/structure-sets');
+          if (setsResponse.ok) {
+            const setsData = await setsResponse.json();
+            setStructureSets(setsData.data.sets || []);
+          }
+        } catch (err) {
+          console.error('Error fetching structure sets:', err);
+        }
 
         // If editing, pre-seed with existing groups (best-effort)
         if (mode === 'edit' && Array.isArray(existingGroups) && existingGroups.length > 0) {
@@ -91,13 +103,16 @@ export default function CommissionStructureModal({
         setLoadingOptions(false);
         setValidationError('');
         setIsGroupMenuOpen(false);
+        setIsStructureSetMenuOpen(false);
+        setSelectedStructureSet('');
+        setSelectedStructureSetData(null);
       }
     };
 
     fetchOptions();
   }, [isOpen, mode, JSON.stringify(existingGroups)]);
 
-  // Dropdown outside/escape handlers
+  // Dropdown outside/escape handlers for group menu
   useEffect(() => {
     if (!isGroupMenuOpen) return;
     const handleOutside = (e) => {
@@ -115,6 +130,93 @@ export default function CommissionStructureModal({
       document.removeEventListener('keydown', handleEsc);
     };
   }, [isGroupMenuOpen]);
+
+  // Dropdown outside/escape handlers for structure set menu
+  useEffect(() => {
+    if (!isStructureSetMenuOpen) return;
+    const handleOutside = (e) => {
+      if (structureSetMenuRef.current && !structureSetMenuRef.current.contains(e.target)) {
+        setIsStructureSetMenuOpen(false);
+      }
+    };
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') setIsStructureSetMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [isStructureSetMenuOpen]);
+
+  const handleStructureSetChange = async (setId) => {
+    setIsStructureSetMenuOpen(false);
+    if (!setId) {
+      setSelectedStructureSet('');
+      setSelectedStructureSetData(null);
+      setSelectedGroups([]);
+      return;
+    }
+
+    if (availableGroups.length === 0 && !loadingOptions) {
+      setValidationError('Groups are still loading. Please wait a moment and try again.');
+      return;
+    }
+
+    try {
+      setLoadingStructureSets(true);
+      setValidationError('');
+      const response = await apiFetch(`/admin/ib-requests/structure-sets/${setId}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        const set = data.data.set;
+        const structureNames = set.structureNames || [];
+        
+        const groupsToAdd = [];
+        const addedGroupIds = new Set();
+        
+        structureNames.forEach(structureName => {
+          availableGroups.forEach(group => {
+            const matchingStructure = group.commissionStructures?.find(
+              s => s.structure_name === structureName
+            );
+            
+            if (matchingStructure && !addedGroupIds.has(group.group_id)) {
+              const groupName = group.dedicated_name || group.name || group.group_id;
+              
+              groupsToAdd.push({
+                groupId: group.group_id,
+                groupName: groupName,
+                structureId: matchingStructure.id,
+                structureName: matchingStructure.structure_name,
+                usdPerLot: matchingStructure.usd_per_lot.toString(),
+                spreadSharePercentage: matchingStructure.spread_share_percentage.toString()
+              });
+              addedGroupIds.add(group.group_id);
+            }
+          });
+        });
+        
+        if (groupsToAdd.length === 0) {
+          setValidationError('No groups found with structures matching the selected structure set.');
+          setSelectedStructureSetData(null);
+        } else {
+          setSelectedGroups(groupsToAdd);
+          setSelectedStructureSet(setId);
+          setSelectedStructureSetData(set);
+        }
+      } else {
+        setValidationError('Failed to load structure set. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error fetching structure set details:', error);
+      setValidationError('Failed to load structure set. Please try again.');
+    } finally {
+      setLoadingStructureSets(false);
+    }
+  };
 
   const handleGroupSelection = (groupId) => {
     const group = availableGroups.find((g) => g.group_id === groupId);
@@ -280,17 +382,98 @@ export default function CommissionStructureModal({
                 </div>
               )}
 
-              {/* Group selection */}
+              {/* Structure Set Selector */}
               <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Structure Set (Select to auto-populate groups)
+                  </label>
+                  <p className="text-xs text-gray-500 mb-3">
+                    Select a structure set to automatically assign all groups and commission structures below if needed.
+                  </p>
+                  <div className="relative" ref={structureSetMenuRef}>
+                    <button
+                      type="button"
+                      onClick={() => setIsStructureSetMenuOpen((prev) => !prev)}
+                      disabled={loadingStructureSets || loadingOptions}
+                      className="w-full flex items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm text-left focus:border-brand-500 focus:ring-2 focus:ring-brand-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    >
+                      <span className={selectedStructureSet ? 'text-gray-900' : 'text-gray-500'}>
+                        {selectedStructureSet && selectedStructureSetData
+                          ? `${selectedStructureSetData.name} (Stage ${selectedStructureSetData.stage})`
+                          : 'Select a Structure Set (or add groups manually below)'}
+                      </span>
+                      <FiChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isStructureSetMenuOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    <AnimatePresence>
+                      {isStructureSetMenuOpen && (
+                        <motion.div
+                          key="structure-set-menu"
+                          initial={{ opacity: 0, y: -4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ duration: 0.15, ease: 'easeOut' }}
+                          className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl"
+                        >
+                          <div className="max-h-60 overflow-y-auto py-1 text-sm">
+                            <button
+                              type="button"
+                              onClick={() => handleStructureSetChange('')}
+                              className={`w-full px-3 py-2 text-left hover:bg-gray-50 ${!selectedStructureSet ? 'bg-brand-50 text-brand-700' : 'text-gray-700'}`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span>None (Manual Selection)</span>
+                                {!selectedStructureSet && <span className="text-brand-600">✓</span>}
+                              </div>
+                            </button>
+                            {structureSets
+                              .filter(set => set.status === 'active')
+                              .map(set => (
+                                <button
+                                  key={set.id}
+                                  type="button"
+                                  onClick={() => handleStructureSetChange(set.id.toString())}
+                                  className={`w-full px-3 py-2 text-left hover:bg-gray-50 ${selectedStructureSet === set.id.toString() ? 'bg-brand-50 text-brand-700' : 'text-gray-700'}`}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <div className="font-medium">{set.name} (Stage {set.stage})</div>
+                                      <div className="text-xs text-gray-500">{set.structures_count || 0} structures</div>
+                                    </div>
+                                    {selectedStructureSet === set.id.toString() && (
+                                      <span className="text-brand-600">✓</span>
+                                    )}
+                                  </div>
+                                </button>
+                              ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  
+                  {/* Info Banner when Structure Set is selected */}
+                  {selectedStructureSet && selectedStructureSetData && (
+                    <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3">
+                      <div className="flex items-start">
+                        <FiInfo className="h-5 w-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
+                        <div className="text-sm text-blue-800">
+                          <span className="font-medium">Structure Set "{selectedStructureSetData.name}" (Stage {selectedStructureSetData.stage})</span> selected. Groups from this set have been auto-assigned below. You can modify or add more groups as needed.
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex items-center justify-between">
                   <label className="block text-sm font-medium text-gray-700">
-                    MT5 Groups & Commission Structure
+                    Groups (from Structure Set or Manual Selection)
                   </label>
                   <div className="relative" ref={groupMenuRef}>
                     <button
                       type="button"
                       onClick={() => setIsGroupMenuOpen((prev) => !prev)}
-                      className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors"
+                      className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-dark-base bg-brand-500 rounded-md hover:bg-brand-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={loadingOptions || availableGroups.length === 0}
                     >
                       Add Group
@@ -352,7 +535,7 @@ export default function CommissionStructureModal({
                             </div>
                             <button
                               onClick={() => handleRemoveGroup(g.groupId)}
-                              className="text-sm text-red-600 hover:text-red-700"
+                              className="text-sm text-red-600 hover:text-red-700 transition-colors"
                             >
                               Remove
                             </button>
@@ -422,7 +605,8 @@ export default function CommissionStructureModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                disabled={loadingAction}
+                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
@@ -430,7 +614,7 @@ export default function CommissionStructureModal({
                 type="button"
                 onClick={primaryAction}
                 disabled={loadingAction || loadingOptions}
-                className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+                className="inline-flex items-center rounded-md border border-transparent bg-brand-500 px-4 py-2 text-sm font-medium text-dark-base hover:bg-brand-600 disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
               >
                 {loadingAction
                   ? mode === 'edit' ? 'Updating...' : 'Approving...'

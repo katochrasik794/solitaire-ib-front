@@ -1131,12 +1131,36 @@ const IBProfileDetails = () => {
             </div>
 
             <div className="space-y-4">
+              {/* Structure Set Section */}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-medium text-gray-700">Structure Set</label>
+                  <button
+                    onClick={() => setShowCommissionModal(true)}
+                    className="text-xs text-brand-600 hover:text-brand-800 font-medium flex items-center gap-1 transition-colors"
+                  >
+                    <FiEdit className="h-3 w-3" />
+                    Edit
+                  </button>
+                </div>
+                {profile.structureSet ? (
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {profile.structureSet.name} (Stage {profile.structureSet.stage})
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-sm text-gray-500">No structure set assigned</span>
+                )}
+              </div>
+
+              {/* Commission Structures Section */}
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-sm font-medium text-gray-700">Commission Structures</label>
                   <button
                     onClick={() => setShowCommissionModal(true)}
-                    className="text-xs text-brand-600 hover:text-brand-800 font-medium flex items-center gap-1"
+                    className="text-xs text-brand-600 hover:text-brand-800 font-medium flex items-center gap-1 transition-colors"
                   >
                     <FiEdit className="h-3 w-3" />
                     Edit
@@ -1178,7 +1202,7 @@ const IBProfileDetails = () => {
                       <button
                         type="button"
                         onClick={() => setEditingReferralCode(true)}
-                        className="text-xs text-brand-600 hover:text-brand-700 font-medium"
+                        className="text-xs text-brand-600 hover:text-brand-700 font-medium transition-colors"
                       >
                         Edit
                       </button>

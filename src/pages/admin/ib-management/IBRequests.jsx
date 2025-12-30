@@ -20,7 +20,13 @@ const CommissionModal = ({ isOpen, onClose, request, onApprove }) => {
   const [validationError, setValidationError] = useState('');
   const [isGroupMenuOpen, setIsGroupMenuOpen] = useState(false);
   const [loadingOptions, setLoadingOptions] = useState(false);
+  const [structureSets, setStructureSets] = useState([]);
+  const [selectedStructureSet, setSelectedStructureSet] = useState('');
+  const [selectedStructureSetData, setSelectedStructureSetData] = useState(null);
+  const [loadingStructureSets, setLoadingStructureSets] = useState(false);
+  const [isStructureSetMenuOpen, setIsStructureSetMenuOpen] = useState(false);
   const groupMenuRef = useRef(null);
+  const structureSetMenuRef = useRef(null);
 
   useEffect(() => {
     if (!isOpen || !request) {
@@ -48,10 +54,103 @@ const CommissionModal = ({ isOpen, onClose, request, onApprove }) => {
       }
     };
 
+    const fetchStructureSets = async () => {
+      try {
+        setLoadingStructureSets(true);
+        const response = await apiFetch('/admin/ib-requests/structure-sets');
+        if (response.ok) {
+          const data = await response.json();
+          setStructureSets(data.data.sets || []);
+        }
+      } catch (error) {
+        console.error('Error fetching structure sets:', error);
+      } finally {
+        setLoadingStructureSets(false);
+      }
+    };
+
     fetchApprovalOptions();
+    fetchStructureSets();
     setValidationError('');
     setIsGroupMenuOpen(false);
+    setIsStructureSetMenuOpen(false);
+    setSelectedStructureSet('');
+    setSelectedStructureSetData(null);
   }, [isOpen, request]);
+
+  const handleStructureSetChange = async (setId) => {
+    setIsStructureSetMenuOpen(false);
+    if (!setId) {
+      setSelectedStructureSet('');
+      setSelectedStructureSetData(null);
+      setSelectedGroups([]);
+      return;
+    }
+
+    // Wait for availableGroups to be loaded
+    if (availableGroups.length === 0 && !loadingOptions) {
+      setValidationError('Groups are still loading. Please wait a moment and try again.');
+      return;
+    }
+
+    try {
+      setLoadingStructureSets(true);
+      setValidationError('');
+      const response = await apiFetch(`/admin/ib-requests/structure-sets/${setId}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        const set = data.data.set;
+        const structureNames = set.structureNames || [];
+        
+        // Find all groups that have structures matching the structure names in the set
+        const groupsToAdd = [];
+        const addedGroupIds = new Set(); // Track which groups we've already added
+        
+        // For each structure name in the set, find all groups that have that structure
+        structureNames.forEach(structureName => {
+          availableGroups.forEach(group => {
+            // Find the structure in this group that matches the structure name
+            const matchingStructure = group.commissionStructures?.find(
+              s => s.structure_name === structureName
+            );
+            
+            if (matchingStructure && !addedGroupIds.has(group.group_id)) {
+              // Use dedicated_name if available, otherwise fall back to name or group_id
+              const groupName = group.dedicated_name || group.name || group.group_id;
+              
+              // Add this group with the matching structure
+              groupsToAdd.push({
+                groupId: group.group_id,
+                groupName: groupName,
+                structureId: matchingStructure.id,
+                structureName: matchingStructure.structure_name,
+                usdPerLot: matchingStructure.usd_per_lot.toString(),
+                spreadSharePercentage: matchingStructure.spread_share_percentage.toString()
+              });
+              addedGroupIds.add(group.group_id);
+            }
+          });
+        });
+        
+        if (groupsToAdd.length === 0) {
+          setValidationError('No groups found with structures matching the selected structure set.');
+          setSelectedStructureSetData(null);
+        } else {
+          setSelectedGroups(groupsToAdd);
+          setSelectedStructureSet(setId);
+          setSelectedStructureSetData(set);
+        }
+      } else {
+        setValidationError('Failed to load structure set. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error fetching structure set details:', error);
+      setValidationError('Failed to load structure set. Please try again.');
+    } finally {
+      setLoadingStructureSets(false);
+    }
+  };
 
   const handleGroupSelection = (groupId, structureId = null) => {
     const group = availableGroups.find(g => g.group_id === groupId);
@@ -120,6 +219,7 @@ const CommissionModal = ({ isOpen, onClose, request, onApprove }) => {
     setValidationError('');
   };
 
+  // Handle outside clicks for group menu
   useEffect(() => {
     if (!isGroupMenuOpen) {
       return;
@@ -144,6 +244,32 @@ const CommissionModal = ({ isOpen, onClose, request, onApprove }) => {
       document.removeEventListener('keydown', handleEscape);
     };
   }, [isGroupMenuOpen]);
+
+  // Handle outside clicks for structure set menu
+  useEffect(() => {
+    if (!isStructureSetMenuOpen) {
+      return;
+    }
+
+    const handleOutsideClick = (event) => {
+      if (structureSetMenuRef.current && !structureSetMenuRef.current.contains(event.target)) {
+        setIsStructureSetMenuOpen(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setIsStructureSetMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isStructureSetMenuOpen]);
 
 
   const handleApprove = async () => {
@@ -266,9 +392,91 @@ const CommissionModal = ({ isOpen, onClose, request, onApprove }) => {
 
                 {/* Multiple Groups Selection */}
                 <div className="space-y-4">
+                  {/* Structure Set Selector */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Structure Set (Select to auto-populate groups)
+                    </label>
+                    <p className="text-xs text-gray-500 mb-3">
+                      Select a structure set to automatically assign all groups and commission structures below if needed.
+                    </p>
+                    <div className="relative" ref={structureSetMenuRef}>
+                      <button
+                        type="button"
+                        onClick={() => setIsStructureSetMenuOpen((prev) => !prev)}
+                        disabled={loadingStructureSets || loadingOptions}
+                        className="w-full flex items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm text-left focus:border-brand-500 focus:ring-2 focus:ring-brand-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <span className={selectedStructureSet ? 'text-gray-900' : 'text-gray-500'}>
+                          {selectedStructureSet && selectedStructureSetData
+                            ? `${selectedStructureSetData.name} (Stage ${selectedStructureSetData.stage})`
+                            : 'Select a Structure Set (or add groups manually below)'}
+                        </span>
+                        <FiChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isStructureSetMenuOpen ? 'rotate-180' : ''}`} />
+                      </button>
+                      <AnimatePresence>
+                        {isStructureSetMenuOpen && (
+                          <motion.div
+                            key="structure-set-menu"
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -6 }}
+                            transition={{ duration: 0.15, ease: 'easeOut' }}
+                            className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl"
+                          >
+                            <div className="max-h-60 overflow-y-auto py-1 text-sm">
+                              <button
+                                type="button"
+                                onClick={() => handleStructureSetChange('')}
+                                className={`w-full px-3 py-2 text-left hover:bg-gray-50 ${!selectedStructureSet ? 'bg-brand-50 text-brand-700' : 'text-gray-700'}`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span>None (Manual Selection)</span>
+                                  {!selectedStructureSet && <span className="text-brand-600">✓</span>}
+                                </div>
+                              </button>
+                              {structureSets
+                                .filter(set => set.status === 'active')
+                                .map(set => (
+                                  <button
+                                    key={set.id}
+                                    type="button"
+                                    onClick={() => handleStructureSetChange(set.id.toString())}
+                                    className={`w-full px-3 py-2 text-left hover:bg-gray-50 ${selectedStructureSet === set.id.toString() ? 'bg-brand-50 text-brand-700' : 'text-gray-700'}`}
+                                  >
+                                    <div className="flex items-center justify-between">
+                                      <div>
+                                        <div className="font-medium">{set.name} (Stage {set.stage})</div>
+                                        <div className="text-xs text-gray-500">{set.structures_count || 0} structures</div>
+                                      </div>
+                                      {selectedStructureSet === set.id.toString() && (
+                                        <span className="text-brand-600">✓</span>
+                                      )}
+                                    </div>
+                                  </button>
+                                ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                    
+                    {/* Info Banner when Structure Set is selected */}
+                    {selectedStructureSet && selectedStructureSetData && (
+                      <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3">
+                        <div className="flex items-start">
+                          <FiInfo className="h-5 w-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
+                          <div className="text-sm text-blue-800">
+                            <span className="font-medium">Structure Set "{selectedStructureSetData.name}" (Stage {selectedStructureSetData.stage})</span> selected. Groups from this set have been auto-assigned below. You can modify or add more groups as needed.
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="flex items-center justify-between">
                     <label className="block text-sm font-medium text-gray-700">
-                      MT5 Groups & Commission Structure
+                      Groups (from Structure Set or Manual Selection)
                     </label>
                     <div className="relative" ref={groupMenuRef}>
                       <button
@@ -334,18 +542,19 @@ const CommissionModal = ({ isOpen, onClose, request, onApprove }) => {
                       const group = availableGroups.find(g => g.group_id === selectedGroup.groupId);
                       const structures = group?.commissionStructures || [];
                       const selectedStructure = structures.find(s => s.id === selectedGroup.structureId);
+                      const structureName = selectedGroup.structureName || selectedStructure?.structure_name;
 
                       return (
                         <div key={selectedGroup.groupId} className="rounded-lg border border-gray-200 p-4">
                           <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center space-x-2 flex-wrap gap-2">
                               <h4 className="font-medium text-gray-900">{selectedGroup.groupName}</h4>
                               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                 Active
                               </span>
-                              {selectedStructure && (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-brand-100 text-brand-900">
-                                  {selectedStructure.structure_name}
+                              {structureName && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-brand-100 text-brand-800">
+                                  {structureName}
                                 </span>
                               )}
                             </div>

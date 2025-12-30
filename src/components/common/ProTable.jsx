@@ -48,6 +48,8 @@ export default function ProTable({
   filters,
   pageSize = 10,
   searchPlaceholder = "Search...",
+  loading = false,
+  emptyMessage = "No data found",
   onResetAll,
   onClearDates,
 }) {
@@ -371,6 +373,28 @@ export default function ProTable({
         </div>
 
         <style>{`
+          @keyframes wave {
+            0%, 60%, 100% {
+              transform: translateY(0);
+              opacity: 0.7;
+            }
+            30% {
+              transform: translateY(-10px);
+              opacity: 1;
+            }
+          }
+          .wave-dot {
+            animation: wave 1.4s ease-in-out infinite;
+          }
+          .wave-dot:nth-child(1) {
+            animation-delay: 0ms;
+          }
+          .wave-dot:nth-child(2) {
+            animation-delay: 200ms;
+          }
+          .wave-dot:nth-child(3) {
+            animation-delay: 400ms;
+          }
           .protable-scroll-wrapper {
             width: 100%;
             position: relative;
@@ -451,29 +475,46 @@ export default function ProTable({
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {slice.map((r, i) => (
-                  <tr key={i} className="hover:bg-gray-50 transition-colors">
-                    {displayColumns.map(c => {
-                      const content = c.key === '__index'
-                        ? (baseIndex + i + 1)
-                        : (c.render ? c.render(r[c.key], r, Badge, baseIndex + i) : r[c.key]);
-                      return (
-                        <td key={c.key} className="px-3 py-2 text-xs whitespace-nowrap text-center border-r border-gray-100 last:border-r-0">
-                          {content}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-                {!slice.length && (
+                {loading ? (
                   <tr>
-                     <td colSpan={displayColumns.length} className="px-6 py-12 text-center text-gray-500 bg-gray-50">
-                       <div className="flex items-center justify-center gap-2 text-gray-500">
-                         <FiInbox className="w-5 h-5" />
-                         <span>No data found</span>
-                       </div>
-                     </td>
+                    <td colSpan={displayColumns.length} className="px-6 py-12 text-center bg-gray-50">
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="flex gap-1.5 items-end">
+                          <div className="w-2.5 h-2.5 bg-gray-500 rounded-full wave-dot"></div>
+                          <div className="w-2.5 h-2.5 bg-gray-500 rounded-full wave-dot"></div>
+                          <div className="w-2.5 h-2.5 bg-gray-500 rounded-full wave-dot"></div>
+                        </div>
+                        <span className="text-gray-500 ml-2">Loading...</span>
+                      </div>
+                    </td>
                   </tr>
+                ) : (
+                  <>
+                    {slice.map((r, i) => (
+                      <tr key={i} className="hover:bg-gray-50 transition-colors">
+                        {displayColumns.map(c => {
+                          const content = c.key === '__index'
+                            ? (baseIndex + i + 1)
+                            : (c.render ? c.render(r[c.key], r, Badge, baseIndex + i) : r[c.key]);
+                          return (
+                            <td key={c.key} className="px-3 py-2 text-xs whitespace-nowrap text-center border-r border-gray-100 last:border-r-0">
+                              {content}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                    {!slice.length && (
+                      <tr>
+                        <td colSpan={displayColumns.length} className="px-6 py-12 text-center text-gray-500 bg-gray-50">
+                          <div className="flex items-center justify-center gap-2 text-gray-500">
+                            <FiInbox className="w-5 h-5" />
+                            <span>{emptyMessage}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </>
                 )}
               </tbody>
             </table>
