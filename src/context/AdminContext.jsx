@@ -323,6 +323,9 @@ export const AdminProvider = ({ children }) => {
 
         localStorage.setItem('admin_user', JSON.stringify(adminUser));
         localStorage.setItem('admin_token', token);
+        // Also store as adminToken for components that expect this key
+        localStorage.setItem('adminToken', token);
+        localStorage.setItem('adminInfo', JSON.stringify(adminUser));
 
         dispatch({
           type: 'ADMIN_LOGIN',
@@ -342,6 +345,8 @@ export const AdminProvider = ({ children }) => {
     adminLogout: () => {
       localStorage.removeItem('admin_user');
       localStorage.removeItem('admin_token');
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminInfo');
       dispatch({ type: 'ADMIN_LOGOUT' });
     },
     setActiveAdminMenu: (menu) => dispatch({ type: 'SET_ACTIVE_ADMIN_MENU', payload: menu }),

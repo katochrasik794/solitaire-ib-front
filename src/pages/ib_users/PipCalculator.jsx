@@ -32,20 +32,37 @@ const PipCalculator = () => {
   const fetchSymbols = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token') || localStorage.getItem('userToken');
-
+      // Symbols endpoint is now public, no token needed
       const response = await fetch('/api/user/symbols', {
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success && Array.isArray(data.data)) {
-          setSymbols(data.data.filter(s => s.status === 'active').sort((a, b) => a.symbol.localeCompare(b.symbol)));
+      console.log('Symbols API response status:', response.status);
+
+      // Try to parse JSON, but handle empty/invalid responses
+      let data;
+      try {
+        const text = await response.text();
+        console.log('Response text (first 200 chars):', text.substring(0, 200));
+        data = text ? JSON.parse(text) : { success: false, message: 'Empty response' };
+      } catch (parseError) {
+        console.error('Failed to parse JSON response:', parseError);
+        data = { success: false, message: 'Invalid JSON response', error: parseError.message };
+      }
+
+      console.log('Symbols API response data:', data);
+      
+      if (response.ok && data.success && Array.isArray(data.data)) {
+        const activeSymbols = data.data.filter(s => !s.status || s.status === 'active').sort((a, b) => (a.symbol || '').localeCompare(b.symbol || ''));
+        console.log('✅ Active symbols count:', activeSymbols.length);
+        if (activeSymbols.length > 0) {
+          console.log('✅ First 5 symbols:', activeSymbols.slice(0, 5).map(s => s.symbol));
         }
+        setSymbols(activeSymbols);
+      } else {
+        console.error('❌ Symbols API error:', response.status, data);
       }
     } catch (error) {
       console.error('Error fetching symbols:', error);
@@ -57,6 +74,12 @@ const PipCalculator = () => {
   const fetchIBRate = async () => {
     try {
       const token = localStorage.getItem('token') || localStorage.getItem('userToken');
+      
+      // If no token, use default rate (calculator works without auth)
+      if (!token) {
+        console.log('No token found, using default IB rate: 1.00');
+        return;
+      }
 
       // Try to get IB rate from user profile or IB request
       const response = await fetch('/api/ib-requests/me', {
@@ -70,11 +93,17 @@ const PipCalculator = () => {
         const data = await response.json();
         if (data.success && data.data?.request?.usd_per_lot) {
           setIbRate(Number(data.data.request.usd_per_lot) || 1.00);
+          console.log('IB rate fetched:', Number(data.data.request.usd_per_lot));
+        }
+      } else {
+        // 401 is expected if not logged in - use default rate silently
+        if (response.status !== 401) {
+          console.warn('Failed to fetch IB rate, using default:', response.status);
         }
       }
     } catch (error) {
-      console.error('Error fetching IB rate:', error);
-      // Use default rate
+      // Silently fail - calculator works with default rate
+      console.log('Could not fetch IB rate, using default rate');
     }
   };
 
