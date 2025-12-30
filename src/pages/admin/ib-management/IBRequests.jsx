@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FiCheck, FiX, FiEye, FiInfo, FiDownload, FiFilter, FiUser, FiMail, FiCalendar, FiSlash, FiChevronDown } from 'react-icons/fi';
 import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import StatusBadge from '../../../components/admin/StatusBadge';
 import ActionButtons from '../../../components/admin/ActionButtons';
-import EnhancedDataTable from '../../../components/admin/EnhancedDataTable';
+import ProTable from '../../../components/common/ProTable';
 import { useNavigate } from 'react-router-dom';
 import CommissionStructureModal from '../../../components/modals/CommissionStructureModal';
 import { apiFetch } from '../../../utils/api';
@@ -666,27 +666,25 @@ const IBRequests = () => {
     }
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
       key: 'full_name',
       label: 'APPLICANT',
-      sortable: true,
-      render: (request) => (
+      render: (val, row) => (
         <div>
-          <div className="font-medium text-gray-900">{request.full_name || 'N/A'}</div>
-          <div className="text-sm text-gray-500">{request.email || ''}</div>
+          <div className="font-medium text-gray-900">{val || 'N/A'}</div>
+          <div className="text-sm text-gray-500">{row.email || ''}</div>
         </div>
       )
     },
     {
       key: 'commissionStructures',
       label: 'IB TYPE',
-      sortable: false,
-      render: (request) => {
+      render: (val, row) => {
         // For approved IBs, show commission structure names
         // For pending/rejected/banned IBs, show "Not Assigned" or "N/A"
-        const structures = request.commissionStructures || [];
-        const isApproved = request.status?.toLowerCase() === 'approved';
+        const structures = row.commissionStructures || [];
+        const isApproved = row.status?.toLowerCase() === 'approved';
 
         if (isApproved && structures.length > 0) {
           // Approved with commission structures - show them
@@ -722,18 +720,16 @@ const IBRequests = () => {
     {
       key: 'status',
       label: 'STATUS',
-      sortable: true,
-      render: (request) => (
-        <StatusBadge status={request.status} />
+      render: (val, row) => (
+        <StatusBadge status={row.status} />
       )
     },
     {
       key: 'submitted_at',
       label: 'SUBMITTED',
-      sortable: true,
-      render: (request) => {
-        if (!request.submitted_at) return <span className="text-gray-400">-</span>;
-        const date = new Date(request.submitted_at);
+      render: (val, row) => {
+        if (!row.submitted_at) return <span className="text-gray-400">-</span>;
+        const date = new Date(row.submitted_at);
         return (
           <div className="text-sm">
             <div className="font-medium text-gray-900">
@@ -758,15 +754,14 @@ const IBRequests = () => {
     {
       key: 'referred_by',
       label: 'REFERRED BY',
-      sortable: false,
-      render: (request) => (
-        request.referrer ? (
+      render: (val, row) => (
+        row.referrer ? (
           <div className="text-sm">
-            <div className="font-medium text-gray-900">{request.referrer.name}</div>
-            <div className="text-gray-500">{request.referrer.email}</div>
-            {request.referrer.referralCode && (
+            <div className="font-medium text-gray-900">{row.referrer.name}</div>
+            <div className="text-gray-500">{row.referrer.email}</div>
+            {row.referrer.referralCode && (
               <div className="text-xs text-brand-700 font-mono mt-0.5">
-                Code: {request.referrer.referralCode}
+                Code: {row.referrer.referralCode}
               </div>
             )}
           </div>
@@ -778,13 +773,12 @@ const IBRequests = () => {
     {
       key: 'usd_per_lot',
       label: 'COMMISSION',
-      sortable: false,
-      render: (request) => (
-        request.usd_per_lot ? (
+      render: (val, row) => (
+        row.usd_per_lot ? (
           <div className="text-sm">
-            <div className="font-medium text-gray-900">${request.usd_per_lot}/lot</div>
-            {request.spread_percentage_per_lot && (
-              <div className="text-gray-500">{request.spread_percentage_per_lot}% spread</div>
+            <div className="font-medium text-gray-900">${row.usd_per_lot}/lot</div>
+            {row.spread_percentage_per_lot && (
+              <div className="text-gray-500">{row.spread_percentage_per_lot}% spread</div>
             )}
           </div>
         ) : (
@@ -795,24 +789,23 @@ const IBRequests = () => {
     {
       key: 'actions',
       label: 'ACTIONS',
-      sortable: false,
-      render: (request) => (
+      render: (val, row) => (
         <div className="flex items-center gap-2">
           <Button
             size="sm"
             variant="outline"
-            onClick={() => handleViewRequest(request)}
+            onClick={() => handleViewRequest(row)}
             icon={<FiEye className="h-4 w-4" />}
             className="text-blue-600 hover:text-blue-700 border-blue-200 hover:border-blue-300"
           >
             View
           </Button>
-          {request.status === 'pending' && (
+          {row.status === 'pending' && (
             <>
               <Button
                 size="sm"
                 variant="success"
-                onClick={() => handleApproveRequest(request)}
+                onClick={() => handleApproveRequest(row)}
                 icon={<FiCheck className="h-4 w-4" />}
               >
                 Approve
@@ -820,7 +813,7 @@ const IBRequests = () => {
               <Button
                 size="sm"
                 variant="danger"
-                onClick={() => handleRejectRequest(request)}
+                onClick={() => handleRejectRequest(row)}
                 icon={<FiX className="h-4 w-4" />}
               >
                 Reject
@@ -828,7 +821,7 @@ const IBRequests = () => {
               <Button
                 size="sm"
                 variant="danger"
-                onClick={() => handleBanRequest(request)}
+                onClick={() => handleBanRequest(row)}
                 icon={<FiSlash className="h-4 w-4" />}
               >
                 Ban
@@ -838,7 +831,7 @@ const IBRequests = () => {
         </div>
       )
     }
-  ];
+  ], []);
 
   const statusOptions = [
     { value: 'all', label: 'All Status' },
@@ -936,45 +929,33 @@ const IBRequests = () => {
 
       {/* Pending Requests Table */}
       <AdminCard>
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Pending Requests</h2>
-          <p className="text-sm text-gray-600">IB applications awaiting approval</p>
-        </div>
-        <EnhancedDataTable
-          data={filteredRequests.filter(r => r.status === 'pending')}
+        <ProTable
+          title="Pending Requests"
+          rows={filteredRequests.filter(r => r.status === 'pending')}
           columns={columns.filter(col => col.key !== 'status')}
-          searchable={true}
-          filterable={true}
-          exportable={true}
-          pagination={true}
-          pageSize={10}
           loading={loading}
-          emptyMessage="No pending requests found"
-          onExport={(data) => {
-            console.log('Exporting pending data:', data);
+          pageSize={10}
+          searchPlaceholder="Search pending requests..."
+          filters={{
+            searchKeys: ['full_name', 'email', 'status']
           }}
+          emptyMessage="No pending requests found"
         />
       </AdminCard>
 
       {/* Approved Requests Table */}
       <AdminCard>
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Approved Requests</h2>
-          <p className="text-sm text-gray-600">Approved IB partners</p>
-        </div>
-        <EnhancedDataTable
-          data={filteredRequests.filter(r => r.status === 'approved')}
+        <ProTable
+          title="Approved Requests"
+          rows={filteredRequests.filter(r => r.status === 'approved')}
           columns={columns.filter(col => col.key !== 'status')}
-          searchable={true}
-          filterable={true}
-          exportable={true}
-          pagination={true}
-          pageSize={10}
           loading={loading}
-          emptyMessage="No approved requests found"
-          onExport={(data) => {
-            console.log('Exporting approved data:', data);
+          pageSize={10}
+          searchPlaceholder="Search approved requests..."
+          filters={{
+            searchKeys: ['full_name', 'email', 'status']
           }}
+          emptyMessage="No approved requests found"
         />
       </AdminCard>
 

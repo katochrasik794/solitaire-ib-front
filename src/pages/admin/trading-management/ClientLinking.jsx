@@ -1,22 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   FiLink,
-  FiSearch,
   FiRefreshCw,
   FiDownload,
-  FiArrowRight,
   FiUsers,
   FiCheckCircle,
   FiXCircle,
   FiClock,
-  FiUser,
-  FiMail
+  FiUser
 } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import StatusBadge from '../../../components/admin/StatusBadge';
-import EnhancedDataTable from '../../../components/admin/EnhancedDataTable';
+import ProTable from '../../../components/common/ProTable';
 import { apiFetch } from '../../../utils/api';
 
 const ClientLinking = () => {
@@ -409,37 +406,34 @@ const ClientLinking = () => {
   };
 
   // History table columns
-  const historyColumns = [
+  const historyColumns = useMemo(() => [
     {
       key: 'id',
       label: 'ID',
-      sortable: true,
-      render: (item) => (
-        <span className="font-mono text-sm text-gray-900">#{item.id}</span>
+      render: (val, row) => (
+        <span className="font-mono text-sm text-gray-900">#{val}</span>
       )
     },
     {
       key: 'user_name',
-      label: 'User',
-      sortable: true,
-      render: (item) => (
+      label: 'USER',
+      render: (val, row) => (
         <div>
-          <div className="font-medium text-gray-900">{item.user_name}</div>
-          <div className="text-xs text-gray-500">{item.user_email}</div>
+          <div className="font-medium text-gray-900">{val}</div>
+          <div className="text-xs text-gray-500">{row.user_email}</div>
         </div>
       )
     },
     {
-      key: 'from_ib',
-      label: 'From IB',
-      sortable: true,
-      render: (item) => (
+      key: 'from_ib_name',
+      label: 'FROM IB',
+      render: (val, row) => (
         <div className="text-sm">
-          {item.from_ib_name ? (
+          {val ? (
             <>
-              <div className="font-medium text-gray-900">{item.from_ib_name}</div>
-              {item.from_ib_code && (
-                <div className="text-xs text-gray-500">{item.from_ib_code}</div>
+              <div className="font-medium text-gray-900">{val}</div>
+              {row.from_ib_code && (
+                <div className="text-xs text-gray-500">{row.from_ib_code}</div>
               )}
             </>
           ) : (
@@ -449,23 +443,22 @@ const ClientLinking = () => {
       )
     },
     {
-      key: 'to_ib',
-      label: 'To IB',
-      sortable: true,
-      render: (item) => (
+      key: 'to_ib_name',
+      label: 'TO IB',
+      render: (val, row) => (
         <div className="text-sm">
-          <div className="font-medium text-gray-900">{item.to_ib_name}</div>
+          <div className="font-medium text-gray-900">{val}</div>
           <div className="text-xs text-gray-500">
-            {item.to_ib_code && <span>{item.to_ib_code}</span>}
-            {item.to_ib_type && (
-              <span className={`ml-2 px-1.5 py-0.5 rounded text-xs font-medium ${item.to_ib_type === 'platinum' ? 'bg-brand-100 text-brand-800' :
-                  item.to_ib_type === 'gold' ? 'bg-yellow-100 text-yellow-800' :
-                    item.to_ib_type === 'silver' ? 'bg-gray-100 text-gray-800' :
-                      item.to_ib_type === 'bronze' ? 'bg-orange-100 text-orange-800' :
-                        item.to_ib_type === 'advanced' ? 'bg-blue-100 text-blue-800' :
+            {row.to_ib_code && <span>{row.to_ib_code}</span>}
+            {row.to_ib_type && (
+              <span className={`ml-2 px-1.5 py-0.5 rounded text-xs font-medium ${row.to_ib_type === 'platinum' ? 'bg-brand-100 text-brand-800' :
+                  row.to_ib_type === 'gold' ? 'bg-yellow-100 text-yellow-800' :
+                    row.to_ib_type === 'silver' ? 'bg-gray-100 text-gray-800' :
+                      row.to_ib_type === 'bronze' ? 'bg-orange-100 text-orange-800' :
+                        row.to_ib_type === 'advanced' ? 'bg-blue-100 text-blue-800' :
                           'bg-green-100 text-green-800'
                 }`}>
-                {item.to_ib_type.charAt(0).toUpperCase() + item.to_ib_type.slice(1)}
+                {row.to_ib_type.charAt(0).toUpperCase() + row.to_ib_type.slice(1)}
               </span>
             )}
           </div>
@@ -474,33 +467,30 @@ const ClientLinking = () => {
     },
     {
       key: 'action',
-      label: 'Action',
-      sortable: true,
-      render: (item) => (
+      label: 'ACTION',
+      render: (val, row) => (
         <StatusBadge
-          status={item.action === 'moved' ? 'moved' : item.action}
+          status={val === 'moved' ? 'moved' : val}
         />
       )
     },
     {
-      key: 'moved_by',
-      label: 'Moved By',
-      sortable: true,
-      render: (item) => (
-        <span className="text-sm text-gray-700">{item.moved_by_name || '-'}</span>
+      key: 'moved_by_name',
+      label: 'MOVED BY',
+      render: (val, row) => (
+        <span className="text-sm text-gray-700">{val || '-'}</span>
       )
     },
     {
       key: 'created_at',
-      label: 'Date',
-      sortable: true,
-      render: (item) => (
+      label: 'DATE',
+      render: (val, row) => (
         <span className="text-sm text-gray-700">
-          {new Date(item.created_at).toLocaleString()}
+          {new Date(val).toLocaleString()}
         </span>
       )
     }
-  ];
+  ], []);
 
   return (
     <div className="space-y-6">
@@ -761,26 +751,17 @@ const ClientLinking = () => {
 
       {/* Linking History Table */}
       <AdminCard>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Client Linking History ({pagination.total} total)
-          </h2>
-        </div>
-        <EnhancedDataTable
-          data={linkingHistory}
+        <ProTable
+          title={`Client Linking History (${pagination.total} total)`}
+          rows={linkingHistory}
           columns={historyColumns}
-          searchable={false}
-          filterable={false}
-          exportable={true}
-          pagination={true}
-          pageSize={pagination.limit}
-          totalCount={pagination.total}
-          currentPage={pagination.page}
           loading={historyLoading}
-          emptyMessage={selectedUserId ? "No linking history found" : "Select a user to view linking history"}
-          onPageChange={(newPage) => {
-            setPagination(prev => ({ ...prev, page: newPage }));
+          pageSize={pagination.limit}
+          searchPlaceholder="Search linking history..."
+          filters={{
+            searchKeys: ['user_name', 'user_email', 'from_ib_name', 'to_ib_name', 'moved_by_name', 'action']
           }}
+          emptyMessage={selectedUserId ? "No linking history found" : "Select a user to view linking history"}
         />
       </AdminCard>
     </div>

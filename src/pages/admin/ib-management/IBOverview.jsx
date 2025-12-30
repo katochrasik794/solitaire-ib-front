@@ -2,10 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FiPlus,
-  FiSearch,
-  FiFilter,
   FiEye,
-  FiUserPlus,
   FiUsers,
   FiClock,
   FiDollarSign,
@@ -17,15 +14,13 @@ import {
 import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import StatusBadge from '../../../components/admin/StatusBadge';
-import DataTable from '../../../components/admin/DataTable';
+import ProTable from '../../../components/common/ProTable';
 import { apiFetch } from '../../../utils/api';
 
 const IBOverview = () => {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
   const [stats, setStats] = useState({
     pending_requests: 0,
     approved_requests: 0
@@ -84,18 +79,6 @@ const IBOverview = () => {
     };
   }, []);
 
-  const filteredIBs = useMemo(() => {
-    const term = searchTerm.trim().toLowerCase();
-    return profiles.filter((ib) => {
-      const matchesSearch = !term ||
-        (ib.name && ib.name.toLowerCase().includes(term)) ||
-        (ib.email && ib.email.toLowerCase().includes(term));
-      const matchesStatus =
-        statusFilter === 'all' ||
-        (ib.status && ib.status.toLowerCase() === statusFilter.toLowerCase());
-      return matchesSearch && matchesStatus;
-    });
-  }, [profiles, searchTerm, statusFilter]);
 
   const handleViewIB = (ib) => {
     navigate(`/admin/ib-management/profiles/${ib.id}`);
@@ -157,63 +140,70 @@ const IBOverview = () => {
     };
   }, [profiles]);
 
-  const columns = [
+  const columns = useMemo(() => [
     {
       key: 'name',
-      label: 'IB Name',
-      sortable: true,
-      render: (ib) => (
+      label: 'IB NAME',
+      render: (val, row) => (
         <div>
-          <div className="font-medium text-gray-900">{ib.name}</div>
-          <div className="text-sm text-gray-500">{ib.email}</div>
+          <div className="font-medium text-gray-900">{val}</div>
+          <div className="text-sm text-gray-500">{row.email}</div>
         </div>
       )
     },
     {
       key: 'status',
-      label: 'Status',
-      sortable: true,
-      render: (ib) => <StatusBadge status={ib.status} />
+      label: 'STATUS',
+      render: (val, row) => <StatusBadge status={row.status} />
     },
     {
       key: 'joinDate',
-      label: 'Join Date',
-      sortable: true,
-      render: (ib) =>
-        ib.joinDate ? new Date(ib.joinDate).toLocaleDateString() : '—'
+      label: 'JOIN DATE',
+      render: (val, row) =>
+        row.joinDate ? new Date(row.joinDate).toLocaleDateString() : '—'
     },
     {
       key: 'approvedDate',
-      label: 'Approved Date',
-      sortable: true,
-      render: (ib) =>
-        ib.approvedDate ? new Date(ib.approvedDate).toLocaleDateString() : '—'
+      label: 'APPROVED DATE',
+      render: (val, row) =>
+        row.approvedDate ? new Date(row.approvedDate).toLocaleDateString() : '—'
     },
     {
       key: 'usdPerLot',
-      label: 'USD / Lot',
-      sortable: true,
-      render: (ib) => `$${Number(ib.usdPerLot || 0).toFixed(2)}`
+      label: 'USD / LOT',
+      render: (val, row) => `$${Number(row.usdPerLot || 0).toFixed(2)}`
     },
     {
       key: 'spreadPercentagePerLot',
-      label: 'Spread %',
-      sortable: true,
-      render: (ib) => `${Number(ib.spreadPercentagePerLot || 0).toFixed(2)}%`
+      label: 'SPREAD %',
+      render: (val, row) => `${Number(row.spreadPercentagePerLot || 0).toFixed(2)}%`
     },
     {
       key: 'totalClients',
-      label: 'Clients',
-      sortable: true,
-      render: (ib) => Number(ib.totalClients || 0)
+      label: 'CLIENTS',
+      render: (val, row) => Number(row.totalClients || 0)
     },
     {
       key: 'totalVolume',
-      label: 'Volume',
-      sortable: true,
-      render: (ib) => `$${formatCurrency(ib.totalVolume || 0)}`
+      label: 'VOLUME',
+      render: (val, row) => `$${formatCurrency(row.totalVolume || 0)}`
+    },
+    {
+      key: 'actions',
+      label: 'ACTIONS',
+      render: (val, row) => (
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => handleViewIB(row)}
+          icon={<FiEye className="h-4 w-4" />}
+          className="text-blue-600 hover:text-blue-700 border-blue-200 hover:border-blue-300"
+        >
+          View
+        </Button>
+      )
     }
-  ];
+  ], []);
 
   const statusOptions = [
     { value: 'all', label: 'All Status' },
@@ -351,55 +341,25 @@ const IBOverview = () => {
         </AdminCard>
       </div>
 
-      {/* Filters and Search */}
-      <AdminCard>
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-            <div className="flex-1 w-full sm:w-auto">
-              <div className="relative">
-                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <input
-                  type="text"
-                  placeholder="Search IBs..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 flex-wrap">
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent w-full sm:w-auto"
-              >
-                {statusOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-
-              <Button variant="outline" size="sm" icon={<FiFilter className="h-4 w-4" />}>
-                <span className="hidden sm:inline">More Filters</span>
-                <span className="sm:hidden">Filters</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </AdminCard>
-
       {/* IBs Table */}
       <AdminCard>
-        <DataTable
-          data={filteredIBs}
+        <ProTable
+          title="IB Overview"
+          rows={profiles}
           columns={columns}
-          searchable={false}
-          filterable={false}
-          exportable={false}
           loading={loading}
-          onView={handleViewIB}
+          pageSize={25}
+          searchPlaceholder="Search IBs..."
+          filters={{
+            searchKeys: ['name', 'email', 'status'],
+            selects: [
+              {
+                key: 'status',
+                label: 'Status',
+                options: statusOptions
+              }
+            ]
+          }}
           emptyMessage={error ? 'Unable to load IB data' : 'No IBs found matching your criteria'}
         />
       </AdminCard>

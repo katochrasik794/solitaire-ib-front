@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { FiEdit, FiSave, FiX, FiUser, FiMail, FiCalendar, FiTrendingUp, FiDollarSign, FiEye, FiXCircle } from 'react-icons/fi';
 import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import StatusBadge from '../../../components/admin/StatusBadge';
-import DataTable from '../../../components/admin/DataTable';
+import ProTable from '../../../components/common/ProTable';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../../utils/api';
 
@@ -75,66 +75,60 @@ const IBProfiles = () => {
     }
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
       key: 'name',
       label: 'IB Partner',
-      sortable: true,
-      render: (profile) => (
+      render: (val, row) => (
         <div>
-          <div className="font-medium text-gray-900">{profile.name}</div>
-          <div className="text-sm text-gray-500">{profile.email}</div>
+          <div className="font-medium text-gray-900">{val}</div>
+          <div className="text-sm text-gray-500">{row.email}</div>
         </div>
       )
     },
     {
       key: 'status',
       label: 'Status',
-      sortable: true,
-      render: (profile) => (
-        <StatusBadge status={profile.status} />
+      render: (val, row) => (
+        <StatusBadge status={row.status} />
       )
     },
     {
       key: 'joinDate',
       label: 'Join Date',
-      sortable: true,
-      render: (profile) => (
+      render: (val, row) => (
         <div className="text-sm">
-          <div>{new Date(profile.joinDate).toLocaleDateString()}</div>
+          <div>{new Date(row.joinDate).toLocaleDateString()}</div>
         </div>
       )
     },
     {
       key: 'usdPerLot',
       label: 'USD per Lot',
-      sortable: true,
-      render: (profile) => (
+      render: (val, row) => (
         <div className="text-sm">
-          <div className="font-medium">${profile.usdPerLot || 0}</div>
+          <div className="font-medium">${row.usdPerLot || 0}</div>
         </div>
       )
     },
     {
       key: 'spreadPercentagePerLot',
       label: 'Spread %',
-      sortable: true,
-      render: (profile) => (
+      render: (val, row) => (
         <div className="text-sm">
-          <div className="font-medium">{profile.spreadPercentagePerLot || 0}%</div>
+          <div className="font-medium">{row.spreadPercentagePerLot || 0}%</div>
         </div>
       )
     },
     {
       key: 'actions',
       label: 'Actions',
-      sortable: false,
-      render: (profile) => (
+      render: (val, row) => (
         <div className="flex items-center space-x-2">
           <Button
             size="sm"
             variant="outline"
-            onClick={() => handleViewProfile(profile)}
+            onClick={() => handleViewProfile(row)}
             icon={<FiEye className="h-3 w-3" />}
           >
             View
@@ -142,17 +136,17 @@ const IBProfiles = () => {
           <Button
             size="sm"
             variant="outline"
-            onClick={() => handleUnapprove(profile)}
-            disabled={unapprovingId === profile.id}
+            onClick={() => handleUnapprove(row)}
+            disabled={unapprovingId === row.id}
             icon={<FiXCircle className="h-3 w-3" />}
             className="text-red-600 hover:text-red-700 hover:border-red-300"
           >
-            {unapprovingId === profile.id ? 'Unapproving...' : 'Unapprove'}
+            {unapprovingId === row.id ? 'Unapproving...' : 'Unapprove'}
           </Button>
         </div>
       )
     }
-  ];
+  ], [unapprovingId]);
 
   return (
     <div className="space-y-6">
@@ -166,17 +160,17 @@ const IBProfiles = () => {
 
       {/* IB Profiles Table */}
       <AdminCard>
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          </div>
-        ) : (
-          <DataTable
-            data={profiles}
-            columns={columns}
-            emptyMessage="No approved IB profiles found"
-          />
-        )}
+        <ProTable
+          rows={profiles}
+          columns={columns}
+          loading={loading}
+          pageSize={25}
+          searchPlaceholder="Search IB profiles..."
+          filters={{
+            searchKeys: ['name', 'email', 'status']
+          }}
+          emptyMessage="No approved IB profiles found"
+        />
       </AdminCard>
     </div>
   );

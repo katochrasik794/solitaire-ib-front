@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { FiPlus, FiRefreshCw, FiEdit3, FiCheck, FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
-import DataTable from '../../../components/admin/DataTable';
+import ProTable from '../../../components/common/ProTable';
 import { apiFetch } from '../../../utils/api';
 
 const Groups = () => {
@@ -92,13 +92,13 @@ const Groups = () => {
     }
   };
 
-  const handleAddCommission = (groupId) => {
-    navigate(`/admin/ib-management/commissions/${groupId}`);
+  const handleAddCommission = (group) => {
+    navigate(`/admin/ib-management/commissions/${encodeURIComponent(group)}`);
   };
 
   const handleEditName = (group) => {
-    setEditingGroup(group.group_id);
-    setEditingName(group.name);
+    setEditingGroup(group.group);
+    setEditingName(group.dedicated_name || '');
   };
 
   const handleSaveName = async (groupId) => {
@@ -112,37 +112,22 @@ const Groups = () => {
         return;
       }
 
-      const response = await fetch(`/api/admin/ib-requests/groups/${groupId}/name`, {
+      const response = await apiFetch(`/admin/ib-requests/groups/${encodeURIComponent(groupId)}/name`, {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
           name: editingName.trim()
         })
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
-
       if (response.ok) {
         const data = await response.json();
         console.log('Success response:', data);
-        // Show success message instead of alert
         alert(`Success: ${data.message}`);
         await fetchGroups(); // Refresh groups after update
         setEditingGroup(null);
         setEditingName('');
       } else {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch (parseError) {
-          errorData = { message: errorText };
-        }
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
         alert(`Failed to update group name: ${errorData.message || 'Unknown error'}`);
       }
     } catch (error) {
@@ -158,19 +143,17 @@ const Groups = () => {
     setEditingName('');
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
-      key: 'group_id',
+      key: 'group',
       label: 'Group ID',
-      sortable: true,
-      render: (item) => <span className="font-mono text-sm">{item.group_id}</span>
+      render: (val) => <span className="font-mono text-sm">{val || '-'}</span>
     },
     {
-      key: 'name',
+      key: 'dedicated_name',
       label: 'Group Name',
-      sortable: true,
-      render: (item) => {
-        if (editingGroup === item.group_id) {
+      render: (val, row) => {
+        if (editingGroup === row.group) {
           return (
             <div className="flex items-center gap-2">
               <input
@@ -184,7 +167,7 @@ const Groups = () => {
               <Button
                 size="sm"
                 variant="success"
-                onClick={() => handleSaveName(item.group_id)}
+                onClick={() => handleSaveName(row.group)}
                 disabled={updating || !editingName.trim()}
                 icon={<FiCheck className="h-3 w-3" />}
               />
@@ -202,13 +185,13 @@ const Groups = () => {
         return (
           <div className="flex items-center justify-between group-row">
             <div>
-              <div className="font-medium text-gray-900">{item.name}</div>
+              <div className="font-medium text-gray-900">{val || 'Click to edit'}</div>
               <div className="text-xs text-gray-500">Click to edit</div>
             </div>
             <Button
               size="sm"
               variant="ghost"
-              onClick={() => handleEditName(item)}
+              onClick={() => handleEditName(row)}
               icon={<FiEdit3 className="h-3 w-3" />}
               className="edit-button opacity-0 transition-opacity"
             />
@@ -219,35 +202,32 @@ const Groups = () => {
     {
       key: 'description',
       label: 'Description',
-      sortable: false,
-      render: (item) => <span className="text-gray-600">{item.description || 'N/A'}</span>
+      render: (val) => <span className="text-gray-600">{val || 'N/A'}</span>
     },
     {
       key: 'commission_count',
       label: 'Structures',
-      sortable: false,
-      render: (item) => (
+      render: (val, row) => (
         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-          {item.commissionStructures?.length || 0} structures
+          {row.commissionStructures?.length || 0} structures
         </span>
       )
     },
     {
       key: 'actions',
       label: 'Actions',
-      sortable: false,
-      render: (item) => (
+      render: (val, row) => (
         <Button
           size="sm"
           variant="primary"
-          onClick={() => handleAddCommission(item.group_id)}
+          onClick={() => handleAddCommission(row.group)}
           icon={<FiPlus className="h-3 w-3" />}
         >
           Add Commission
         </Button>
       )
     }
-  ];
+  ], [editingGroup, editingName, updating]);
 
   return (
     <div className="space-y-6">
@@ -287,19 +267,17 @@ const Groups = () => {
 
       {/* Groups Table */}
       <AdminCard>
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          </div>
-        ) : (
-          <DataTable
-            data={groups}
-            columns={columns}
-            searchable={true}
-            filterable={false}
-            emptyMessage="No groups available. Click 'Sync Groups' to fetch from API."
-          />
-        )}
+        <ProTable
+          rows={groups}
+          columns={columns}
+          loading={loading}
+          pageSize={25}
+          searchPlaceholder="Search groups..."
+          filters={{
+            searchKeys: ['group', 'dedicated_name', 'account_type']
+          }}
+          emptyMessage="No groups available. Click 'Sync Groups' to fetch from API."
+        />
       </AdminCard>
     </div>
   );

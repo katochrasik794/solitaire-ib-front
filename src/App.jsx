@@ -38,7 +38,6 @@ const AllSymbols = React.lazy(() => import('./pages/admin/ib-management/AllSymbo
 const SymbolsPipValues = React.lazy(() => import('./pages/admin/trading-management/SymbolsPipValues'));
 const IBWithdrawals = React.lazy(() => import('./pages/admin/trading-management/IBWithdrawals'));
 const ClientLinking = React.lazy(() => import('./pages/admin/trading-management/ClientLinking'));
-const TradingGroups = React.lazy(() => import('./pages/admin/group-management/TradingGroups'));
 const CommissionDistribution = React.lazy(() => import('./pages/admin/group-management/CommissionDistribution'));
 const Promotions = React.lazy(() => import('./pages/admin/content-management/Promotions'));
 const HelpSupport = React.lazy(() => import('./pages/admin/content-management/HelpSupport'));
@@ -342,8 +341,6 @@ function AppRoutes() {
         <Route path="/admin/trading-management/ib-withdrawals" element={<AdminRoute><IBWithdrawals /></AdminRoute>} />
         <Route path="/admin/reports/withdrawal-history" element={<AdminRoute><WithdrawalHistoryReports /></AdminRoute>} />
         <Route path="/admin/trading-management/client-linking" element={<AdminRoute><ClientLinking /></AdminRoute>} />
-        <Route path="/admin/group-management" element={<AdminRoute><TradingGroups /></AdminRoute>} />
-        <Route path="/admin/group-management/trading-groups" element={<AdminRoute><TradingGroups /></AdminRoute>} />
         <Route path="/admin/group-management/commission-distribution" element={<AdminRoute><CommissionDistribution /></AdminRoute>} />
         <Route path="/admin/financial-management" element={<AdminRoute><AdminPlaceholder title="Financial Management" /></AdminRoute>} />
         <Route path="/admin/content-management" element={<AdminRoute><Promotions /></AdminRoute>} />

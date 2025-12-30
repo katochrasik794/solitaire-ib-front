@@ -105,12 +105,6 @@ const AdminSidebar = () => {
       path: '/admin/trading-management/client-linking'
     },
     {
-      id: 'trading-groups',
-      label: 'Trading Groups',
-      icon: FiLayers,
-      path: '/admin/group-management/trading-groups'
-    },
-    {
       id: 'commission-distribution',
       label: 'Commission Distribution',
       icon: FiPieChart,

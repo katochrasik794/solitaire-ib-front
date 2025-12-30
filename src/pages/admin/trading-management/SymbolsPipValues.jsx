@@ -1,27 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   FiPlus,
   FiEdit,
   FiTrash2,
-  FiTrendingUp,
-  FiDollarSign,
-  FiActivity,
-  FiSettings,
   FiRefreshCw,
   FiInfo,
-  FiSearch,
-  FiFilter,
   FiX,
   FiCloud,
   FiAlertTriangle,
   FiGrid,
-  FiDatabase
+  FiDollarSign
 } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import StatusBadge from '../../../components/admin/StatusBadge';
-import EnhancedDataTable from '../../../components/admin/EnhancedDataTable';
+import ProTable from '../../../components/common/ProTable';
 import { SymbolModal } from '../../../components/modals/SymbolModal';
 import { apiFetch } from '../../../utils/api';
 
@@ -62,17 +56,18 @@ const SymbolsPipValues = () => {
   const [deletingId, setDeletingId] = useState(null);
   const [togglingId, setTogglingId] = useState(null);
 
-  // Fetch symbols
+  // Fetch symbols - fetch all for client-side filtering with ProTable
   const fetchSymbols = async () => {
     try {
       setLoading(true);
+      // Fetch all symbols (or a large page size) for client-side filtering
       const params = new URLSearchParams({
-        page: pagination.page.toString(),
-        limit: pagination.limit.toString(),
-        category: filters.category,
-        group: filters.group,
-        status: filters.status,
-        search: filters.search
+        page: '1',
+        limit: '10000', // Large limit to get all symbols for client-side filtering
+        category: 'all',
+        group: 'all',
+        status: 'all',
+        search: ''
       });
 
       const response = await apiFetch(`/admin/symbols-with-categories?${params}`);
@@ -84,9 +79,9 @@ const SymbolsPipValues = () => {
         setSymbols(symbolsData);
         setPagination(prev => ({
           ...prev,
-          total: data.data?.pagination?.total || 0,
-          totalPages: data.data?.pagination?.totalPages || 1,
-          limit: data.data?.pagination?.limit || 100
+          total: data.data?.pagination?.total || symbolsData.length,
+          totalPages: 1,
+          limit: symbolsData.length
         }));
       } else {
         console.error('Failed to fetch symbols:', response.status);
@@ -316,17 +311,8 @@ const SymbolsPipValues = () => {
   };
 
   useEffect(() => {
-    // Reset to page 1 when filters change
-    if (pagination.page !== 1) {
-      setPagination(prev => ({ ...prev, page: 1 }));
-    } else {
-      fetchSymbols();
-    }
-  }, [filters]);
-
-  useEffect(() => {
     fetchSymbols();
-  }, [pagination.page]);
+  }, []);
 
   useEffect(() => {
     fetchStats();
@@ -334,21 +320,19 @@ const SymbolsPipValues = () => {
     checkConnection();
   }, []);
 
-  const columns = [
+  const columns = useMemo(() => [
     {
       key: 'symbol',
       label: 'SYMBOL',
-      sortable: true,
-      render: (symbol) => (
-        <span className="font-mono font-medium text-gray-900">{symbol.symbol}</span>
+      render: (val, row) => (
+        <span className="font-mono font-medium text-gray-900">{val}</span>
       )
     },
     {
       key: 'spread',
       label: 'SPREAD',
-      sortable: true,
-      render: (symbol) => {
-        const spread = parseFloat(symbol.spread) || 0;
+      render: (val, row) => {
+        const spread = parseFloat(val) || 0;
         // Format spread with appropriate decimals (usually 5-6 decimals for forex/crypto)
         const decimals = spread < 0.001 ? 6 : (spread < 1 ? 5 : 2);
         return (
@@ -361,17 +345,15 @@ const SymbolsPipValues = () => {
     {
       key: 'category',
       label: 'CATEGORY',
-      sortable: true,
-      render: (symbol) => (
-        <span className="text-sm text-gray-700">{symbol.category || '-'}</span>
+      render: (val, row) => (
+        <span className="text-sm text-gray-700">{val || '-'}</span>
       )
     },
     {
       key: 'pip_per_lot',
       label: 'PIP/LOT',
-      sortable: true,
-      render: (symbol) => {
-        const pipPerLot = parseFloat(symbol.pip_per_lot) || 1.00;
+      render: (val, row) => {
+        const pipPerLot = parseFloat(val) || 1.00;
         return (
           <span className="text-sm font-medium text-gray-900">
             {pipPerLot.toFixed(2)} pip
@@ -382,9 +364,8 @@ const SymbolsPipValues = () => {
     {
       key: 'pip_value',
       label: 'PIP VALUE',
-      sortable: true,
-      render: (symbol) => {
-        const pipValue = parseFloat(symbol.pip_value) || 0.00;
+      render: (val, row) => {
+        const pipValue = parseFloat(val) || 0.00;
         return (
           <span className="text-sm font-medium text-green-600">
             USD{pipValue.toFixed(2)}
@@ -395,9 +376,8 @@ const SymbolsPipValues = () => {
     {
       key: 'commission',
       label: 'COMMISSION',
-      sortable: true,
-      render: (symbol) => {
-        const commission = parseFloat(symbol.commission) || 0.00;
+      render: (val, row) => {
+        const commission = parseFloat(val) || 0.00;
         return (
           <span className="text-sm font-medium text-green-600">
             USD{commission.toFixed(2)}
@@ -408,27 +388,25 @@ const SymbolsPipValues = () => {
     {
       key: 'currency',
       label: 'CURRENCY',
-      sortable: true,
-      render: (symbol) => (
+      render: (val, row) => (
         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-          {symbol.currency || 'USD'}
+          {val || 'USD'}
         </span>
       )
     },
     {
       key: 'status',
       label: 'STATUS',
-      sortable: true,
-      render: (symbol) => {
-        const isActive = (symbol.status || 'active') === 'active';
-        const isToggling = togglingId === symbol.id;
+      render: (val, row) => {
+        const isActive = (row.status || 'active') === 'active';
+        const isToggling = togglingId === row.id;
 
         return (
           <label className="relative inline-flex items-center cursor-pointer">
             <input
               type="checkbox"
               checked={isActive}
-              onChange={() => handleStatusToggle(symbol.id, symbol.status || 'active')}
+              onChange={() => handleStatusToggle(row.id, row.status || 'active')}
               disabled={isToggling}
               className="sr-only peer"
             />
@@ -443,14 +421,13 @@ const SymbolsPipValues = () => {
     {
       key: 'actions',
       label: 'ACTIONS',
-      sortable: false,
-      render: (symbol) => (
+      render: (val, row) => (
         <div className="flex items-center gap-2">
           <Button
             size="sm"
             variant="ghost"
             icon={<FiEdit className="h-4 w-4" />}
-            onClick={() => handleEdit(symbol)}
+            onClick={() => handleEdit(row)}
             className="text-blue-600 hover:text-blue-700"
             title="Edit"
           />
@@ -458,16 +435,16 @@ const SymbolsPipValues = () => {
             size="sm"
             variant="ghost"
             icon={<FiTrash2 className="h-4 w-4" />}
-            onClick={() => handleDelete(symbol.id, symbol.symbol)}
-            loading={deletingId === symbol.id}
-            disabled={deletingId === symbol.id}
+            onClick={() => handleDelete(row.id, row.symbol)}
+            loading={deletingId === row.id}
+            disabled={deletingId === row.id}
             className="text-red-600 hover:text-red-700"
             title="Delete"
           />
         </div>
       )
     }
-  ];
+  ], [togglingId, deletingId]);
 
   return (
     <div className="space-y-6">
@@ -607,62 +584,6 @@ const SymbolsPipValues = () => {
         </AdminCard>
       </div>
 
-      {/* Filters and Search */}
-      <AdminCard>
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-          <select
-            value={filters.category}
-            onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-          >
-            <option value="all">All Categories</option>
-            {categories.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-
-          <select
-            value={filters.group}
-            onChange={(e) => setFilters(prev => ({ ...prev, group: e.target.value }))}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-          >
-            <option value="all">All Groups</option>
-            {groups.map(group => (
-              <option key={group} value={group}>{group}</option>
-            ))}
-          </select>
-
-          <select
-            value={filters.status}
-            onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-          >
-            <option value="all">All Status</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-
-          <div className="relative flex-1 w-full sm:max-w-md">
-            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <input
-              type="text"
-              placeholder="Search symbol..."
-              value={filters.search}
-              onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
-            />
-          </div>
-
-          <Button
-            variant="primary"
-            size="sm"
-            icon={<FiPlus className="h-4 w-4" />}
-            onClick={() => alert('Add symbol functionality coming soon')}
-          >
-            + Add Symbol
-          </Button>
-        </div>
-      </AdminCard>
 
       {/* Debug Info Bar */}
       <AdminCard className="bg-blue-50 border-blue-200">
@@ -718,39 +639,32 @@ const SymbolsPipValues = () => {
 
       {/* Symbols Table */}
       <AdminCard>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Symbols ({pagination.total} total)
-          </h2>
-          <Button
-            variant="outline"
-            size="sm"
-            icon={<FiInfo className="h-4 w-4" />}
-          >
-            Preview
-          </Button>
-        </div>
-        <EnhancedDataTable
-          data={symbols}
+        <ProTable
+          title={`Symbols (${pagination.total} total)`}
+          rows={symbols}
           columns={columns}
-          searchable={false}
-          filterable={false}
-          exportable={true}
-          pagination={true}
-          pageSize={pagination.limit}
-          totalCount={pagination.total}
-          currentPage={pagination.page}
           loading={loading}
+          pageSize={100}
+          searchPlaceholder="Search symbol, category, currency..."
+          filters={{
+            searchKeys: ['symbol', 'category', 'currency', 'status'],
+            selects: [
+              {
+                key: 'category',
+                label: 'All Categories',
+                options: categories.map(cat => ({ value: cat, label: cat }))
+              },
+              {
+                key: 'status',
+                label: 'All Status',
+                options: [
+                  { value: 'active', label: 'Active' },
+                  { value: 'inactive', label: 'Inactive' }
+                ]
+              }
+            ]
+          }}
           emptyMessage="No symbols found"
-          onPageChange={(newPage) => {
-            setPagination(prev => ({ ...prev, page: newPage }));
-          }}
-          onExport={(data) => {
-            // Export all filtered data from server
-            const exportData = symbols.length > 0 ? symbols : data;
-            console.log('Exporting symbols:', exportData.length);
-            // You can implement actual CSV export here
-          }}
         />
       </AdminCard>
 
