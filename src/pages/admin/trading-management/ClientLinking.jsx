@@ -17,6 +17,7 @@ import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import StatusBadge from '../../../components/admin/StatusBadge';
 import EnhancedDataTable from '../../../components/admin/EnhancedDataTable';
+import { apiFetch } from '../../../utils/api';
 
 const ClientLinking = () => {
   const [selectedUserId, setSelectedUserId] = useState('');
@@ -46,13 +47,7 @@ const ClientLinking = () => {
   // Fetch users list from User table who are NOT under any IB
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/ib-requests/unlinked-users', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/ib-requests/unlinked-users');
 
       if (response.ok) {
         const data = await response.json();
@@ -77,13 +72,7 @@ const ClientLinking = () => {
   // Fetch IB list from ib_request table (approved status only)
   const fetchIbs = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/ib-requests/profiles/approved', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/ib-requests/profiles/approved');
 
       if (response.ok) {
         const data = await response.json();
@@ -374,12 +363,8 @@ const ClientLinking = () => {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
 
-      const response = await fetch('/api/admin/ib-requests/move-user', {
+      const response = await apiFetch('/admin/ib-requests/move-user', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
           user_id: selectedUser.id,
           user_name: selectedUser.name,

@@ -8,6 +8,7 @@ import ActionButtons from '../../../components/admin/ActionButtons';
 import EnhancedDataTable from '../../../components/admin/EnhancedDataTable';
 import { useNavigate } from 'react-router-dom';
 import CommissionStructureModal from '../../../components/modals/CommissionStructureModal';
+import { apiFetch } from '../../../utils/api';
 
 // Removed old IB type system - now using groups and commission structures
 
@@ -29,13 +30,7 @@ const CommissionModal = ({ isOpen, onClose, request, onApprove }) => {
     const fetchApprovalOptions = async () => {
       try {
         setLoadingOptions(true);
-        const token = localStorage.getItem('adminToken');
-        const response = await fetch('/api/admin/ib-requests/approval-options', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
+        const response = await apiFetch('/admin/ib-requests/approval-options');
 
         if (response.ok) {
           const data = await response.json();
@@ -507,12 +502,7 @@ const IBRequests = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/ib-requests', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/ib-requests');
 
       if (response.ok) {
         const data = await response.json();
@@ -531,12 +521,7 @@ const IBRequests = () => {
   const fetchStats = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/ib-requests/stats/overview', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/ib-requests/stats/overview');
 
       if (response.ok) {
         const data = await response.json();

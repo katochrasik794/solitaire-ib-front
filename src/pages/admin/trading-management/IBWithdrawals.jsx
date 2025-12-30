@@ -18,6 +18,7 @@ import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import StatusBadge from '../../../components/admin/StatusBadge';
 import EnhancedDataTable from '../../../components/admin/EnhancedDataTable';
+import { apiFetch } from '../../../utils/api';
 
 // Approval Modal Component
 const ApprovalModal = ({ isOpen, onClose, withdrawal, onComplete }) => {
@@ -220,13 +221,7 @@ const IBWithdrawals = () => {
   // Fetch stats
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/withdrawals/stats', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/withdrawals/stats');
 
       const data = await response.json();
       if (data.success) {

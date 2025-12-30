@@ -3,6 +3,7 @@ import { FiRefreshCw, FiSearch, FiList, FiDatabase, FiTrendingUp } from 'react-i
 import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import DataTable from '../../../components/admin/DataTable';
+import { apiFetch } from '../../../utils/api';
 
 const AllSymbols = () => {
   const [symbols, setSymbols] = useState([]);
@@ -25,19 +26,13 @@ const AllSymbols = () => {
   const fetchSymbols = async (page = 1, search = '') => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
       const params = new URLSearchParams({
         page: page.toString(),
         limit: pageSize.toString(),
         ...(search && { search })
       });
 
-      const response = await fetch(`/api/admin/symbols?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch(`/admin/symbols?${params}`);
 
       if (response.ok) {
         const data = await response.json();
@@ -58,13 +53,7 @@ const AllSymbols = () => {
   // Fetch symbols statistics
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/symbols/stats', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/symbols/stats');
 
       if (response.ok) {
         const data = await response.json();
@@ -80,10 +69,8 @@ const AllSymbols = () => {
     try {
       setSyncing(true);
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/symbols/sync', {
+      const response = await apiFetch('/admin/symbols/sync', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });

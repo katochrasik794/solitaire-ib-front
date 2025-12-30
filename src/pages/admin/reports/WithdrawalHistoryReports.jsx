@@ -14,6 +14,7 @@ import {
 import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import ProTable from '../../../components/common/ProTable';
+import { apiFetch } from '../../../utils/api';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const WithdrawalHistoryReports = () => {
@@ -51,12 +52,7 @@ const WithdrawalHistoryReports = () => {
       if (statusFilter !== 'all') params.append('status', statusFilter);
       params.append('limit', '10000'); // Get all for reporting
 
-      const response = await fetch(`/api/admin/withdrawals?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch(`/admin/withdrawals?${params}`);
 
       const data = await response.json();
       if (data.success) {

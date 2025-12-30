@@ -23,6 +23,7 @@ import Button from '../../../components/common/Button';
 import StatusBadge from '../../../components/admin/StatusBadge';
 import EnhancedDataTable from '../../../components/admin/EnhancedDataTable';
 import { SymbolModal } from '../../../components/modals/SymbolModal';
+import { apiFetch } from '../../../utils/api';
 
 const SymbolsPipValues = () => {
   const [symbols, setSymbols] = useState([]);
@@ -65,7 +66,6 @@ const SymbolsPipValues = () => {
   const fetchSymbols = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
       const params = new URLSearchParams({
         page: pagination.page.toString(),
         limit: pagination.limit.toString(),
@@ -75,12 +75,7 @@ const SymbolsPipValues = () => {
         search: filters.search
       });
 
-      const response = await fetch(`/api/admin/symbols-with-categories?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch(`/admin/symbols-with-categories?${params}`);
 
       if (response.ok) {
         const data = await response.json();
@@ -106,13 +101,7 @@ const SymbolsPipValues = () => {
   // Fetch stats
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/symbols-with-categories/stats', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/symbols-with-categories/stats');
 
       if (response.ok) {
         const data = await response.json();
@@ -129,13 +118,7 @@ const SymbolsPipValues = () => {
   // Fetch groups
   const fetchGroups = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/symbols-with-categories/groups', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/symbols-with-categories/groups');
 
       if (response.ok) {
         const data = await response.json();
@@ -149,13 +132,7 @@ const SymbolsPipValues = () => {
   // Check database connection
   const checkConnection = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/symbols-with-categories/test/connection', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/symbols-with-categories/test/connection');
 
       if (response.ok) {
         const data = await response.json();
@@ -170,13 +147,8 @@ const SymbolsPipValues = () => {
   const handleSync = async (category = null) => {
     try {
       setSyncing(prev => ({ ...prev, [category || 'all']: true }));
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/symbols-with-categories/sync', {
+      const response = await apiFetch('/admin/symbols-with-categories/sync', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({ category })
       });
 

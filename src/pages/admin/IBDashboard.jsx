@@ -25,6 +25,7 @@ import AdminCard from '../../components/admin/AdminCard';
 import Button from '../../components/common/Button';
 import StatusBadge from '../../components/admin/StatusBadge';
 import { useAdmin } from '../../hooks/useAdmin';
+import { apiFetch } from '../../utils/api';
 
 const IBDashboard = () => {
   const { ibs, ibRequests, settlements } = useAdmin();
@@ -57,36 +58,16 @@ const IBDashboard = () => {
       const token = localStorage.getItem('adminToken');
 
       // Fetch summary for top cards
-      const summaryResponse = await fetch('/api/admin/dashboard/summary', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const summaryResponse = await apiFetch('/admin/dashboard/summary');
 
       // Fetch IB requests stats
-      const requestsResponse = await fetch('/api/admin/ib-requests/stats/overview', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const requestsResponse = await apiFetch('/admin/ib-requests/stats/overview');
 
       // Fetch approved IB profiles
-      const profilesResponse = await fetch('/api/admin/ib-requests/profiles/approved', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const profilesResponse = await apiFetch('/admin/ib-requests/profiles/approved');
 
       // Fetch recent activity (mock for now)
-      const activityResponse = await fetch('/api/admin/dashboard/activity/recent', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const activityResponse = await apiFetch('/admin/dashboard/activity/recent');
 
       if (requestsResponse.ok) {
         const requestsData = await requestsResponse.json();

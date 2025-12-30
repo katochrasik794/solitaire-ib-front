@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import StatusBadge from '../../../components/admin/StatusBadge';
+import { apiFetch } from '../../../utils/api';
 
 const CommissionStructures = () => {
   const [groupStructures, setGroupStructures] = useState([]);
@@ -23,12 +24,7 @@ const CommissionStructures = () => {
         navigate('/admin/login');
         return;
       }
-      const response = await fetch('/api/admin/ib-requests/commission-structures', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/ib-requests/commission-structures');
 
       if (response.ok) {
         const data = await response.json();

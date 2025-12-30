@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import DataTable from '../../../components/admin/DataTable';
+import { apiFetch } from '../../../utils/api';
 
 const Groups = () => {
   const [groups, setGroups] = useState([]);
@@ -28,12 +29,7 @@ const Groups = () => {
         navigate('/admin/login');
         return;
       }
-      const response = await fetch('/api/admin/ib-requests/groups', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/ib-requests/groups');
 
       if (response.ok) {
         const data = await response.json();
@@ -57,12 +53,8 @@ const Groups = () => {
     try {
       setSyncing(true);
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/ib-requests/groups/sync', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+      const response = await apiFetch('/admin/ib-requests/groups/sync', {
+        method: 'POST'
       });
 
       if (response.ok) {
@@ -81,12 +73,8 @@ const Groups = () => {
     try {
       setRegenerating(true);
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/ib-requests/groups/regenerate-names', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+      const response = await apiFetch('/admin/ib-requests/groups/regenerate-names', {
+        method: 'POST'
       });
 
       if (response.ok) {

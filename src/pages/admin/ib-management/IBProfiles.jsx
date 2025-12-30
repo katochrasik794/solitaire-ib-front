@@ -5,6 +5,7 @@ import Button from '../../../components/common/Button';
 import StatusBadge from '../../../components/admin/StatusBadge';
 import DataTable from '../../../components/admin/DataTable';
 import { useNavigate } from 'react-router-dom';
+import { apiFetch } from '../../../utils/api';
 
 const IBProfiles = () => {
   const [profiles, setProfiles] = useState([]);
@@ -19,13 +20,7 @@ const IBProfiles = () => {
   const fetchProfiles = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/ib-requests/profiles/approved', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/ib-requests/profiles/approved');
 
       if (response.ok) {
         const data = await response.json();
@@ -51,13 +46,8 @@ const IBProfiles = () => {
 
     try {
       setUnapprovingId(ib.id);
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(`/api/admin/ib-requests/${ib.id}/status`, {
+      const response = await apiFetch(`/admin/ib-requests/${ib.id}/status`, {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
           status: 'pending',
           adminComments: 'Unapproved by admin'

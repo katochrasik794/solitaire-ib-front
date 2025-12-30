@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import EnhancedDataTable from '../../../components/admin/EnhancedDataTable';
+import { apiFetch } from '../../../utils/api';
 
 const TradingGroups = () => {
   const [groups, setGroups] = useState([]);
@@ -56,12 +57,7 @@ const TradingGroups = () => {
         search: filters.search
       });
 
-      const response = await fetch(`/api/admin/trading-groups?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch(`/admin/trading-groups?${params}`);
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -109,12 +105,7 @@ const TradingGroups = () => {
         return;
       }
 
-      const response = await fetch('/api/admin/trading-groups/stats', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/trading-groups/stats');
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -169,10 +160,8 @@ const TradingGroups = () => {
         return;
       }
 
-      const response = await fetch('/api/admin/trading-groups/sync', {
+      const response = await apiFetch('/admin/trading-groups/sync', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({

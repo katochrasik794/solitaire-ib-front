@@ -4,6 +4,7 @@ import ProTable from '../../../components/common/ProTable.jsx';
 import AdminCard from '../../../components/admin/AdminCard';
 import Badge from '../../../components/common/Badge';
 import RewardClaimDetails from './RewardClaimDetails';
+import { apiFetch } from '../../../utils/api';
 
 const ClaimedRewards = () => {
   const [loading, setLoading] = useState(true);
@@ -57,12 +58,7 @@ const ClaimedRewards = () => {
         params.append('dateTo', filters.dateTo);
       }
 
-      const response = await fetch(`/api/admin/rewards/claims?${params.toString()}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch(`/admin/rewards/claims?${params.toString()}`);
 
       const data = await response.json();
 
@@ -83,13 +79,7 @@ const ClaimedRewards = () => {
 
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/rewards/stats', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/rewards/stats');
 
       const data = await response.json();
 

@@ -13,6 +13,7 @@ import {
 import Swal from 'sweetalert2';
 import AdminCard from '../../../components/admin/AdminCard';
 import ProTable from '../../../components/common/ProTable';
+import { apiFetch } from '../../../utils/api';
 
 const CommissionDistribution = () => {
   const [ibs, setIbs] = useState([]);
@@ -54,12 +55,7 @@ const CommissionDistribution = () => {
         sort_by: filters.sort_by
       });
 
-      const response = await fetch(`/api/admin/commission-distribution?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch(`/admin/commission-distribution?${params}`);
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -100,12 +96,7 @@ const CommissionDistribution = () => {
 
       if (!token) return;
 
-      const response = await fetch('/api/admin/commission-distribution/stats', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/commission-distribution/stats');
 
       if (response.ok) {
         const result = await response.json();
@@ -130,12 +121,7 @@ const CommissionDistribution = () => {
 
       if (!token) return;
 
-      const response = await fetch('/api/admin/commission-distribution/rates', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/admin/commission-distribution/rates');
 
       if (response.ok) {
         const result = await response.json();

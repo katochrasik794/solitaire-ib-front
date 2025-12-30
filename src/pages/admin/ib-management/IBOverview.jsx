@@ -18,6 +18,7 @@ import AdminCard from '../../../components/admin/AdminCard';
 import Button from '../../../components/common/Button';
 import StatusBadge from '../../../components/admin/StatusBadge';
 import DataTable from '../../../components/admin/DataTable';
+import { apiFetch } from '../../../utils/api';
 
 const IBOverview = () => {
   const [profiles, setProfiles] = useState([]);
@@ -38,13 +39,7 @@ const IBOverview = () => {
       try {
         setLoading(true);
         setError('');
-        const token = localStorage.getItem('adminToken');
-        const response = await fetch('/api/admin/ib-requests/profiles/approved', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
+        const response = await apiFetch('/admin/ib-requests/profiles/approved');
 
         if (!response.ok) {
           throw new Error('Failed to load IB data');
@@ -69,13 +64,7 @@ const IBOverview = () => {
 
     const fetchStats = async () => {
       try {
-        const token = localStorage.getItem('adminToken');
-        const response = await fetch('/api/admin/ib-requests/stats/overview', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
+        const response = await apiFetch('/admin/ib-requests/stats/overview');
 
         if (response.ok) {
           const data = await response.json();

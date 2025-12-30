@@ -1,4 +1,18 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5001/api');
+// Force localhost in development mode
+const getApiBaseUrl = () => {
+  // If VITE_API_BASE_URL is explicitly set, use it
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+  // In production, use relative path
+  if (import.meta.env.PROD) {
+    return '/api';
+  }
+  // In development, always use localhost:5005
+  return 'http://localhost:5005/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 const API_TIMEOUT = import.meta.env.VITE_API_TIMEOUT || 10000;
 
 // Create axios-like fetch wrapper
@@ -216,6 +230,46 @@ export const tokenManager = {
   isAuthenticated: () => {
     return !!localStorage.getItem('token');
   },
+};
+
+// Helper function to get API base URL for direct fetch calls
+export const getApiBaseUrl = () => {
+  // If VITE_API_BASE_URL is explicitly set, use it
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+  // In production, use relative path
+  if (import.meta.env.PROD) {
+    return '/api';
+  }
+  // In development, always use localhost:5005
+  return 'http://localhost:5005/api';
+};
+
+// Helper function for direct fetch calls that need absolute URLs
+export const apiFetch = async (endpoint, options = {}) => {
+  const baseUrl = getApiBaseUrl();
+  const url = endpoint.startsWith('http') ? endpoint : `${baseUrl}${endpoint}`;
+  
+  // Add auth token if available
+  const isAdminRoute = endpoint.includes('/admin');
+  const token = isAdminRoute 
+    ? localStorage.getItem('adminToken') 
+    : localStorage.getItem('token');
+  
+  const headers = {
+    'Content-Type': 'application/json',
+    ...options.headers,
+  };
+  
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  
+  return fetch(url, {
+    ...options,
+    headers
+  });
 };
 
 export default apiClient;

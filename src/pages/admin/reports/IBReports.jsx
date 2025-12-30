@@ -42,6 +42,7 @@ import {
 } from 'recharts';
 import AdminCard from '../../../components/admin/AdminCard';
 import ProTable from '../../../components/common/ProTable';
+import { apiFetch } from '../../../utils/api';
 
 const IBReports = () => {
   const [period, setPeriod] = useState('30d');
@@ -87,27 +88,13 @@ const IBReports = () => {
         performersRes,
         rewardsRes
       ] = await Promise.all([
-        fetch(`/api/admin/ib-reports/summary?${params}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch(`/api/admin/ib-reports/commission-trends?${params}&groupBy=day`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch(`/api/admin/ib-reports/trading-volume?${params}&groupBy=day`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch(`/api/admin/ib-reports/client-growth?${params}&groupBy=day`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch(`/api/admin/ib-reports/withdrawals?${params}&groupBy=day`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch(`/api/admin/ib-reports/top-performers?${params}&limit=20`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch(`/api/admin/ib-reports/reward-claims?${params}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+        apiFetch(`/admin/ib-reports/summary?${params}`),
+        apiFetch(`/admin/ib-reports/commission-trends?${params}&groupBy=day`),
+        apiFetch(`/admin/ib-reports/trading-volume?${params}&groupBy=day`),
+        apiFetch(`/admin/ib-reports/client-growth?${params}&groupBy=day`),
+        apiFetch(`/admin/ib-reports/withdrawals?${params}&groupBy=day`),
+        apiFetch(`/admin/ib-reports/top-performers?${params}&limit=20`),
+        apiFetch(`/admin/ib-reports/reward-claims?${params}`)
       ]);
 
       if (summaryRes.ok) {
@@ -177,9 +164,7 @@ const IBReports = () => {
       }
       params.append('type', type);
 
-      const response = await fetch(`/api/admin/ib-reports/export?${params}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const response = await apiFetch(`/admin/ib-reports/export?${params}`);
 
       if (response.ok) {
         const blob = await response.blob();

@@ -1,6 +1,17 @@
 // Authentication utility functions for admin token management
 
-const API_BASE = (import.meta.env?.VITE_API_BASE_URL || '/api').toString().trim().replace(/\/$/, '');
+// Force localhost in development mode
+const getApiBase = () => {
+  if (import.meta.env?.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL.toString().trim().replace(/\/$/, '');
+  }
+  if (import.meta.env?.PROD) {
+    return '/api';
+  }
+  return 'http://localhost:5005/api';
+};
+
+const API_BASE = getApiBase();
 
 export const authUtils = {
   // Token storage keys
