@@ -233,8 +233,8 @@ const Login = () => {
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <img
-                src="/favicon.png"
-                alt="Solitaire IB"
+                src="/logo.png"
+                alt="Solitaire Partners"
                 className="h-16 w-auto"
               />
             </div>

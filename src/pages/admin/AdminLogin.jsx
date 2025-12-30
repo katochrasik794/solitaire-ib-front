@@ -87,7 +87,7 @@ const AdminLogin = () => {
         {/* Logo and Title */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img src="/favicon.png" alt="Solitaire IB Admin" className="h-16 w-auto" />
+            <img src="/logo.png" alt="Solitaire Partners Admin" className="h-16 w-auto" />
           </div>
           <h1 className="text-3xl font-bold text-dark-base mb-2 font-heading">Admin Portal</h1>
           <p className="text-dark-base/60">Sign in to access the admin dashboard</p>

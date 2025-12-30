@@ -220,7 +220,7 @@ const Sidebar = () => {
             >
               <div className="h-12 flex items-center justify-center flex-shrink-0">
                 <img
-                  src="/ib_images/logo.svg"
+                  src="/logo.png"
                   alt="Solitaire Partners"
                   className="h-12 w-auto"
                 />

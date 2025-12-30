@@ -25,7 +25,7 @@ const AdminHeader = () => {
             {/* Logo */}
             <div className="flex items-center ml-3 lg:ml-0 gap-3">
               <div className="flex-shrink-0">
-                <img src="/favicon.png" alt="Solitaire IB Admin" className="h-10 w-auto" />
+                <img src="/logo.png" alt="Solitaire Partners Admin" className="h-10 w-auto" />
               </div>
               <div>
                 <span className="block text-sm font-semibold text-dark-base font-heading">Admin Panel</span>
