@@ -1,13 +1,23 @@
 // Authentication utility functions for admin token management
 
-// Force localhost in development mode
+// Get API base URL - respects environment variables
 const getApiBase = () => {
+  // If VITE_API_BASE_URL is explicitly set, use it (highest priority)
   if (import.meta.env?.VITE_API_BASE_URL) {
     return import.meta.env.VITE_API_BASE_URL.toString().trim().replace(/\/$/, '');
   }
+  // In production, use relative path (will be proxied or same origin)
   if (import.meta.env?.PROD) {
+    // In production, if we're on the production domain, use it
+    if (typeof window !== 'undefined') {
+      const currentOrigin = window.location.origin;
+      if (currentOrigin.includes('solitaire.partners') || currentOrigin.includes('cabinet.solitaire.partners')) {
+        return `${currentOrigin}/api`;
+      }
+    }
     return '/api';
   }
+  // In development, always use localhost:5005
   return 'http://localhost:5005/api';
 };
 

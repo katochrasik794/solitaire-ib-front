@@ -68,11 +68,8 @@ const AllSymbols = () => {
   const handleSync = async () => {
     try {
       setSyncing(true);
-      const token = localStorage.getItem('adminToken');
       const response = await apiFetch('/admin/symbols/sync', {
-        method: 'POST',
-          'Content-Type': 'application/json'
-        }
+        method: 'POST'
       });
 
       if (response.ok) {

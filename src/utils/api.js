@@ -1,19 +1,34 @@
 // Helper function to get API base URL for direct fetch calls
 const getApiBaseUrl = () => {
-  // If VITE_API_BASE_URL is explicitly set, use it
-  if (import.meta.env.VITE_API_BASE_URL) {
-    return import.meta.env.VITE_API_BASE_URL;
+  // If VITE_API_BASE_URL is explicitly set, use it (highest priority)
+  // This should be set in .env.production for production builds
+  if (import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.trim() !== '') {
+    const envUrl = import.meta.env.VITE_API_BASE_URL.trim();
+    // Ensure it doesn't end with /api/api
+    return envUrl.endsWith('/api') ? envUrl : `${envUrl}/api`;
   }
-  // In production, use relative path
-  if (import.meta.env.PROD) {
-    return '/api';
+  
+  // In production, detect the API URL based on current domain
+  if (import.meta.env.PROD && typeof window !== 'undefined') {
+    const currentOrigin = window.location.origin;
+    // If on production domain, check if API is on same domain or different
+    if (currentOrigin.includes('solitaire.partners') || currentOrigin.includes('cabinet.solitaire.partners')) {
+      // If frontend is on cabinet.solitaire.partners, API might be on same domain or Render
+      // Try same domain first, but allow override via env var
+      return `${currentOrigin}/api`;
+    }
+    // Fallback: if no env var and not on known domain, use Render backend
+    // This is a safety fallback - should be set via VITE_API_BASE_URL
+    return 'https://solitaire-ib-back.onrender.com/api';
   }
+  
   // In development, always use localhost:5005
   return 'http://localhost:5005/api';
 };
 
 const API_BASE_URL = getApiBaseUrl();
-const API_TIMEOUT = import.meta.env.VITE_API_TIMEOUT || 10000;
+// Increase timeout for production (Render free tier can take 50+ seconds to spin up)
+const API_TIMEOUT = import.meta.env.VITE_API_TIMEOUT || (import.meta.env.PROD ? 60000 : 10000);
 
 // Create axios-like fetch wrapper
 class ApiClient {
@@ -237,7 +252,21 @@ export { getApiBaseUrl };
 
 // Helper function for direct fetch calls that need absolute URLs
 export const apiFetch = async (endpoint, options = {}) => {
-  const baseUrl = getApiBaseUrl();
+  let baseUrl = getApiBaseUrl();
+  
+  // In production, ensure we have the correct base URL
+  if (import.meta.env.PROD) {
+    // If baseUrl is relative, check if we need to use production domain
+    if (baseUrl.startsWith('/')) {
+      const currentOrigin = window.location.origin;
+      // If we're on the production domain, use it for API calls
+      if (currentOrigin.includes('solitaire.partners') || currentOrigin.includes('cabinet.solitaire.partners')) {
+        baseUrl = `${currentOrigin}/api`;
+      }
+      // Otherwise keep relative path (for same-origin or if API is on same domain)
+    }
+  }
+  
   const url = endpoint.startsWith('http') ? endpoint : `${baseUrl}${endpoint}`;
   
   // Add auth token if available
@@ -255,10 +284,27 @@ export const apiFetch = async (endpoint, options = {}) => {
     headers.Authorization = `Bearer ${token}`;
   }
   
-  return fetch(url, {
-    ...options,
-    headers
-  });
+  // Add timeout for apiFetch (important for Render free tier spin-up delays)
+  const timeout = import.meta.env.VITE_API_TIMEOUT || (import.meta.env.PROD ? 60000 : 10000);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers,
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new Error(`Request timeout after ${timeout}ms. The server may be spinning up (Render free tier can take 50+ seconds).`);
+    }
+    throw error;
+  }
 };
 
 export default apiClient;

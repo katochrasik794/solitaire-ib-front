@@ -162,8 +162,6 @@ const TradingGroups = () => {
 
       const response = await apiFetch('/admin/trading-groups/sync', {
         method: 'POST',
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
           apiUrl: '/api/Groups'
         })
