@@ -1,4 +1,4 @@
-// Force localhost in development mode
+// Helper function to get API base URL for direct fetch calls
 const getApiBaseUrl = () => {
   // If VITE_API_BASE_URL is explicitly set, use it
   if (import.meta.env.VITE_API_BASE_URL) {
@@ -232,19 +232,8 @@ export const tokenManager = {
   },
 };
 
-// Helper function to get API base URL for direct fetch calls
-export const getApiBaseUrl = () => {
-  // If VITE_API_BASE_URL is explicitly set, use it
-  if (import.meta.env.VITE_API_BASE_URL) {
-    return import.meta.env.VITE_API_BASE_URL;
-  }
-  // In production, use relative path
-  if (import.meta.env.PROD) {
-    return '/api';
-  }
-  // In development, always use localhost:5005
-  return 'http://localhost:5005/api';
-};
+// Export the function for use in other files if needed
+export { getApiBaseUrl };
 
 // Helper function for direct fetch calls that need absolute URLs
 export const apiFetch = async (endpoint, options = {}) => {
